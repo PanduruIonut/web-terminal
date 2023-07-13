@@ -1,47 +1,124 @@
----
-export interface Props {
-}
+<script>
+    let command: string = '';
 
----
+    document.addEventListener('DOMContentLoaded', () => {    
+        const input = document.querySelector('.terminal__input') as HTMLInputElement;
+        const terminalDisplay = document.querySelector('.terminal__display') as HTMLDivElement;
+
+        input?.addEventListener('keyup', (event) => handleKeyUp(event));
+
+        function handleKeyUp(event: KeyboardEvent) {
+            if (event.key === 'Enter' || event.keyCode === 13) {
+                console.log('Enter key pressed', command);
+                input.value = '';
+                const output = handleCommand(command);
+                console.log('Output:', output);
+                terminalDisplay.textContent += output + '\n' + '\n';
+                command = '';
+            } else {
+                command = input.value;
+            }
+        }
+
+        function handleCommand(command: string): string {
+            switch (command) {
+                case 'help':
+                    return 'You can use the following commands: ...';
+                default:
+                    return `sh: Unknown command: ${command}. See 'help' for info.`;
+            }
+        }
+    });
+</script>
 
 <div class="terminal">
-    <span class="terminal__title">Terminal</span>
-    <div class="terminal__display"></div>
-    <input class="terminal__input"/>
+    <span class="terminal__title">guest@MacBook-Air-2:~</span>
+    <div class="terminal__content">
+        <div class="terminal__display-container">
+            <div class="terminal__display"></div>
+        </div>
+        <div class="terminal__input_container">
+            <div class="terminal___input_container-prompt">
+                <span class="terminal__input_container-promt-1">λ</span>
+                <span class="terminal__input_container-promt-2">~</span>
+                <span class="terminal__input_container-promt-3">&gt;&gt;</span>
+                <input class="terminal__input" id="input-field" />
+            </div>
+        </div>
+    </div>
 </div>
+
 <style>
-    .terminal{
-        display:flex;
+    .terminal__content {
+        display: flex;
         flex-direction: column;
+        justify-content: space-between;
         background-color: rgba(0, 0, 0, 0.6);
-        height:400px;
-        width:800px;
+        height: 400px;
+        width: 800px;
         box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-        $___{
-            
-        }
+        border-bottom-left-radius: 7px;
+        border-bottom-right-radius: 7px;
     }
-    .terminal__title{
-        background-color:#202123;
-        color:white;
-        width:100%;
-        display:flex;
-        padding-top:5px;
-        padding-bottom:5px;
-        font-weight: bold;
+    
+    .terminal__title {
+        background-color: #C8C8C8;
+        backdrop-filter: blur(10px);
+        border-top-left-radius: 7px;
+        border-top-right-radius: 7px;
+        color: black;
+        width: 100%;
+        display: flex;
+        padding-top: 5px;
+        padding-bottom: 5px;
         justify-content: center;
-        font-size:12px;
+        font-size: 12px;
         border-bottom: black 1px solid;
     }
-    .terminal__input{
-        bottom:0%;
-        width:90%;
+    
+    .terminal__display-container {
+        flex: 1;
+        overflow: auto;
+    }
+    
+    .terminal__display {
+        color: white;
+        padding: 10px;
+        white-space: pre-wrap;
+    }
+    
+    
+    .terminal__input {
+        margin: 0 auto;
+        bottom: 0%;
+        width: 90%;
         background-color: rgba(0, 0, 0, 0.0);
         border: none;
-        color:white
-        
+        color: #83ABDA;
+        margin-bottom: 25px;
+        font-size: 15px;
     }
-    .terminal__input:focus{
-    outline: none;
+    
+    .terminal__input:focus {
+        outline: none;
+    }
+    
+    .terminal__input_container-promt-1 {
+        color: #A56C4C;
+        margin-left: 20px;
+        margin-bottom: 25px;
+    }
+    
+    .terminal__input_container-promt-2 {
+        color: #AF91E8;
+        margin-left: 5px;
+        margin-bottom: 25px;
+    }
+    
+    .terminal__input_container-promt-3 {
+        color: #2290A4;
+        margin-bottom: 25px;
+        margin-left: 5px;
+        font-size: 12px;
     }
 </style>
