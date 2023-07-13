@@ -1,0 +1,47 @@
+---
+export interface Props {
+}
+
+---
+
+<div class="terminal">
+    <span class="terminal__title">Terminal</span>
+    <div class="terminal__display"></div>
+    <input class="terminal__input"/>
+</div>
+<style>
+    .terminal{
+        display:flex;
+        flex-direction: column;
+        background-color: rgba(0, 0, 0, 0.6);
+        height:400px;
+        width:800px;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        $___{
+            
+        }
+    }
+    .terminal__title{
+        background-color:#202123;
+        color:white;
+        width:100%;
+        display:flex;
+        padding-top:5px;
+        padding-bottom:5px;
+        font-weight: bold;
+        justify-content: center;
+        font-size:12px;
+        border-bottom: black 1px solid;
+    }
+    .terminal__input{
+        bottom:0%;
+        width:90%;
+        background-color: rgba(0, 0, 0, 0.0);
+        border: none;
+        color:white
+        
+    }
+    .terminal__input:focus{
+    outline: none;
+    }
+</style>
