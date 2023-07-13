@@ -4,6 +4,7 @@
     document.addEventListener('DOMContentLoaded', () => {    
         const input = document.querySelector('.terminal__input') as HTMLInputElement;
         const terminalDisplay = document.querySelector('.terminal__display') as HTMLDivElement;
+        const terminalDisplayContainer = document.querySelector('.terminal__display-container') as HTMLDivElement;
 
         input?.addEventListener('keyup', (event) => handleKeyUp(event));
 
@@ -15,6 +16,7 @@
                 console.log('Output:', output);
                 terminalDisplay.textContent += output + '\n' + '\n';
                 command = '';
+                terminalDisplayContainer.scrollTop = terminalDisplayContainer.scrollHeight;
             } else {
                 command = input.value;
             }
@@ -42,7 +44,7 @@
                 <span class="terminal__input_container-promt-1">λ</span>
                 <span class="terminal__input_container-promt-2">~</span>
                 <span class="terminal__input_container-promt-3">&gt;&gt;</span>
-                <input class="terminal__input" id="input-field" />
+                <input class="terminal__input" id="input-field" autofocus />
             </div>
         </div>
     </div>
