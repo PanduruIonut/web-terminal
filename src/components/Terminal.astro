@@ -1,5 +1,6 @@
 <script>
     let command: string = '';
+    const commands = ['help', 'whoami', 'yolo'];
 
     document.addEventListener('DOMContentLoaded', () => {    
         const input = document.querySelector('.terminal__input') as HTMLInputElement;
@@ -18,7 +19,12 @@
                 command = '';
                 terminalDisplayContainer.scrollTop = terminalDisplayContainer.scrollHeight;
             } else {
-                command = input.value;
+                command = input.value.trim();
+                if (commands.includes(command)) {
+                    input.classList.add('valid-command');
+                } else {
+                    input.classList.remove('valid-command');
+        }
             }
         }
 
@@ -158,4 +164,7 @@
         flex-grow: 1;
         text-align: center;
     }
+    .terminal__input.valid-command {
+    color: rgb(36, 170, 36);
+}
 </style>
