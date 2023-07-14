@@ -12,40 +12,52 @@
         terminal.addEventListener('click', () => {
         input.focus();
     });
-
-        function handleKeyUp(event: KeyboardEvent) {
-            if (event.key === 'Enter' || event.keyCode === 13) {
-                console.log('Enter key pressed', command);
-                input.value = '';
-                const output = handleCommand(command);
-                console.log('Output:', output);
-                terminalDisplay.textContent += output + '\n' + '\n';
-                command = '';
-                terminalDisplayContainer.scrollTop = terminalDisplayContainer.scrollHeight;
-            } else {
-                command = input.value.trim();
-                if (commands.includes(command)) {
-                    input.classList.add('valid-command');
-                } else {
-                    input.classList.remove('valid-command');
-        }
-            }
-        }
-
-        function handleCommand(command: string): string {
-            switch (command) {
-                case 'help':
-                    return 'You can use the following commands: ...';
-                case 'whoami':
-                    return 'guest';
-                case 'clear':
-                    terminalDisplay.textContent = '';
-                    return '';
-                default:
-                    return `sh: Unknown command: ${command}. See 'help' for info.`;
-            }
+    
+    document.addEventListener('keydown', (event) => {
+        if (event.metaKey && event.key === 'k') {
+            clearScreen();
+        } else if (event.ctrlKey && event.key === 'l') { 
+            clearScreen();
         }
     });
+
+    function clearScreen() {
+        terminalDisplay.textContent = '';
+    }
+
+    function handleKeyUp(event: KeyboardEvent) {
+        if (event.key === 'Enter' || event.keyCode === 13) {
+            console.log('Enter key pressed', command);
+            input.value = '';
+            const output = handleCommand(command);
+            console.log('Output:', output);
+            terminalDisplay.textContent += output + '\n' + '\n';
+            command = '';
+            terminalDisplayContainer.scrollTop = terminalDisplayContainer.scrollHeight;
+        } else {
+            command = input.value.trim();
+            if (commands.includes(command)) {
+                input.classList.add('valid-command');
+            } else {
+                input.classList.remove('valid-command');
+    }
+        }
+    }
+
+    function handleCommand(command: string): string {
+        switch (command) {
+            case 'help':
+                return 'You can use the following commands: ...';
+            case 'whoami':
+                return 'guest';
+            case 'clear':
+                terminalDisplay.textContent = '';
+                return '';
+            default:
+                return `sh: Unknown command: ${command}. See 'help' for info.`;
+        }
+    }
+});
 </script>
 
 <div class="terminal">
