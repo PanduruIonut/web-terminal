@@ -4,10 +4,14 @@
 
     document.addEventListener('DOMContentLoaded', () => {    
         const input = document.querySelector('.terminal__input') as HTMLInputElement;
+        const terminal = document.querySelector('.terminal') as HTMLDivElement;
         const terminalDisplay = document.querySelector('.terminal__display') as HTMLDivElement;
         const terminalDisplayContainer = document.querySelector('.terminal__display-container') as HTMLDivElement;
 
         input?.addEventListener('keyup', (event) => handleKeyUp(event));
+        terminal.addEventListener('click', () => {
+        input.focus();
+    });
 
         function handleKeyUp(event: KeyboardEvent) {
             if (event.key === 'Enter' || event.keyCode === 13) {
