@@ -1,6 +1,6 @@
 <script>
     let command: string = '';
-    const commands = ['help', 'whoami', 'yolo'];
+    const commands = ['help', 'whoami', 'yolo', 'clear'];
 
     document.addEventListener('DOMContentLoaded', () => {    
         const input = document.querySelector('.terminal__input') as HTMLInputElement;
@@ -34,6 +34,9 @@
                     return 'You can use the following commands: ...';
                 case 'whoami':
                     return 'guest';
+                case 'clear':
+                    terminalDisplay.textContent = '';
+                    return '';
                 default:
                     return `sh: Unknown command: ${command}. See 'help' for info.`;
             }
@@ -82,6 +85,7 @@
         border-top-left-radius: 7px;
         border-top-right-radius: 7px;
         color: black;
+        font-weight: bold;
         width: 100%;
         align-items: center;
         display: flex;
