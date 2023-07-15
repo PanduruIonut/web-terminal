@@ -58,6 +58,7 @@
             outputContainer.appendChild(promptSpan3);
             outputContainer.appendChild(commandInput);
     
+            if(command == 'clear') return;
             terminalDisplay.appendChild(outputContainer);
     
             const outputText = document.createElement('div');
