@@ -2,50 +2,88 @@
     let command: string = '';
     const commands = ['help', 'whoami', 'yolo', 'clear'];
 
-    document.addEventListener('DOMContentLoaded', () => {    
+    document.addEventListener('DOMContentLoaded', () => {
         const input = document.querySelector('.terminal__input') as HTMLInputElement;
         const terminal = document.querySelector('.terminal') as HTMLDivElement;
         const terminalDisplay = document.querySelector('.terminal__display') as HTMLDivElement;
         const terminalDisplayContainer = document.querySelector('.terminal__display-container') as HTMLDivElement;
 
-        input?.addEventListener('keyup', (event) => handleKeyUp(event));
+        input.addEventListener('keyup', (event) => handleKeyUp(event));
         terminal.addEventListener('click', () => {
-        input.focus();
-    });
+            input.focus();
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.metaKey && event.key === 'k') {
+            clearScreen();
+            } else if (event.ctrlKey && event.key === 'l') {
+            clearScreen();
+            }
+        });
     
-    document.addEventListener('keydown', (event) => {
-        if (event.metaKey && event.key === 'k') {
-            clearScreen();
-        } else if (event.ctrlKey && event.key === 'l') { 
-            clearScreen();
+        function clearScreen() {
+            terminalDisplay.textContent = '';
         }
-    });
-
-    function clearScreen() {
-        terminalDisplay.textContent = '';
-    }
-
-    function handleKeyUp(event: KeyboardEvent) {
-        if (event.key === 'Enter' || event.keyCode === 13) {
+    
+        function handleKeyUp(event: KeyboardEvent) {
+            if (event.key === 'Enter' || event.keyCode === 13) {
             console.log('Enter key pressed', command);
             input.value = '';
             const output = handleCommand(command);
             console.log('Output:', output);
-            terminalDisplay.textContent += output + '\n' + '\n';
+    
+            const outputContainer = document.createElement('div');
+            outputContainer.classList.add('output-container');
+    
+            const promptSpan1 = document.createElement('span');
+            promptSpan1.classList.add('terminal__input_container-promt-2');
+            promptSpan1.textContent = 'λ';
+            promptSpan1.setAttribute('style', 'color: #A56C4C;margin-left: 10px;margin-bottom: 25px;')
+            const promptSpan2 = document.createElement('span');
+            promptSpan2.classList.add('terminal__input_container-promt-2');
+            promptSpan2.textContent = '~';
+            promptSpan2.setAttribute('style', "color: #AF91E8;margin-left: 5px; margin-bottom: 25px;")
+            const promptSpan3 = document.createElement('span');
+            promptSpan3.classList.add('terminal__input_container-promt-3');
+            promptSpan3.textContent = '>>';
+            promptSpan3.setAttribute('style', "color: #2290A4;margin-bottom: 25px;margin-left: 5px;font-size: 12px;")
+    
+            const commandInput = document.createElement('span');
+            commandInput.classList.add('command-input');
+            commandInput.setAttribute('style', 'color:#7699C4; margin-left:10px')
+            commandInput.textContent = command;
+    
+            outputContainer.appendChild(promptSpan1);
+            outputContainer.appendChild(promptSpan2);
+            outputContainer.appendChild(promptSpan3);
+            outputContainer.appendChild(commandInput);
+    
+            terminalDisplay.appendChild(outputContainer);
+    
+            const outputText = document.createElement('div');
+            outputText.textContent = output;
+            outputText.setAttribute('style', 'margin-left:10px; margin-top:5px; color:#7699C4')
+            terminalDisplay.appendChild(outputText);
+    
+            terminalDisplay.innerHTML += '<br>';
+    
+            input.value = '';
+            input.focus();
+    
             command = '';
             terminalDisplayContainer.scrollTop = terminalDisplayContainer.scrollHeight;
-        } else {
+            } else {
             command = input.value.trim();
             if (commands.includes(command)) {
                 input.classList.add('valid-command');
             } else {
                 input.classList.remove('valid-command');
-    }
+            }
+            }
         }
-    }
-
-    function handleCommand(command: string): string {
-        switch (command) {
+    
+        function handleCommand(command: string): string {
+            switch (command) {
             case 'help':
                 return 'You can use the following commands: ...';
             case 'whoami':
@@ -55,13 +93,13 @@
                 return '';
             default:
                 return `sh: Unknown command: ${command}. See 'help' for info.`;
+            }
         }
-    }
-});
-</script>
-
-<div class="terminal">
-    <div class="terminal__title-container">
+        });
+    </script>
+    
+    <div class="terminal">
+        <div class="terminal__title-container">
         <div class="close-button"></div>
         <div class="hide-button"></div>
         <div class="resize-button"></div>
@@ -185,6 +223,17 @@
         text-align: center;
     }
     .terminal__input.valid-command {
-    color: rgb(36, 170, 36);
-}
+        color: rgb(36, 170, 36);
+    }
+    
+        .output-container {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+        margin-bottom: 10px;
+        }
+        .command-input {
+        margin-left: 5px;
+        color:red;
+        }
 </style>
