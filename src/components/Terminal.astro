@@ -1,6 +1,13 @@
 <script>
     let command: string = '';
-    const commands = ['help', 'whoami', 'yolo', 'clear'];
+    const commands = [
+        { name: 'whoami', description: 'About Me' },
+        { name: 'history', description: 'Professional Background ' },
+        { name: 'top', description: 'My Main Tech Stack' },
+        { name: 'ls', description: 'My Projects' },
+        { name: 'ssh', description: 'Contact Me' },
+        { name: 'help', description: 'Commands list' },
+    ];
 
     document.addEventListener('DOMContentLoaded', () => {
         const input = document.querySelector('.terminal__input') as HTMLInputElement;
@@ -66,7 +73,6 @@
             outputText.setAttribute('style', 'margin-left:10px; margin-top:5px; color:#7699C4');
             terminalDisplay.appendChild(outputText);
     
-            terminalDisplay.innerHTML += '<br>';
             if (command === 'help') {
                 displayHelp();
             }
@@ -78,7 +84,9 @@
             terminalDisplayContainer.scrollTop = terminalDisplayContainer.scrollHeight;
             } else {
             command = input.value.trim();
-            if (commands.includes(command)) {
+            const isCmdValid = commands.find((cmd) => cmd.name == command)
+            console.log(isCmdValid, command)
+            if (isCmdValid) {
                 input.classList.add('valid-command');
             } else {
                 input.classList.remove('valid-command');
@@ -104,12 +112,6 @@
     const helpContainer = document.createElement('div');
     helpContainer.setAttribute('style', 'display: flex; flex-direction: column; padding-left:10px; padding-right:10px;');
 
-    const commands = [
-        { name: 'whoami', description: 'about me' },
-        { name: 'history', description: 'professional background ' },
-        { name: 'top', description: 'my main tech stack' },
-        { name: 'ssh', description: 'contact me' },
-    ];
 
     commands.forEach((cmd) => {
         const commandElement = document.createElement('div');
@@ -139,7 +141,7 @@
         <div class="close-button"></div>
         <div class="hide-button"></div>
         <div class="resize-button"></div>
-        <div class="terminal__title">guest@MacBook-Air-2:~</div>
+        <div class="terminal__title">ionut@MacBook-Air-2:~</div>
         </div>
         <div class="terminal__content">
         <div class="terminal__display-container">
