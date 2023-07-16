@@ -38,19 +38,19 @@
             const promptSpan1 = document.createElement('span');
             promptSpan1.classList.add('terminal__input_container-promt-2');
             promptSpan1.textContent = 'λ';
-            promptSpan1.setAttribute('style', 'color: #A56C4C;margin-left: 10px;margin-bottom: 25px;')
+            promptSpan1.setAttribute('style', 'color: #A56C4C;margin-left: 10px;margin-bottom: 25px;');
             const promptSpan2 = document.createElement('span');
             promptSpan2.classList.add('terminal__input_container-promt-2');
             promptSpan2.textContent = '~';
-            promptSpan2.setAttribute('style', "color: #AF91E8;margin-left: 5px; margin-bottom: 25px;")
+            promptSpan2.setAttribute('style', 'color: #AF91E8;margin-left: 5px; margin-bottom: 25px;');
             const promptSpan3 = document.createElement('span');
             promptSpan3.classList.add('terminal__input_container-promt-3');
             promptSpan3.textContent = '>>';
-            promptSpan3.setAttribute('style', "color: #2290A4;margin-bottom: 25px;margin-left: 5px;font-size: 12px;")
+            promptSpan3.setAttribute('style', 'color: #2290A4;margin-bottom: 25px;margin-left: 5px;font-size: 12px;');
     
             const commandInput = document.createElement('span');
             commandInput.classList.add('command-input');
-            commandInput.setAttribute('style', 'color:#7699C4; margin-left:10px')
+            commandInput.setAttribute('style', 'color:#7699C4; margin-left:10px');
             commandInput.textContent = command;
     
             outputContainer.appendChild(promptSpan1);
@@ -58,15 +58,18 @@
             outputContainer.appendChild(promptSpan3);
             outputContainer.appendChild(commandInput);
     
-            if(command == 'clear') return;
+            if (command === 'clear') return;
             terminalDisplay.appendChild(outputContainer);
     
             const outputText = document.createElement('div');
             outputText.textContent = output;
-            outputText.setAttribute('style', 'margin-left:10px; margin-top:5px; color:#7699C4')
+            outputText.setAttribute('style', 'margin-left:10px; margin-top:5px; color:#7699C4');
             terminalDisplay.appendChild(outputText);
     
             terminalDisplay.innerHTML += '<br>';
+            if (command === 'help') {
+                displayHelp();
+            }
     
             input.value = '';
             input.focus();
@@ -86,7 +89,7 @@
         function handleCommand(command: string): string {
             switch (command) {
             case 'help':
-                return 'You can use the following commands: ...';
+                return '';
             case 'whoami':
                 return 'guest';
             case 'clear':
@@ -96,7 +99,38 @@
                 return `sh: Unknown command: ${command}. See 'help' for info.`;
             }
         }
-        });
+    
+        function displayHelp() {
+    const helpContainer = document.createElement('div');
+    helpContainer.setAttribute('style', 'display: flex; flex-direction: column; padding-left:10px; padding-right:10px;');
+
+    const commands = [
+        { name: 'whoami', description: 'about me' },
+        { name: 'history', description: 'professional background ' },
+        { name: 'top', description: 'my main tech stack' },
+        { name: 'ssh', description: 'contact me' },
+    ];
+
+    commands.forEach((cmd) => {
+        const commandElement = document.createElement('div');
+        commandElement.setAttribute('style', 'display: flex; justify-content: space-between; margin-bottom: 5px; color:#83abda');
+
+        const nameElement = document.createElement('span');
+        nameElement.textContent = cmd.name;
+        nameElement.setAttribute('style', 'flex-grow: 1; text-align: left;');
+
+        const descriptionElement = document.createElement('span');
+        descriptionElement.textContent = cmd.description;
+        descriptionElement.setAttribute('style', 'color: #2290a4; text-align: right;');
+
+        commandElement.appendChild(nameElement);
+        commandElement.appendChild(descriptionElement);
+        helpContainer.appendChild(commandElement);
+    });
+
+    terminalDisplay.appendChild(helpContainer);
+    }
+    });
     </script>
     
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:ital,wght@0,400;0,700;1,400;1,700&display=swap">
@@ -106,24 +140,24 @@
         <div class="hide-button"></div>
         <div class="resize-button"></div>
         <div class="terminal__title">guest@MacBook-Air-2:~</div>
-    </div>
-    <div class="terminal__content">
+        </div>
+        <div class="terminal__content">
         <div class="terminal__display-container">
             <div class="terminal__display"></div>
         </div>
         <div class="terminal__input_container">
             <div class="terminal___input_container-prompt">
-                <span class="terminal__input_container-promt-1">λ</span>
-                <span class="terminal__input_container-promt-2">~</span>
-                <span class="terminal__input_container-promt-3">&gt;&gt;</span>
-                <input class="terminal__input" id="input-field" autofocus  spellcheck="false"/>
+            <span class="terminal__input_container-promt-1">λ</span>
+            <span class="terminal__input_container-promt-2">~</span>
+            <span class="terminal__input_container-promt-3">&gt;&gt;</span>
+            <input class="terminal__input" id="input-field" autofocus spellcheck="false" />
             </div>
         </div>
+        </div>
     </div>
-</div>
-
-<style>
-    .terminal__content {
+    
+    <style>
+        .terminal__content {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -133,11 +167,10 @@
         box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
         border-bottom-left-radius: 7px;
         border-bottom-right-radius: 7px;
-    }
+        }
     
-    .terminal__title-container {
-        background-color: #C8C8C8;
-        backdrop-filter: blur(10px);
+        .terminal__title-container {
+        background-color: #c8c8c8;
         border-top-left-radius: 7px;
         border-top-right-radius: 7px;
         color: black;
@@ -150,78 +183,79 @@
         justify-content: center;
         font-size: 12px;
         border-bottom: black 1px solid;
-    }
+        }
     
-    .terminal__display-container {
+        .terminal__display-container {
         flex: 1;
         overflow: auto;
-    }
+        }
     
-    .terminal__display {
+        .terminal__display {
         color: white;
         padding: 10px;
         white-space: pre-wrap;
-        font-size:13px;
-    }
+        font-size: 14px;
+        }
     
-    
-    .terminal__input {
+        .terminal__input {
         margin: 0 auto;
         bottom: 0%;
         width: 90%;
         background-color: rgba(0, 0, 0, 0.0);
         border: none;
-        color: #83ABDA;
+        color: #83abda;
         margin-bottom: 25px;
-        font-size: 12px;
+        font-size: 14px;
         font-family: 'Fira Code', monospace;
-    }
+        }
     
-    .terminal__input:focus {
+        .terminal__input:focus {
         outline: none;
-    }
+        }
     
-    .terminal__input_container-promt-1 {
-        color: #A56C4C;
+        .terminal__input_container-promt-1 {
+        color: #a56c4c;
         margin-left: 20px;
         margin-bottom: 25px;
-    }
+        }
     
-    .terminal__input_container-promt-2 {
-        color: #AF91E8;
+        .terminal__input_container-promt-2 {
+        color: #af91e8;
         margin-left: 5px;
         margin-bottom: 25px;
-    }
+        }
     
-    .terminal__input_container-promt-3 {
-        color: #2290A4;
+        .terminal__input_container-promt-3 {
+        color: #2290a4;
         margin-bottom: 25px;
         margin-left: 5px;
         font-size: 12px;
-    }
-
-    .close-button{
-        width:12px;
-        height:12px;
-        margin-left:10px;
-        border-radius:50%;
+        }
+    
+        .close-button {
+        width: 12px;
+        height: 12px;
+        margin-left: 10px;
+        border-radius: 50%;
         box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-        background-color:#FF605C;
-    }
-    .hide-button{
-        width:12px;
-        height:12px;
-        border-radius:50%;
-        margin-left:8px;
-        margin-right:8px;
-        background-color:#FFBD44;
-    }
-    .resize-button{
-        width:12px;
-        height:12px;
-        border-radius:50%;
-        background-color:#00CA4E;
-    }
+        background-color: #ff605c;
+        }
+    
+        .hide-button {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-left: 8px;
+        margin-right: 8px;
+        background-color: #ffbd44;
+        }
+    
+    .resize-button {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: #00ca4e;
+        }
     .terminal__title {
         flex-grow: 1;
         text-align: center;
@@ -230,14 +264,4 @@
         color: rgb(36, 170, 36);
     }
     
-        .output-container {
-        display: flex;
-        align-items: center;
-        white-space: nowrap;
-        margin-bottom: 10px;
-        }
-        .command-input {
-        margin-left: 5px;
-        color:red;
-        }
 </style>
