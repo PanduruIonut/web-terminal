@@ -1,10 +1,10 @@
-<script>
+    <script>
     type Command = {
         name: string;
         description: string;
     };
     let command: string = '';
-    const commands:Command[] = [
+    const commands: Command[] = [
         { name: 'whoami', description: 'About Me' },
         { name: 'history', description: 'Professional Background' },
         { name: 'top', description: 'My Main Tech Stack' },
@@ -21,167 +21,171 @@
 
         terminal.style.transform = 'translateY(10px)';
         setTimeout(() => {
-            terminal.style.transform = 'translateY(0)';
+        terminal.style.transform = 'translateY(0)';
         }, 1000);
 
         input.addEventListener('keyup', (event) => handleKeyUp(event));
         terminal.addEventListener('click', () => {
-            input.focus();
+        input.focus();
         });
 
         document.addEventListener('keydown', (event) => {
-            if (event.metaKey && event.key === 'k') {
-                clearScreen();
-            } else if (event.ctrlKey && event.key === 'l') {
-                clearScreen();
-            }
+        if (event.metaKey && event.key === 'k') {
+            clearScreen();
+        } else if (event.ctrlKey && event.key === 'l') {
+            clearScreen();
+        }
         });
 
         function clearScreen() {
-            terminalDisplay.textContent = '';
+        terminalDisplay.textContent = '';
         }
 
         function handleKeyUp(event: KeyboardEvent) {
-            if (event.key === 'Enter' || event.keyCode === 13) {
-                input.value = '';
-                const output = handleCommand(command);
+        if (event.key === 'Enter' || event.keyCode === 13) {
+            input.value = '';
+            const output = handleCommand(command);
 
-                const outputContainer = document.createElement('div');
-                outputContainer.classList.add('output-container');
-                outputContainer.style.marginTop = '3px';
-                outputContainer.style.marginBottom = '3px';
+            const outputContainer = document.createElement('div');
+            outputContainer.classList.add('output-container');
+            outputContainer.style.marginTop = '3px';
+            outputContainer.style.marginBottom = '3px';
 
-                const promptSpan1 = document.createElement('span');
-                promptSpan1.classList.add('terminal__input_container-promt-2');
-                promptSpan1.textContent = 'λ';
-                promptSpan1.style.color = '#A56C4C';
-                promptSpan1.style.marginLeft = '10px';
-                promptSpan1.style.marginBottom = '25px';
+            const promptSpan1 = document.createElement('span');
+            promptSpan1.classList.add('terminal__input_container-promt-2');
+            promptSpan1.textContent = 'λ';
+            promptSpan1.style.color = '#A56C4C';
+            promptSpan1.style.marginLeft = '10px';
+            promptSpan1.style.marginBottom = '25px';
 
-                const promptSpan2 = document.createElement('span');
-                promptSpan2.classList.add('terminal__input_container-promt-2');
-                promptSpan2.textContent = '~';
-                promptSpan2.style.color = '#AF91E8';
-                promptSpan2.style.marginLeft = '5px';
-                promptSpan2.style.marginBottom = '25px';
+            const promptSpan2 = document.createElement('span');
+            promptSpan2.classList.add('terminal__input_container-promt-2');
+            promptSpan2.textContent = '~';
+            promptSpan2.style.color = '#AF91E8';
+            promptSpan2.style.marginLeft = '5px';
+            promptSpan2.style.marginBottom = '25px';
 
-                const promptSpan3 = document.createElement('span');
-                promptSpan3.classList.add('terminal__input_container-promt-3');
-                promptSpan3.textContent = '>>';
-                promptSpan3.style.color = '#2290A4';
-                promptSpan3.style.marginBottom = '25px';
-                promptSpan3.style.marginLeft = '5px';
-                promptSpan3.style.fontSize = '12px';
+            const promptSpan3 = document.createElement('span');
+            promptSpan3.classList.add('terminal__input_container-promt-3');
+            promptSpan3.textContent = '>>';
+            promptSpan3.style.color = '#2290A4';
+            promptSpan3.style.marginBottom = '25px';
+            promptSpan3.style.marginLeft = '5px';
+            promptSpan3.style.fontSize = '12px';
 
-                const commandInput = document.createElement('span');
-                commandInput.classList.add('command-input');
-                commandInput.style.color = '#7699C4';
-                commandInput.style.marginLeft = '10px';
-                commandInput.textContent = command;
+            const commandInput = document.createElement('span');
+            commandInput.classList.add('command-input');
+            commandInput.style.color = '#7699C4';
+            commandInput.style.marginLeft = '10px';
+            commandInput.textContent = command;
 
-                outputContainer.appendChild(promptSpan1);
-                outputContainer.appendChild(promptSpan2);
-                outputContainer.appendChild(promptSpan3);
-                outputContainer.appendChild(commandInput);
+            outputContainer.appendChild(promptSpan1);
+            outputContainer.appendChild(promptSpan2);
+            outputContainer.appendChild(promptSpan3);
+            outputContainer.appendChild(commandInput);
 
-                if (command === 'clear') return;
-                terminalDisplay.appendChild(outputContainer);
+            if (command === 'clear') return;
+            terminalDisplay.appendChild(outputContainer);
 
-                const outputText = document.createElement('div');
-                outputText.style.marginLeft = '10px';
-                terminalDisplay.appendChild(outputText);
-                animateText(outputText, output);
+            const outputText = document.createElement('div');
+            outputText.style.marginLeft = '10px';
+            terminalDisplay.appendChild(outputText);
+            animateText(outputText, output);
 
-                if (command === 'help') {
-                    displayHelp();
-                }
-
-                input.value = '';
-                input.focus();
-
-                command = '';
-                terminalDisplayContainer.scrollTop = terminalDisplayContainer.scrollHeight;
-            } else {
-                command = input.value.trim();
-                if (commands.find((cmd) => cmd.name === command)) {
-                    input.classList.add('valid-command');
-                } else {
-                    input.classList.remove('valid-command');
-                }
+            if (command === 'help') {
+            displayHelp();
             }
+
+            input.value = '';
+            input.focus();
+
+            command = '';
+            terminalDisplayContainer.scrollTop = terminalDisplayContainer.scrollHeight;
+        } else {
+            command = input.value.trim();
+            if (commands.find((cmd) => cmd.name === command)) {
+            input.classList.add('valid-command');
+            } else {
+            input.classList.remove('valid-command');
+            }
+        }
         }
 
         function handleCommand(command: string): string {
-            const selectedCommand = commands.find((cmd) => cmd.name === command);
-            if (selectedCommand) {
-                switch (selectedCommand.name) {
-                case 'help':
-                    return '';
-                case 'whoami':
-                    return 'guest';
-                case 'clear':
-                    return '';
-                default:
-                    return `sh: Unknown command: ${command}. See 'help' for info.`;
-                }
-            } else {
+        const selectedCommand = commands.find((cmd) => cmd.name === command);
+        if (selectedCommand) {
+            switch (selectedCommand.name) {
+            case 'help':
+                return '';
+            case 'whoami':
+                return `My name is Panduru Ionut, im 26 and I'm currently a fullstack web developer.\nI love coding in Javascript, Typescript, and have worked with frameworks like VueJS, ReactJS, NodeJs & Laravel.\n\nI'm currently trying out new technolgies like NextJS.`;
+            case 'history':
+                return `2015 - Graduated from University of Lucian Blaga Sibiu (B.Sc. in ComputerScience)\n\n2018 - Graduated from University of Lucian Blaga Sibiu (M.Sc. in ComputerScience)\n\n2018 - Android developer @ KeepCalling\n\n2020 - Web development @ EdelCode\n\n2020 - Full stack web developer @ Graffino\n\nsince - 2021 Working as freelancer`;
+            case 'ls':
+                return `Web app to schedule & organize teams for multiple sports https://sprint-scape.vercel.app\n\nAttempt to recreate apple scroll animate effect https://panduruionut.github.io/leap-of-faith\n\nMore @ https://github.com/PanduruIonut`;
+            case 'clear':
+                return '';
+            default:
                 return `sh: Unknown command: ${command}. See 'help' for info.`;
             }
+        } else {
+            return `sh: Unknown command: ${command}. See 'help' for info.`;
+        }
         }
 
         function displayHelp() {
-            const helpContainer = document.createElement('div');
-            helpContainer.style.display = 'flex';
-            helpContainer.style.flexDirection = 'column';
-            helpContainer.style.paddingLeft = '10px';
-            helpContainer.style.paddingRight = '10px';
-            helpContainer.style.paddingTop = '5px';
-            helpContainer.style.paddingBottom = '5px';
+        const helpContainer = document.createElement('div');
+        helpContainer.style.display = 'flex';
+        helpContainer.style.flexDirection = 'column';
+        helpContainer.style.paddingLeft = '10px';
+        helpContainer.style.paddingRight = '10px';
+        helpContainer.style.paddingTop = '5px';
+        helpContainer.style.paddingBottom = '5px';
 
-            commands.forEach((cmd) => {
-                const commandElement = document.createElement('div');
-                commandElement.style.display = 'flex';
-                commandElement.style.justifyContent = 'space-between';
-                commandElement.style.marginBottom = '5px';
-                commandElement.style.color = '#83abda';
+        commands.forEach((cmd) => {
+            const commandElement = document.createElement('div');
+            commandElement.style.display = 'flex';
+            commandElement.style.justifyContent = 'space-between';
+            commandElement.style.marginBottom = '5px';
+            commandElement.style.color = '#83abda';
 
-                const command = document.createElement('span');
-                command.style.flexGrow = '1';
-                command.style.textAlign = 'left';
+            const commandName = document.createElement('span');
+            commandName.style.flexGrow = '1';
+            commandName.style.textAlign = 'left';
 
-                const descriptionElement = document.createElement('span');
-                descriptionElement.style.color = '#2290a4';
-                descriptionElement.style.textAlign = 'right';
+            const descriptionElement = document.createElement('span');
+            descriptionElement.style.color = '#2290a4';
+            descriptionElement.style.textAlign = 'right';
 
-                commandElement.appendChild(command);
-                commandElement.appendChild(descriptionElement);
-                helpContainer.appendChild(commandElement);
+            commandElement.appendChild(commandName);
+            commandElement.appendChild(descriptionElement);
+            helpContainer.appendChild(commandElement);
 
-                animateText(command, cmd.name);
-                animateText(descriptionElement, cmd.description);
-            });
+            animateText(commandName, cmd.name);
+            animateText(descriptionElement, cmd.description);
+        });
 
-            terminalDisplay.appendChild(helpContainer);
+        terminalDisplay.appendChild(helpContainer);
         }
 
         function animateText(element: HTMLElement, text: string) {
-            let index = 0;
-            const typingSpeed = 50;
+        const typingSpeed = 50;
+        let index = 0;
 
-            function type() {
-                if (index < text.length) {
-                    element.textContent += text.charAt(index);
-                    index++;
-                    setTimeout(type, typingSpeed);
-                }
+        function type() {
+            if (index < text.length) {
+            element.textContent += text.charAt(index);
+            index++;
+            setTimeout(type, typingSpeed);
             }
+        }
 
-            type();
+        type();
         }
     });
-</script>
+    </script>
 
-<div class="terminal">
+    <div class="terminal">
     <div class="terminal__title-container">
         <div class="close-button"></div>
         <div class="hide-button"></div>
@@ -190,20 +194,20 @@
     </div>
     <div class="terminal__content">
         <div class="terminal__display-container">
-            <div class="terminal__display"></div>
+        <div class="terminal__display"></div>
         </div>
         <div class="terminal__input_container">
-            <div class="terminal___input_container-prompt">
-                <span class="terminal__input_container-promt-1">λ</span>
-                <span class="terminal__input_container-promt-2">~</span>
-                <span class="terminal__input_container-promt-3">&gt;&gt;</span>
-                <input class="terminal__input" id="input-field" autofocus spellcheck="false" />
-            </div>
+        <div class="terminal___input_container-prompt">
+            <span class="terminal__input_container-promt-1">λ</span>
+            <span class="terminal__input_container-promt-2">~</span>
+            <span class="terminal__input_container-promt-3">&gt;&gt;</span>
+            <input class="terminal__input" id="input-field" autofocus spellcheck="false" />
+        </div>
         </div>
     </div>
-</div>
+    </div>
 
-<style>
+    <style>
     .terminal__content {
         display: flex;
         flex-direction: column;
@@ -316,17 +320,17 @@
 
     @keyframes moveTerminal {
         0% {
-            transform: translateY(0);
+        transform: translateY(0);
         }
         50% {
-            transform: translateY(10px);
+        transform: translateY(10px);
         }
         100% {
-            transform: translateY(0);
+        transform: translateY(0);
         }
     }
 
     .terminal {
         animation: moveTerminal 1s ease-in-out;
     }
-</style>
+    </style>
