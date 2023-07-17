@@ -44,6 +44,7 @@
     
             const outputContainer = document.createElement('div');
             outputContainer.classList.add('output-container');
+            outputContainer.setAttribute('style', 'margin-top:3px; margin-bottom:3px');
     
             const promptSpan1 = document.createElement('span');
             promptSpan1.classList.add('terminal__input_container-promt-2');
@@ -72,6 +73,7 @@
             terminalDisplay.appendChild(outputContainer);
     
             const outputText = document.createElement('div');
+            outputText.setAttribute('style', 'margin-left:10px')
             terminalDisplay.appendChild(outputText);
             animateText(outputText, output);
     
