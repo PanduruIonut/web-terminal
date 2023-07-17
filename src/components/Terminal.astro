@@ -5,7 +5,7 @@
         { name: 'history', description: 'Professional Background ' },
         { name: 'top', description: 'My Main Tech Stack' },
         { name: 'ls', description: 'My Projects' },
-        { name: 'ssh', description: 'Contact Me' },
+        { name: 'ping', description: 'Contact Me' },
         { name: 'help', description: 'Commands list' },
     ];
 
@@ -14,6 +14,11 @@
         const terminal = document.querySelector('.terminal') as HTMLDivElement;
         const terminalDisplay = document.querySelector('.terminal__display') as HTMLDivElement;
         const terminalDisplayContainer = document.querySelector('.terminal__display-container') as HTMLDivElement;
+
+        terminal.style.transform = 'translateY(10px)';
+        setTimeout(() => {
+            terminal.style.transform = 'translateY(0)';
+        }, 1000);
 
         input.addEventListener('keyup', (event) => handleKeyUp(event));
         terminal.addEventListener('click', () => {
@@ -262,4 +267,19 @@
         color: rgb(36, 170, 36);
     }
     
+    @keyframes moveTerminal {
+        0% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(10px);
+        }
+        100% {
+            transform: translateY(0);
+        }
+    }
+
+    .terminal {
+        animation: moveTerminal 1s ease-in-out;
+    }
 </style>
