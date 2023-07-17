@@ -72,9 +72,8 @@
             terminalDisplay.appendChild(outputContainer);
     
             const outputText = document.createElement('div');
-            outputText.textContent = output;
-            outputText.setAttribute('style', 'margin-left:10px; margin-top:5px; color:#7699C4');
             terminalDisplay.appendChild(outputText);
+            animateText(outputText, output);
     
             if (command === 'help') {
                 displayHelp();
@@ -108,33 +107,49 @@
                 return `sh: Unknown command: ${command}. See 'help' for info.`;
             }
         }
-    
+
         function displayHelp() {
     const helpContainer = document.createElement('div');
-    helpContainer.setAttribute('style', 'display: flex; flex-direction: column; padding-left:10px; padding-right:10px;');
-
+    helpContainer.setAttribute('style', 'display: flex; flex-direction: column; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px;');
 
     commands.forEach((cmd) => {
         const commandElement = document.createElement('div');
-        commandElement.setAttribute('style', 'display: flex; justify-content: space-between; margin-bottom: 5px; color:#83abda');
+        commandElement.setAttribute('style', 'display: flex; justify-content: space-between; margin-bottom: 5px; color: #83abda;');
 
-        const nameElement = document.createElement('span');
-        nameElement.textContent = cmd.name;
-        nameElement.setAttribute('style', 'flex-grow: 1; text-align: left;');
+        const command = document.createElement('span');
+        command.setAttribute('style', 'flex-grow: 1; text-align: left;');
 
         const descriptionElement = document.createElement('span');
-        descriptionElement.textContent = cmd.description;
         descriptionElement.setAttribute('style', 'color: #2290a4; text-align: right;');
 
-        commandElement.appendChild(nameElement);
+        commandElement.appendChild(command);
         commandElement.appendChild(descriptionElement);
         helpContainer.appendChild(commandElement);
+
+        animateText(command, cmd.name);
+        animateText(descriptionElement, cmd.description);
     });
 
     terminalDisplay.appendChild(helpContainer);
-    }
+}
+
+        function animateText(element: HTMLElement, text: string) {
+            let index = 0;
+            const typingSpeed = 50;
+
+            function type() {
+                if (index < text.length) {
+                    element.textContent += text.charAt(index);
+                    index++;
+                    setTimeout(type, typingSpeed);
+                }
+            }
+
+            type();
+        }
     });
-    </script>
+</script>
+
     
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:ital,wght@0,400;0,700;1,400;1,700&display=swap">
     <div class="terminal">
