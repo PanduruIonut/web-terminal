@@ -12,6 +12,13 @@
         { name: 'ping', description: 'Contact Me' },
         { name: 'help', description: 'Commands list' },
     ];
+    const socials: Command[] = [
+        { name: 'GitHub', description: 'https://github.com/PanduruIonut'},
+        { name: 'Twitter', description: 'https://twitter.com/ThisIsIonut'},
+        { name: 'Linkedin', description: 'https://www.linkedin.com/in/ionut-panduru/'},
+        { name: 'E-mail', description: 'panduru.ionut@hotmail.com'}
+    ];
+
 
     document.addEventListener('DOMContentLoaded', () => {
         const input = document.querySelector('.terminal__input') as HTMLInputElement;
@@ -96,7 +103,10 @@
 
 
             if (command === 'help') {
-            displayHelp();
+            displaySidesBlock(commands)
+            }
+            if(command === 'ping') {
+            displaySidesBlock(socials)
             }
 
             input.value = '';
@@ -127,6 +137,7 @@
             case 'ls':
                 return `Projects i'm currenlty proud of:\n\nWeb app to schedule & organize teams for multiple sports https://sprint-scape.vercel.app\n\nAttempt to recreate apple scroll animate effect https://panduruionut.github.io/leap-of-faith\n\nMore @ https://github.com/PanduruIonut`;
             case 'ping':
+
             return ``
             case 'clear':
                 return '';
@@ -138,7 +149,7 @@
         }
         }
 
-        function displayHelp() {
+        function displaySidesBlock(content : Command[]) {
         const helpContainer = document.createElement('div');
         helpContainer.style.display = 'flex';
         helpContainer.style.flexDirection = 'column';
@@ -147,7 +158,7 @@
         helpContainer.style.paddingTop = '5px';
         helpContainer.style.paddingBottom = '5px';
 
-        commands.forEach((cmd) => {
+        content.forEach((cmd) => {
             const commandElement = document.createElement('div');
             commandElement.style.display = 'flex';
             commandElement.style.justifyContent = 'space-between';
@@ -167,7 +178,9 @@
             helpContainer.appendChild(commandElement);
 
             animateText(commandName, cmd.name);
-            animateText(descriptionElement, cmd.description);
+            animateText(descriptionElement, cmd.description).then(() => {
+                highlightLinks(descriptionElement, cmd.description)
+            })
         });
 
         terminalDisplay.appendChild(helpContainer);
