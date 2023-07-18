@@ -90,7 +90,10 @@
             const outputText = document.createElement('div');
             outputText.style.marginLeft = '10px';
             terminalDisplay.appendChild(outputText);
-            animateText(outputText, output);
+            animateText(outputText, output).then(() => {
+                highlightLinks(outputText, output)
+            });
+
 
             if (command === 'help') {
             displayHelp();
@@ -122,7 +125,9 @@
             case 'history':
                 return `2015 - Graduated from University of Lucian Blaga Sibiu (B.Sc. in ComputerScience)\n\n2018 - Graduated from University of Lucian Blaga Sibiu (M.Sc. in ComputerScience)\n\n2018 - Android developer @ KeepCalling\n\n2020 - Web development @ EdelCode\n\n2020 - Full stack web developer @ Graffino\n\nsince - 2021 Working as freelancer`;
             case 'ls':
-                return `Web app to schedule & organize teams for multiple sports https://sprint-scape.vercel.app\n\nAttempt to recreate apple scroll animate effect https://panduruionut.github.io/leap-of-faith\n\nMore @ https://github.com/PanduruIonut`;
+                return `Projects i'm currenlty proud of:\n\nWeb app to schedule & organize teams for multiple sports https://sprint-scape.vercel.app\n\nAttempt to recreate apple scroll animate effect https://panduruionut.github.io/leap-of-faith\n\nMore @ https://github.com/PanduruIonut`;
+            case 'ping':
+            return ``
             case 'clear':
                 return '';
             default:
@@ -168,21 +173,41 @@
         terminalDisplay.appendChild(helpContainer);
         }
 
-        function animateText(element: HTMLElement, text: string) {
-        const typingSpeed = 50;
-        let index = 0;
+        function animateText(element: HTMLElement, text: string): Promise<void> {
+            return new Promise((resolve) => {
+                const typingSpeed = 1;
+                let index = 0;
 
-        function type() {
-            if (index < text.length) {
-            element.textContent += text.charAt(index);
-            index++;
-            setTimeout(type, typingSpeed);
+                function type() {
+                if (index < text.length) {
+                    element.innerHTML += text.charAt(index);
+                    index++;
+                    setTimeout(type, typingSpeed);
+                } else {
+                    resolve();
+                }
+            }
+                type();
+            });
+        }
+        
+        function highlightLinks(element:HTMLElement, text:string) {
+            const links = text.match(/https?:\/\/[^\s]+/g);
+            if (links) {
+                links.forEach((link) => {
+                const anchorTag = document.createElement('a');
+                anchorTag.href = link;
+                anchorTag.textContent = link;
+                anchorTag.style.color = '#2498AF';
+                anchorTag.style.textDecoration = 'underline';
+                anchorTag.style.cursor = 'pointer';
+                anchorTag.style.fontWeight = 'bold';
+                element.innerHTML = element.innerHTML.replace(link, anchorTag.outerHTML);
+                });
             }
         }
-
-        type();
-        }
     });
+    
     </script>
 
     <div class="terminal">
