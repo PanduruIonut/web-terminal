@@ -1,6 +1,6 @@
-    <script>
-    import keySound  from  '../../public/sounds/keyboardTyping.wav';
-    
+<script>
+    import keySound from "../../public/sounds/keyboardTyping.wav";
+
     let typingTimeout: ReturnType<typeof setTimeout>;
     let isCommandRunning = false;
 
@@ -8,280 +8,295 @@
     clickSound.volume = 0.4;
     clickSound.playbackRate = 1.4;
     let typingSpeed = 50;
-    
+
     type Command = {
         name: string;
         description: string;
     };
 
-    let command: string = '';
+    let command: string = "";
     const commands: Command[] = [
-        { name: 'whoami', description: 'About Me' },
-        { name: 'history', description: 'Professional Background' },
-        { name: 'top', description: 'My Main Tech Stack' },
-        { name: 'ls', description: 'My Projects' },
-        { name: 'ping', description: 'Contact Me' },
-        { name: 'help', description: 'Commands list' },
+        { name: "whoami", description: "About Me" },
+        { name: "history", description: "Professional Background" },
+        { name: "top", description: "My Main Tech Stack" },
+        { name: "ls", description: "My Projects" },
+        { name: "ping", description: "Contact Me" },
+        { name: "help", description: "Commands list" },
     ];
     const socials: Command[] = [
-        { name: 'GitHub', description: 'https://github.com/PanduruIonut'},
-        { name: 'Twitter', description: 'https://twitter.com/ThisIsIonut'},
-        { name: 'Linkedin', description: 'https://www.linkedin.com/in/ionut-panduru/'},
-        { name: 'E-mail', description: 'panduru.ionut@hotmail.com'}
+        { name: "GitHub", description: "https://github.com/PanduruIonut" },
+        { name: "Twitter", description: "https://twitter.com/ThisIsIonut" },
+        {
+            name: "Linkedin",
+            description: "https://www.linkedin.com/in/ionut-panduru/",
+        },
+        { name: "E-mail", description: "panduru.ionut@hotmail.com" },
     ];
 
+    document.addEventListener("DOMContentLoaded", () => {
+        const input = document.querySelector(
+            ".terminal__input"
+        ) as HTMLInputElement;
+        const terminal = document.querySelector(".terminal") as HTMLDivElement;
+        const terminalDisplay = document.querySelector(
+            ".terminal__display"
+        ) as HTMLDivElement;
+        const terminalDisplayContainer = document.querySelector(
+            ".terminal__display-container"
+        ) as HTMLDivElement;
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const input = document.querySelector('.terminal__input') as HTMLInputElement;
-        const terminal = document.querySelector('.terminal') as HTMLDivElement;
-        const terminalDisplay = document.querySelector('.terminal__display') as HTMLDivElement;
-        const terminalDisplayContainer = document.querySelector('.terminal__display-container') as HTMLDivElement;
-
-        terminal.style.transform = 'translateY(10px)';
+        terminal.style.transform = "translateY(10px)";
         setTimeout(() => {
-        terminal.style.transform = 'translateY(0)';
+            terminal.style.transform = "translateY(0)";
         }, 1000);
 
-        input.addEventListener('keyup', (event) => handleKeyUp(event));
-        terminal.addEventListener('click', () => {
-        input.focus();
+        input.addEventListener("keyup", (event) => handleKeyUp(event));
+        terminal.addEventListener("click", () => {
+            input.focus();
         });
 
-        document.addEventListener('keydown', (event) => {
-            if (event.ctrlKey && event.key === 'c') {
+        document.addEventListener("keydown", (event) => {
+            if (event.ctrlKey && event.key === "c") {
                 stopTyping();
             }
-            if (event.metaKey && event.key === 'k') {
+            if (event.metaKey && event.key === "k") {
                 stopTyping();
-            } else if (event.ctrlKey && event.key === 'l') {
-                stopTyping()
-            } else if (event.shiftKey && event.key ==='>'){
-                if(typingSpeed < 10) return;
+            } else if (event.ctrlKey && event.key === "l") {
+                stopTyping();
+            } else if (event.shiftKey && event.key === ">") {
+                if (typingSpeed < 10) return;
                 typingSpeed -= 10;
                 clickSound.playbackRate += 0.1;
-            } else if (event.shiftKey && event.key === '<'){
-                if(typingSpeed > 100) return;
+            } else if (event.shiftKey && event.key === "<") {
+                if (typingSpeed > 100) return;
                 typingSpeed += 10;
-                if(clickSound.playbackRate < 1.3) return;
+                if (clickSound.playbackRate < 1.3) return;
                 clickSound.playbackRate -= 0.1;
-            } else if (event.shiftKey && event.key === '>'){
-                if(typingSpeed < 150) return;
+            } else if (event.shiftKey && event.key === ">") {
+                if (typingSpeed < 150) return;
                 typingSpeed -= 10;
-                if(clickSound.playbackRate > 2.1) return;
+                if (clickSound.playbackRate > 2.1) return;
                 clickSound.playbackRate += 0.1;
-            } else if (event.shiftKey && event.key === '<'){
-                if(typingSpeed > 100) return;
+            } else if (event.shiftKey && event.key === "<") {
+                if (typingSpeed > 100) return;
                 typingSpeed += 10;
-                if(clickSound.playbackRate < 1.3) return;
+                if (clickSound.playbackRate < 1.3) return;
                 clickSound.playbackRate += 0.1;
             }
         });
 
         function handleKeyUp(event: KeyboardEvent) {
-        if (event.key === 'Enter' || event.keyCode === 13) {
-            if (isCommandRunning) {
-                return;
-            }
-            isCommandRunning = true;
-            input.value = '';
-            const output = handleCommand(command);
+            if (event.key === "Enter" || event.keyCode === 13) {
+                if (isCommandRunning) {
+                    return;
+                }
+                isCommandRunning = true;
+                input.value = "";
+                const output = handleCommand(command);
 
-            const outputContainer = document.createElement('div');
-            outputContainer.classList.add('output-container');
-            outputContainer.style.marginTop = '10px';
-            outputContainer.style.marginBottom = '10px';
+                const outputContainer = document.createElement("div");
+                outputContainer.classList.add("output-container");
+                outputContainer.style.marginTop = "10px";
+                outputContainer.style.marginBottom = "10px";
 
-            const promptSpan1 = document.createElement('span');
-            promptSpan1.classList.add('terminal__input_container-promt-2');
-            promptSpan1.textContent = 'λ';
-            promptSpan1.style.color = '#A56C4C';
-            promptSpan1.style.marginLeft = '10px';
-            promptSpan1.style.marginBottom = '25px';
+                const promptSpan1 = document.createElement("span");
+                promptSpan1.classList.add("terminal__input_container-promt-2");
+                promptSpan1.textContent = "λ";
+                promptSpan1.style.color = "#A56C4C";
+                promptSpan1.style.marginLeft = "10px";
+                promptSpan1.style.marginBottom = "25px";
 
-            const promptSpan2 = document.createElement('span');
-            promptSpan2.classList.add('terminal__input_container-promt-2');
-            promptSpan2.textContent = '~';
-            promptSpan2.style.color = '#AF91E8';
-            promptSpan2.style.marginLeft = '5px';
-            promptSpan2.style.marginBottom = '25px';
+                const promptSpan2 = document.createElement("span");
+                promptSpan2.classList.add("terminal__input_container-promt-2");
+                promptSpan2.textContent = "~";
+                promptSpan2.style.color = "#AF91E8";
+                promptSpan2.style.marginLeft = "5px";
+                promptSpan2.style.marginBottom = "25px";
 
-            const promptSpan3 = document.createElement('span');
-            promptSpan3.classList.add('terminal__input_container-promt-3');
-            promptSpan3.textContent = '>>';
-            promptSpan3.style.color = '#2290A4';
-            promptSpan3.style.marginBottom = '25px';
-            promptSpan3.style.marginLeft = '5px';
-            promptSpan3.style.fontSize = '12px';
+                const promptSpan3 = document.createElement("span");
+                promptSpan3.classList.add("terminal__input_container-promt-3");
+                promptSpan3.textContent = ">>";
+                promptSpan3.style.color = "#2290A4";
+                promptSpan3.style.marginBottom = "25px";
+                promptSpan3.style.marginLeft = "5px";
+                promptSpan3.style.fontSize = "12px";
 
-            const commandInput = document.createElement('span');
-            commandInput.classList.add('command-input');
-            commandInput.style.color = '#7699C4';
-            commandInput.style.marginLeft = '10px';
-            commandInput.textContent = command;
+                const commandInput = document.createElement("span");
+                commandInput.classList.add("command-input");
+                commandInput.style.color = "#7699C4";
+                commandInput.style.marginLeft = "10px";
+                commandInput.textContent = command;
 
-            outputContainer.appendChild(promptSpan1);
-            outputContainer.appendChild(promptSpan2);
-            outputContainer.appendChild(promptSpan3);
-            outputContainer.appendChild(commandInput);
+                outputContainer.appendChild(promptSpan1);
+                outputContainer.appendChild(promptSpan2);
+                outputContainer.appendChild(promptSpan3);
+                outputContainer.appendChild(commandInput);
 
-            if (command === 'clear') return;
-            if(command === 'mute') {
-                clickSound.muted = !clickSound.muted;
-                isCommandRunning = false;
-                return;
-            }
-            terminalDisplay.appendChild(outputContainer);
+                if (command === "clear") return;
+                if (command === "mute") {
+                    clickSound.muted = !clickSound.muted;
+                    isCommandRunning = false;
+                    return;
+                }
+                terminalDisplay.appendChild(outputContainer);
 
+                const outputText = document.createElement("div");
+                outputText.style.marginLeft = "10px";
+                terminalDisplay.appendChild(outputText);
+                animateText(outputText, output).then(() => {
+                    highlightLinks(outputText, output);
+                    isCommandRunning = false;
+                });
 
-            const outputText = document.createElement('div');
-            outputText.style.marginLeft = '10px';
-            terminalDisplay.appendChild(outputText);
-            animateText(outputText, output).then(() => {
-                highlightLinks(outputText, output)
-                isCommandRunning = false;
-            });
+                if (command === "help") {
+                    displaySidesBlock(commands);
+                }
+                if (command === "ping") {
+                    displaySidesBlock(socials);
+                }
 
+                input.value = "";
+                input.focus();
 
-            if (command === 'help') {
-            displaySidesBlock(commands)
-            }
-            if(command === 'ping') {
-            displaySidesBlock(socials)
-            }
-
-            input.value = '';
-            input.focus();
-
-            command = '';
-            terminalDisplayContainer.scrollTop = terminalDisplayContainer.scrollHeight;
-        } else {
-            command = input.value.trim();
-            if (commands.find((cmd) => cmd.name === command)) {
-                input.classList.add('valid-command');
+                command = "";
+                terminalDisplayContainer.scrollTop =
+                    terminalDisplayContainer.scrollHeight;
             } else {
-                input.classList.remove('valid-command');
+                command = input.value.trim();
+                if (commands.find((cmd) => cmd.name === command)) {
+                    input.classList.add("valid-command");
+                } else {
+                    input.classList.remove("valid-command");
+                }
             }
         }
-    }
 
         function handleCommand(command: string): string {
-        const selectedCommand = commands.find((cmd) => cmd.name === command);
-        if (selectedCommand) {
-            switch (selectedCommand.name) {
-            case 'help':
-                return '';
-            case 'whoami':
-                return `My name is Panduru Ionut, im 26 and I'm currently a fullstack web developer.\n\nI love coding in Javascript, Typescript, and have worked with frameworks like VueJS, ReactJS, NodeJs & Laravel.\n\nI'm currently trying out new technolgies like NextJS.`;
-            case 'history':
-                return `2015 - Graduated from University of Lucian Blaga Sibiu (B.Sc. in ComputerScience)\n\n2018 - Graduated from University of Lucian Blaga Sibiu (M.Sc. in ComputerScience)\n\n2018 - Android developer @ KeepCalling\n\n2020 - Web development @ EdelCode\n\n2020 - Full stack web developer @ Graffino\n\nsince - 2021 Working as freelancer`;
-            case 'ls':
-                return `Projects i'm currenlty proud of:\n\nWeb app to schedule & organize teams for multiple sports https://sprint-scape.vercel.app\n\nAttempt to recreate apple scroll animation effect https://panduruionut.github.io/leap-of-faith\n\nMore @ https://github.com/PanduruIonut`;
-            case 'ping':
-            return ``
-            case 'top':
-                return `My current main tech stack is VueJs with Typescript for fronted & Laravel for backend.\n\nI'm currently trying out NextJS with Typescript & TailwindCSS.\n\nI'm also trying to learn more about AWS & Docker.`;
-            case 'clear':
-                return '';
-            case 'mute':
-                return '';
-            default:
+            const selectedCommand = commands.find(
+                (cmd) => cmd.name === command
+            );
+            if (selectedCommand) {
+                switch (selectedCommand.name) {
+                    case "help":
+                        return "";
+                    case "whoami":
+                        return `My name is Panduru Ionut, im 26 and I'm currently a fullstack web developer.\n\nI love coding in Javascript, Typescript, and have worked with frameworks like VueJS, ReactJS, NodeJs & Laravel.\n\nI'm currently trying out new technolgies like NextJS.`;
+                    case "history":
+                        return `2015 - Graduated from University of Lucian Blaga Sibiu (B.Sc. in ComputerScience)\n\n2018 - Graduated from University of Lucian Blaga Sibiu (M.Sc. in ComputerScience)\n\n2018 - Android developer @ KeepCalling\n\n2020 - Web development @ EdelCode\n\n2020 - Full stack web developer @ Graffino\n\nsince - 2021 Working as freelancer`;
+                    case "ls":
+                        return `Projects i'm currenlty proud of:\n\nWeb app to schedule & organize teams for multiple sports https://sprint-scape.vercel.app\n\nAttempt to recreate apple scroll animation effect https://panduruionut.github.io/leap-of-faith\n\nMore @ https://github.com/PanduruIonut`;
+                    case "ping":
+                        return ``;
+                    case "top":
+                        return `My current main tech stack is VueJs with Typescript for fronted & Laravel for backend.\n\nI'm currently trying out NextJS with Typescript & TailwindCSS.\n\nI'm also trying to learn more about AWS & Docker.`;
+                    case "clear":
+                        return "";
+                    case "mute":
+                        return "";
+                    default:
+                        return `sh: Unknown command: ${command}. See 'help' for info.`;
+                }
+            } else {
                 return `sh: Unknown command: ${command}. See 'help' for info.`;
             }
-        } else {
-            return `sh: Unknown command: ${command}. See 'help' for info.`;
-        }
         }
 
-        function displaySidesBlock(content : Command[]) {
-        const helpContainer = document.createElement('div');
-        helpContainer.style.display = 'flex';
-        helpContainer.style.flexDirection = 'column';
-        helpContainer.style.paddingLeft = '10px';
-        helpContainer.style.paddingRight = '10px';
-        helpContainer.style.paddingTop = '5px';
-        helpContainer.style.paddingBottom = '5px';
+        function displaySidesBlock(content: Command[]) {
+            const helpContainer = document.createElement("div");
+            helpContainer.style.display = "flex";
+            helpContainer.style.flexDirection = "column";
+            helpContainer.style.paddingLeft = "10px";
+            helpContainer.style.paddingRight = "10px";
+            helpContainer.style.paddingTop = "5px";
+            helpContainer.style.paddingBottom = "5px";
 
-        content.forEach((cmd) => {
-            const commandElement = document.createElement('div');
-            commandElement.style.display = 'flex';
-            commandElement.style.justifyContent = 'space-between';
-            commandElement.style.marginBottom = '5px';
-            commandElement.style.color = '#83abda';
+            content.forEach((cmd) => {
+                const commandElement = document.createElement("div");
+                commandElement.style.display = "flex";
+                commandElement.style.justifyContent = "space-between";
+                commandElement.style.marginBottom = "5px";
+                commandElement.style.color = "#83abda";
 
-            const commandName = document.createElement('span');
-            commandName.style.flexGrow = '1';
-            commandName.style.textAlign = 'left';
+                const commandName = document.createElement("span");
+                commandName.style.flexGrow = "1";
+                commandName.style.textAlign = "left";
 
-            const descriptionElement = document.createElement('span');
-            descriptionElement.style.color = '#2290a4';
-            descriptionElement.style.textAlign = 'right';
+                const descriptionElement = document.createElement("span");
+                descriptionElement.style.color = "#2290a4";
+                descriptionElement.style.textAlign = "right";
 
-            commandElement.appendChild(commandName);
-            commandElement.appendChild(descriptionElement);
-            helpContainer.appendChild(commandElement);
+                commandElement.appendChild(commandName);
+                commandElement.appendChild(descriptionElement);
+                helpContainer.appendChild(commandElement);
 
-            animateText(commandName, cmd.name);
-            animateText(descriptionElement, cmd.description).then(() => {
-                highlightLinks(descriptionElement, cmd.description)
-            })
-        });
-
-        terminalDisplay.appendChild(helpContainer);
-        }
-
-        function animateText(element: HTMLElement, text: string): Promise<void> {
-            clickSound.play().catch((error) => {
-                console.error('Audio playback error:', error);
+                animateText(commandName, cmd.name);
+                animateText(descriptionElement, cmd.description).then(() => {
+                    highlightLinks(descriptionElement, cmd.description);
+                });
             });
-            
+
+            terminalDisplay.appendChild(helpContainer);
+        }
+
+        function animateText(
+            element: HTMLElement,
+            text: string
+        ): Promise<void> {
+            clickSound.play().catch((error) => {
+                console.error("Audio playback error:", error);
+            });
+
             return new Promise((resolve) => {
                 let index = 0;
 
                 function type() {
-                if (index < text.length) {
-                    element.innerHTML += text.charAt(index);
-                    index++;
+                    if (index < text.length) {
+                        element.innerHTML += text.charAt(index);
+                        index++;
 
-                    terminalDisplayContainer.scrollTop = terminalDisplayContainer.scrollHeight;
+                        terminalDisplayContainer.scrollTop =
+                            terminalDisplayContainer.scrollHeight;
 
-                    if (index === text.length) {
-                    clickSound.pause();
-                    resolve();
-                    } else {
-                    setTimeout(type, typingSpeed);
+                        if (index === text.length) {
+                            clickSound.pause();
+                            resolve();
+                        } else {
+                            setTimeout(type, typingSpeed);
+                        }
                     }
                 }
-            }
-            type();
-        });
-    }
+                type();
+            });
+        }
 
-        function highlightLinks(element:HTMLElement, text:string) {
+        function highlightLinks(element: HTMLElement, text: string) {
             const links = text.match(/https?:\/\/[^\s]+/g);
             if (links) {
                 links.forEach((link) => {
-                const anchorTag = document.createElement('a');
-                anchorTag.href = link;
-                anchorTag.textContent = link;
-                anchorTag.style.color = '#2498AF';
-                anchorTag.style.textDecoration = 'underline';
-                anchorTag.style.cursor = 'pointer';
-                anchorTag.style.fontWeight = 'bold';
-                element.innerHTML = element.innerHTML.replace(link, anchorTag.outerHTML);
+                    const anchorTag = document.createElement("a");
+                    anchorTag.href = link;
+                    anchorTag.textContent = link;
+                    anchorTag.style.color = "#2498AF";
+                    anchorTag.style.textDecoration = "underline";
+                    anchorTag.style.cursor = "pointer";
+                    anchorTag.style.fontWeight = "bold";
+                    element.innerHTML = element.innerHTML.replace(
+                        link,
+                        anchorTag.outerHTML
+                    );
                 });
             }
         }
         function stopTyping() {
             clearTimeout(typingTimeout);
             clickSound.pause();
-            terminalDisplay.innerHTML = '';
+            terminalDisplay.innerHTML = "";
             isCommandRunning = false;
         }
     });
+</script>
 
-    </script>
-
-    <div class="terminal">
+<div class="terminal">
     <div class="terminal__title-container">
         <div class="close-button"></div>
         <div class="hide-button"></div>
@@ -290,20 +305,25 @@
     </div>
     <div class="terminal__content">
         <div class="terminal__display-container">
-        <div class="terminal__display"></div>
+            <div class="terminal__display"></div>
         </div>
         <div class="terminal__input_container">
-        <div class="terminal___input_container-prompt">
-            <span class="terminal__input_container-promt-1">λ</span>
-            <span class="terminal__input_container-promt-2">~</span>
-            <span class="terminal__input_container-promt-3">&gt;&gt;</span>
-            <input class="terminal__input" id="input-field" autofocus spellcheck="false" />
-        </div>
+            <div class="terminal___input_container-prompt">
+                <span class="terminal__input_container-promt-1">λ</span>
+                <span class="terminal__input_container-promt-2">~</span>
+                <span class="terminal__input_container-promt-3">&gt;&gt;</span>
+                <input
+                    class="terminal__input"
+                    id="input-field"
+                    autofocus
+                    spellcheck="false"
+                />
+            </div>
         </div>
     </div>
-    </div>
+</div>
 
-    <style>
+<style>
     .terminal__content {
         display: flex;
         flex-direction: column;
@@ -335,7 +355,7 @@
     .terminal__display-container {
         flex: 1;
         overflow: auto;
-        font-family: 'Consolas', 'Menlo', 'Fira Code', monospace;
+        font-family: "Consolas", "Menlo", "Fira Code", monospace;
     }
 
     .terminal__display {
@@ -349,12 +369,12 @@
         margin: 0 auto;
         bottom: 0%;
         width: 90%;
-        background-color: rgba(0, 0, 0, 0.0);
+        background-color: rgba(0, 0, 0, 0);
         border: none;
         color: #83abda;
         margin-bottom: 25px;
         font-size: 14px;
-        font-family: 'Consolas', 'Menlo', 'Fira Code', monospace;
+        font-family: "Consolas", "Menlo", "Fira Code", monospace;
     }
 
     .terminal__input:focus {
@@ -416,17 +436,17 @@
 
     @keyframes moveTerminal {
         0% {
-        transform: translateY(0);
+            transform: translateY(0);
         }
         50% {
-        transform: translateY(10px);
+            transform: translateY(10px);
         }
         100% {
-        transform: translateY(0);
+            transform: translateY(0);
         }
     }
 
     .terminal {
         animation: moveTerminal 1s ease-in-out;
     }
-    </style>
+</style>
