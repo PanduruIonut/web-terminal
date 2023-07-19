@@ -298,9 +298,11 @@
 
 <div class="terminal">
     <div class="terminal__title-container">
-        <div class="close-button"></div>
-        <div class="hide-button"></div>
-        <div class="resize-button"></div>
+        <div class="terminal__buttons">
+            <div class="close-button"></div>
+            <div class="hide-button"></div>
+            <div class="resize-button"></div>
+        </div>
         <div class="terminal__title">ionut@MacBook-Air-2:~</div>
     </div>
     <div class="terminal__content">
@@ -448,5 +450,10 @@
 
     .terminal {
         animation: moveTerminal 1s ease-in-out;
+    }
+    .terminal__buttons {
+        display: flex;
+        position: fixed;
+        left: 0;
     }
 </style>
