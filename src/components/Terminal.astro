@@ -3,7 +3,7 @@
 
     let typingTimeout: ReturnType<typeof setTimeout>;
     let isCommandRunning = false;
-    let skipKeys = ['>', '<'];
+    let skipKeys = [">", "<"];
 
     const clickSound = new Audio(keySound);
     clickSound.volume = 0.4;
@@ -49,6 +49,7 @@
         terminal.style.transform = "translateY(10px)";
         setTimeout(() => {
             terminal.style.transform = "translateY(0)";
+            displayWelcomeText(terminalDisplay);
         }, 1000);
 
         input.addEventListener("keyup", (event) => handleKeyUp(event));
@@ -88,7 +89,7 @@
                 clickSound.playbackRate += 0.1;
                 preventTyping(event);
             }
-            if(event.key === "Escape") {
+            if (event.key === "Escape") {
                 input.value = "";
             }
         });
@@ -111,7 +112,6 @@
                 promptSpan1.classList.add("terminal__input_container-promt-2");
                 promptSpan1.textContent = "λ";
                 promptSpan1.style.color = "#ff9e64";
-                promptSpan1.style.marginLeft = "10px";
                 promptSpan1.style.marginBottom = "25px";
 
                 const promptSpan2 = document.createElement("span");
@@ -149,7 +149,6 @@
                 terminalDisplay.appendChild(outputContainer);
 
                 const outputText = document.createElement("div");
-                outputText.style.marginLeft = "10px";
                 terminalDisplay.appendChild(outputText);
                 animateText(outputText, output).then(() => {
                     highlightLinks(outputText, output);
@@ -307,6 +306,14 @@
                 return;
             }
         }
+        function displayWelcomeText(terminalDisplay:HTMLDivElement) {
+            const welcomeText = `Welcome to my personal website!\n\nType "help" to see the list of available commands.\n\nFeel free to explore!\n\n`;
+            isCommandRunning = true;
+            animateText(terminalDisplay, welcomeText).then(() => {
+                input.focus();
+                isCommandRunning = false;
+            });
+        }
     });
 </script>
 
@@ -372,6 +379,7 @@
         flex: 1;
         overflow: auto;
         font-family: "Consolas", "Menlo", "Fira Code", monospace;
+        margin-left:10px;
     }
 
     .terminal__display {

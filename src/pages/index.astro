@@ -32,7 +32,6 @@ import Terminal from "../components/Terminal.astro";
 	function highlightCommands(hint: string, hintElement: Element) {
 		const commands = hint.match(/\[(.*?)\]/g);
 		if (commands) {
-			console.log(commands);
 			const cmd1 = document.createElement("span");
 			const cmd2 = document.createElement("span");
 			cmd1.textContent = commands[0];
