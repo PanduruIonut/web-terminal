@@ -3,6 +3,7 @@
 
     let typingTimeout: ReturnType<typeof setTimeout>;
     let isCommandRunning = false;
+    let skipKeys = ['>', '<'];
 
     const clickSound = new Audio(keySound);
     clickSound.volume = 0.4;
@@ -67,21 +68,28 @@
                 if (typingSpeed < 10) return;
                 typingSpeed -= 10;
                 clickSound.playbackRate += 0.1;
+                preventTyping(event);
             } else if (event.shiftKey && event.key === "<") {
                 if (typingSpeed > 100) return;
                 typingSpeed += 10;
                 if (clickSound.playbackRate < 1.3) return;
                 clickSound.playbackRate -= 0.1;
+                preventTyping(event);
             } else if (event.shiftKey && event.key === ">") {
                 if (typingSpeed < 150) return;
                 typingSpeed -= 10;
                 if (clickSound.playbackRate > 2.1) return;
                 clickSound.playbackRate += 0.1;
+                preventTyping(event);
             } else if (event.shiftKey && event.key === "<") {
                 if (typingSpeed > 100) return;
                 typingSpeed += 10;
                 if (clickSound.playbackRate < 1.3) return;
                 clickSound.playbackRate += 0.1;
+                preventTyping(event);
+            }
+            if(event.key === "Escape") {
+                input.value = "";
             }
         });
 
@@ -102,7 +110,7 @@
                 const promptSpan1 = document.createElement("span");
                 promptSpan1.classList.add("terminal__input_container-promt-2");
                 promptSpan1.textContent = "λ";
-                promptSpan1.style.color = "#A56C4C";
+                promptSpan1.style.color = "#ff9e64";
                 promptSpan1.style.marginLeft = "10px";
                 promptSpan1.style.marginBottom = "25px";
 
@@ -116,7 +124,7 @@
                 const promptSpan3 = document.createElement("span");
                 promptSpan3.classList.add("terminal__input_container-promt-3");
                 promptSpan3.textContent = ">>";
-                promptSpan3.style.color = "#2290A4";
+                promptSpan3.style.color = "#2ac3de";
                 promptSpan3.style.marginBottom = "25px";
                 promptSpan3.style.marginLeft = "5px";
                 promptSpan3.style.fontSize = "12px";
@@ -293,6 +301,12 @@
             terminalDisplay.innerHTML = "";
             isCommandRunning = false;
         }
+        function preventTyping(event: KeyboardEvent) {
+            if (skipKeys.includes(event.key)) {
+                event.preventDefault();
+                return;
+            }
+        }
     });
 </script>
 
@@ -384,7 +398,7 @@
     }
 
     .terminal__input_container-promt-1 {
-        color: #a56c4c;
+        color: #ff9e64;
         margin-left: 20px;
         margin-bottom: 25px;
     }
@@ -396,7 +410,7 @@
     }
 
     .terminal__input_container-promt-3 {
-        color: #2290a4;
+        color: #2ac3de;
         margin-bottom: 25px;
         margin-left: 5px;
         font-size: 12px;

@@ -11,7 +11,7 @@ import Terminal from "../components/Terminal.astro";
 		"Press [cmd] & [m] to toggle sounds",
 		"Press [ctrl] & [c] to cancel the current command",
 		"Press [ctrl] & [l] to clear the terminal",
-		"Type help to see all commands",
+		"Press [cmd] & [esc] to clear the input",
 		"Type mute to mute the typing sound",
 	];
 	let hintIndex = 0;
@@ -20,6 +20,7 @@ import Terminal from "../components/Terminal.astro";
 		const hintElement = document.querySelector(".hints");
 		if (hintElement) {
 			hintElement.innerHTML = hints[hintIndex] ?? "";
+			highlightCommands(hints[hintIndex] ?? '', hintElement);
 			hintElement.setAttribute("style", "opacity: 0.7;");
 			setTimeout(() => {
 				hintElement.setAttribute("style", "opacity: 0;");
@@ -28,9 +29,32 @@ import Terminal from "../components/Terminal.astro";
 		}
 	};
 
+	function highlightCommands(hint:string, hintElement:Element) {
+		const commands = hint.match(/\[(.*?)\]/g);
+		if (commands) {
+			console.log(commands);
+			const cmd1 = document.createElement("span");
+			const cmd2 = document.createElement("span");
+			cmd1.textContent = commands[0];
+			cmd2.textContent = commands[1] ? commands[1] : "";
+			cmd1.setAttribute("style", "color:#ff9e64;");
+			cmd2.setAttribute("style", "color:#2ac3de;");
+
+			hintElement.innerHTML = hintElement.innerHTML.replace(
+				commands[0],
+				cmd1.outerHTML
+			);
+
+			hintElement.innerHTML = hintElement.innerHTML.replace(
+				commands[1],
+				cmd2.outerHTML
+			);
+		}
+	}
+
 	displayNextHint();
 
-	setInterval(displayNextHint, 3000);
+	setInterval(displayNextHint, 3500);
 </script>
 
 <Layout title="shell.me">
