@@ -102,7 +102,7 @@
                     typingSpeed = 1;
                     return;
                 }
-                if(input.value === "") return;
+                if (input.value === "") return;
                 isCommandRunning = true;
                 input.value = "";
                 const output = handleCommand(command);
@@ -312,7 +312,7 @@
                 return;
             }
         }
-        function displayWelcomeText(terminalDisplay:HTMLDivElement) {
+        function displayWelcomeText(terminalDisplay: HTMLDivElement) {
             const welcomeText = `Welcome to my personal website!\n\nType "help" to see the list of available commands.\n\nFeel free to explore!\n\n`;
             isCommandRunning = true;
             animateText(terminalDisplay, welcomeText).then(() => {
@@ -385,7 +385,8 @@
         flex: 1;
         overflow: auto;
         font-family: "Consolas", "Menlo", "Fira Code", monospace;
-        margin-left:10px;
+        margin-left: 10px;
+        margin-top: 20px;
     }
 
     .terminal__display {
