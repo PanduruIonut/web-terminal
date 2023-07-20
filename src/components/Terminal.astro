@@ -239,6 +239,7 @@
                 animateText(commandName, cmd.name);
                 animateText(descriptionElement, cmd.description).then(() => {
                     highlightLinks(descriptionElement, cmd.description);
+                    isCommandRunning = false;
                 });
             });
 
