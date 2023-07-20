@@ -1,23 +1,58 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Terminal from '../components/Terminal.astro';
+import Layout from "../layouts/Layout.astro";
+import Terminal from "../components/Terminal.astro";
 ---
+
+<script>
+	const hints = [
+		"Press [cmd] & [>] to speed up typing",
+		"Press [cmd] & [<] to slow down typing",
+		"Press [cmd] & [k] to clear the terminal",
+		"Press [cmd] & [m] to toggle sounds",
+		"Press [ctrl] & [c] to cancel the current command",
+		"Press [ctrl] & [l] to clear the terminal",
+		"Type help to see all commands",
+		"Type mute to mute the typing sound",
+	];
+	let hintIndex = 0;
+
+	const displayNextHint = () => {
+		const hintElement = document.querySelector(".hints");
+		if (hintElement) {
+			hintElement.innerHTML = hints[hintIndex] ?? "";
+			hintElement.setAttribute("style", "opacity: 0.7;");
+			setTimeout(() => {
+				hintElement.setAttribute("style", "opacity: 0;");
+			}, 2000);
+			hintIndex = (hintIndex + 1) % hints.length;
+		}
+	};
+
+	displayNextHint();
+
+	setInterval(displayNextHint, 3000);
+</script>
 
 <Layout title="shell.me">
 	<main>
-		<Terminal/>
+		<div class="content-container">
+			<Terminal />
+			<div class="hints"></div>
+		</div>
 	</main>
 </Layout>
 
 <style>
-	html{
-		background-color: #1A1B26;
+	html {
+		background-color: #1a1b26;
 	}
-	body{
+
+	body {
 		margin: 0;
 		padding: 0;
 		overflow: auto;
 	}
+
 	main {
 		width: 100vw;
 		height: 100vh;
@@ -25,4 +60,30 @@ import Terminal from '../components/Terminal.astro';
 		justify-content: center;
 		align-items: center;
 	}
-	</style>
+
+	main {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 100vh;
+		/* margin-top:30px; */
+	}
+
+	.content-container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.hints {
+		color: white;
+		opacity: 0.7;
+		font-size: 0.9rem;
+		margin-top: 1rem;
+		text-align: center;
+		font-family: "Fira Code", monospace;
+		height: 10px;
+		transition: opacity 2s;
+		margin-top: 40px;
+	}
+</style>
