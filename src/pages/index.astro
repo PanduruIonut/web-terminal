@@ -20,7 +20,7 @@ import Terminal from "../components/Terminal.astro";
 		const hintElement = document.querySelector(".hints");
 		if (hintElement) {
 			hintElement.innerHTML = hints[hintIndex] ?? "";
-			highlightCommands(hints[hintIndex] ?? '', hintElement);
+			highlightCommands(hints[hintIndex] ?? "", hintElement);
 			hintElement.setAttribute("style", "opacity: 0.7;");
 			setTimeout(() => {
 				hintElement.setAttribute("style", "opacity: 0;");
@@ -29,7 +29,7 @@ import Terminal from "../components/Terminal.astro";
 		}
 	};
 
-	function highlightCommands(hint:string, hintElement:Element) {
+	function highlightCommands(hint: string, hintElement: Element) {
 		const commands = hint.match(/\[(.*?)\]/g);
 		if (commands) {
 			console.log(commands);
@@ -40,15 +40,20 @@ import Terminal from "../components/Terminal.astro";
 			cmd1.setAttribute("style", "color:#ff9e64;");
 			cmd2.setAttribute("style", "color:#2ac3de;");
 
-			hintElement.innerHTML = hintElement.innerHTML.replace(
-				commands[0],
-				cmd1.outerHTML
-			);
-
-			hintElement.innerHTML = hintElement.innerHTML.replace(
-				commands[1],
-				cmd2.outerHTML
-			);
+			let highlightedHint = hint;
+			if (commands) {
+				highlightedHint = highlightedHint.replace(
+					commands[0],
+					cmd1.outerHTML
+				);
+				if (commands[1]) {
+					highlightedHint = highlightedHint.replace(
+						commands[1],
+						cmd2.outerHTML
+					);
+				}
+			}
+			hintElement.innerHTML = highlightedHint;
 		}
 	}
 
