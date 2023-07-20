@@ -59,6 +59,9 @@
         });
 
         document.addEventListener("keydown", (event) => {
+            if(event.shiftKey && event.key === "M" || event.ctrlKey && event.key === "M"){
+                clickSound.muted = !clickSound.muted;
+            }
             if (event.ctrlKey && event.key === "c") {
                 stopTyping();
             }
