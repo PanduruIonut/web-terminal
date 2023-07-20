@@ -98,6 +98,7 @@
         function handleKeyUp(event: KeyboardEvent) {
             if (event.key === "Enter") {
                 if (isCommandRunning) {
+                    if (previousTypingSpeed !== typingSpeed) return;
                     previousTypingSpeed = typingSpeed;
                     typingSpeed = 1;
                     return;
@@ -174,6 +175,7 @@
                     terminalDisplayContainer.scrollHeight;
             } else {
                 command = input.value.trim();
+                command = command.toLocaleLowerCase();
                 if (commands.find((cmd) => cmd.name === command)) {
                     input.classList.add("valid-command");
                 } else {
