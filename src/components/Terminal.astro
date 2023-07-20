@@ -9,6 +9,7 @@
     clickSound.volume = 0.4;
     clickSound.playbackRate = 1.4;
     let typingSpeed = 50;
+    let previousTypingSpeed = typingSpeed;
 
     type Command = {
         name: string;
@@ -95,10 +96,13 @@
         });
 
         function handleKeyUp(event: KeyboardEvent) {
-            if (event.key === "Enter" || event.keyCode === 13) {
+            if (event.key === "Enter") {
                 if (isCommandRunning) {
+                    previousTypingSpeed = typingSpeed;
+                    typingSpeed = 1;
                     return;
                 }
+                if(input.value === "") return;
                 isCommandRunning = true;
                 input.value = "";
                 const output = handleCommand(command);
@@ -267,6 +271,7 @@
 
                         if (index === text.length) {
                             clickSound.pause();
+                            typingSpeed = previousTypingSpeed;
                             resolve();
                         } else {
                             setTimeout(type, typingSpeed);
