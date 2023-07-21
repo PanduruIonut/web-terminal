@@ -14,11 +14,12 @@
     type Command = {
         name: string;
         description: string;
+        text?: string;
     };
 
     let command: string = "";
     const commands: Command[] = [
-        { name: "whoami", description: "About Me" },
+        { name: "whoami", description: "About Me",},
         { name: "history", description: "Professional Background" },
         { name: "top", description: "My Main Tech Stack" },
         { name: "ls", description: "My Projects" },
@@ -26,11 +27,11 @@
         { name: "help", description: "Commands list" },
     ];
     const socials: Command[] = [
-        { name: "GitHub", description: "https://github.com/PanduruIonut" },
-        { name: "Twitter", description: "https://twitter.com/ThisIsIonut" },
+        { name: "GitHub", description: "https://github.com/PanduruIonut", text: 'PanduruIonut' },
+        { name: "Twitter", description: "https://twitter.com/ThisIsIonut", text: 'ThisIsIonut'},
         {
             name: "Linkedin",
-            description: "https://www.linkedin.com/in/ionut-panduru/",
+            description: "https://www.linkedin.com/in/ionut-panduru/", text: 'Ionut-Panduru'
         },
         { name: "E-mail", description: "panduru.ionut@hotmail.com" },
     ];
@@ -196,9 +197,9 @@
                     case "help":
                         return "";
                     case "whoami":
-                        return `My name is Panduru Ionut, im 26 and I'm currently a fullstack web developer.\n\nI love coding in Javascript, Typescript, and have worked with frameworks like VueJS, ReactJS, NodeJs & Laravel.\n\nI'm currently trying out new technolgies like NextJS.`;
+                        return `My name is Panduru Ionut\n\nI'm 26 and I'm currently a fullstack web developer.\n\nI love coding and CTF's.`;
                     case "history":
-                        return `2015 - Graduated from University of Lucian Blaga Sibiu (B.Sc. in ComputerScience)\n\n2018 - Graduated from University of Lucian Blaga Sibiu (M.Sc. in ComputerScience)\n\n2018 - Android developer @ KeepCalling\n\n2020 - Web development @ EdelCode\n\n2020 - Full stack web developer @ Graffino\n\nsince - 2021 Working as freelancer`;
+                        return `2018 - Graduated from University of Lucian Blaga Sibiu (B.Sc. in ComputerScience)\n\n2018 - Android Developer @ KeepCalling\n\n2020 - Web Developer @ EdelCode\n\n2020 - Graduated from University of Lucian Blaga Sibiu (M.Sc. in ComputerScience)\n\n2020 - Full Stack Web Developer @ Graffino\n\n2022 - Now Working as Freelancer`;
                     case "ls":
                         return `Projects i'm currenlty proud of:\n\nWeb app to schedule & organize teams for multiple sports https://sprint-scape.vercel.app\n\nAttempt to recreate apple scroll animation effect https://panduruionut.github.io/leap-of-faith\n\nMore @ https://github.com/PanduruIonut`;
                     case "ping":
@@ -289,6 +290,7 @@
 
         function highlightLinks(element: HTMLElement, text: string) {
             const links = text.match(/https?:\/\/[^\s]+/g);
+            const mail = text.match(/\S+@\S+\.\S+/g);
             if (links) {
                 links.forEach((link) => {
                     const anchorTag = document.createElement("a");
@@ -298,8 +300,27 @@
                     anchorTag.style.textDecoration = "underline";
                     anchorTag.style.cursor = "pointer";
                     anchorTag.style.fontWeight = "bold";
+                    anchorTag.textContent = socials.find(
+                        (social) => social.description === link
+                    )?.text || link;
                     element.innerHTML = element.innerHTML.replace(
                         link,
+                        anchorTag.outerHTML
+                    );
+                    
+                });
+            }
+            if(mail){
+                mail.forEach((email) => {
+                    const anchorTag = document.createElement("a");
+                    anchorTag.href = `mailto:${email}`;
+                    anchorTag.textContent = email;
+                    anchorTag.style.color = "#2498AF";
+                    anchorTag.style.textDecoration = "underline";
+                    anchorTag.style.cursor = "pointer";
+                    anchorTag.style.fontWeight = "bold";
+                    element.innerHTML = element.innerHTML.replace(
+                        email,
                         anchorTag.outerHTML
                     );
                 });
