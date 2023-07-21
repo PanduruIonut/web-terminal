@@ -25,6 +25,7 @@
         { name: "ls", description: "My Projects" },
         { name: "ping", description: "Contact Me" },
         { name: "help", description: "Commands list" },
+        { name: "clear", description: "Clear the terminal" },
     ];
     const socials: Command[] = [
         { name: "GitHub", description: "https://github.com/PanduruIonut", text: 'PanduruIonut' },
@@ -149,7 +150,11 @@
                 outputContainer.appendChild(promptSpan3);
                 outputContainer.appendChild(commandInput);
 
-                if (command === "clear") return;
+                if (command === "clear") {
+                    terminalDisplay.innerHTML = "";
+                    isCommandRunning = false;
+                    return;
+                }
                 if (command === "mute") {
                     clickSound.muted = !clickSound.muted;
                     isCommandRunning = false;
@@ -165,7 +170,7 @@
                 });
 
                 if (command === "help") {
-                    displaySidesBlock(commands);
+                    displaySidesBlock(commands.filter((cmd) => cmd.name !== "clear"));
                 }
                 if (command === "ping") {
                     displaySidesBlock(socials);
