@@ -19,13 +19,13 @@
 
     let command: string = "";
     const commands: Command[] = [
-        { name: "whoami", description: "About Me",},
+        { name: "clear", description: "Clear the terminal" },
+        { name: "help", description: "Commands list" },
         { name: "history", description: "Professional Background" },
-        { name: "top", description: "My Main Tech Stack" },
         { name: "ls", description: "My Projects" },
         { name: "ping", description: "Contact Me" },
-        { name: "help", description: "Commands list" },
-        { name: "clear", description: "Clear the terminal" },
+        { name: "top", description: "My Main Tech Stack" },
+        { name: "whoami", description: "About Me",},
     ];
     const socials: Command[] = [
         { name: "GitHub", description: "https://github.com/PanduruIonut", text: 'PanduruIonut' },
@@ -101,6 +101,22 @@
         });
 
         function handleKeyUp(event: KeyboardEvent) {
+            if (event.keyCode === 39) {
+                event.preventDefault();
+                event.stopPropagation();
+                command = input.value.trim();
+                command = command.toLowerCase();
+                if(command === "") return;
+                const suggestions = getCommandSuggestions(command);
+                if (suggestions.length > 0) {
+                    const matchedSuggestion = suggestions.find((suggestion) => suggestion !== command);
+                    if (matchedSuggestion) {
+                        const inputWithSuggestion = command + matchedSuggestion.slice(command.length);
+                        input.value = inputWithSuggestion;
+                    }
+                }
+            }
+
             if (event.key === "Enter") {
                 if (isCommandRunning) {
                     if (previousTypingSpeed !== typingSpeed) return;
@@ -351,6 +367,11 @@
                 isCommandRunning = false;
             });
         }
+        function getCommandSuggestions(inputValue: string) {
+            return commands
+                .map((cmd) => cmd.name)
+                .filter((cmd) => cmd.startsWith(inputValue));
+}
     });
 </script>
 
