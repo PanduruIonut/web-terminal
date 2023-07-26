@@ -1,4 +1,4 @@
-import { displayWelcomeText, handleKeyUp, handleKeyDown } from "./terminal-utils";
+import { displayWelcomeText, handleKeyUp, handleKeyDown } from "../utils/terminal-utils";
 
 export class MyTerminal extends HTMLElement {
 
