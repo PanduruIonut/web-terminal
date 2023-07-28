@@ -1,15 +1,16 @@
-export function randomizeText(text){
+export function randomizeText(text: HTMLElement) {
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     let iterationsNr = 0;
-    let intervalId;
+    let intervalId: ReturnType<typeof setInterval>;
 
     if (!text) return;
 
     text.onmouseover = () => {
+        if (!text.dataset.value) return;
         intervalId = setInterval(() => {
             text.innerText = text.innerText.split("")
                 .map((letter, index) => {
-                    if (index < iterationsNr) {
+                    if (index < iterationsNr && text.dataset.value) {
                         return text.dataset.value[index];
                     }
                     return letters[Math.floor(Math.random() * 26)];
