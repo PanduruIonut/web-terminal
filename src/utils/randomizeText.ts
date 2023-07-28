@@ -9,7 +9,7 @@ export function randomizeText(text: HTMLElement) {
         if (!text.dataset.value) return;
         intervalId = setInterval(() => {
             text.innerText = text.innerText.split("")
-                .map((letter, index) => {
+                .map((_letter, index) => {
                     if (index < iterationsNr && text.dataset.value) {
                         return text.dataset.value[index];
                     }
