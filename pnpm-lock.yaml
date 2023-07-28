@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@vercel/analytics': ^1.0.1
   install: ^0.13.0
   lit-element: ^3.3.2
   lit-html: ^2.7.5
@@ -8,6 +9,7 @@ specifiers:
   vite: ^4.4.5
 
 dependencies:
+  '@vercel/analytics': 1.0.1
   install: 0.13.0
   lit-element: 3.3.2
   lit-html: 2.7.5
@@ -228,6 +230,10 @@ packages:
 
   /@types/trusted-types/2.0.3:
     resolution: {integrity: sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==}
+    dev: false
+
+  /@vercel/analytics/1.0.1:
+    resolution: {integrity: sha512-Ux0c9qUfkcPqng3vrR0GTrlQdqNJ2JREn/2ydrVuKwM3RtMfF2mWX31Ijqo1opSjNAq6rK76PwtANw6kl6TAow==}
     dev: false
 
   /esbuild/0.18.16:

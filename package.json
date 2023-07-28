@@ -13,6 +13,7 @@
     "vite": "^4.4.5"
   },
   "dependencies": {
+    "@vercel/analytics": "^1.0.1",
     "install": "^0.13.0",
     "lit-element": "^3.3.2",
     "lit-html": "^2.7.5"
