@@ -1,6 +1,7 @@
 import keySound from "../../public/sounds/keyboardTyping.wav";
 import { readFile, listFiles, changeDirectory, getCurrentPath } from "./fileSystem/functionality";
 import { currentDirectory } from "./fileSystem/functionality";
+import.meta.env
 
 type Command = {
     name: string;
@@ -58,16 +59,9 @@ function parseInput(input: string) {
 
     if (command.options) {
         parsedInput.options = rest.filter(arg => command.options!.includes(arg));
-        // if (parsedInput.options.length !== rest.length) {
-        //     return{ command: "Invalid option"}
-        // }
     }
 
     if (command.args) {
-        // if (rest.length !== command.args.length) {
-        //     console.log("invalid nr of args")
-        //     return {command:"Invalid number of args"}
-        // }
         parsedInput.args = rest;
     }
 
@@ -427,7 +421,7 @@ export async function getFlag(flagNumber: string) {
     try {
         const response = await fetch(`https://organic-silkworm-30652.kv.vercel-storage.com/get/${flagNumber}`, {
             headers: {
-                Authorization: "Bearer AXe8ASQgYWI0MjFkN2UtNGRiYy00M2NiLWEyNGItNTZmMDQyYzQ4NjQ4NzE5ZWZlZjRhOTZmNGQ4ZGFkZWYwYjhlYzNmM2RkNWY="
+                Authorization: `Bearer ${import.meta.env.VITE_KV_REST_API_TOKEN}`
             },
         });
 
