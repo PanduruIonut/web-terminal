@@ -189,13 +189,7 @@ function preventTyping(event: KeyboardEvent) {
     }
 }
 function changePromptLocation() {
-    // const inputPrompt = document.querySelector('.terminal__input_container-promt-location');
-    if(currentDirectory === "/") {
-        return
-    }
     const inputPromptElement = document.querySelector('.terminal__input_container-promt-4');
-    // if (!inputPrompt) return;
-    // inputPrompt.textContent = getCurrentPath();
     if (!inputPromptElement) return;
     inputPromptElement.textContent = getCurrentPath();
 
