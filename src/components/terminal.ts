@@ -1,5 +1,6 @@
 import { displayWelcomeText, handleKeyUp, handleKeyDown } from "../utils/terminal-utils";
-
+import { getCurrentPath } from "../utils/fileSystem/functionality";
+import { saveVirtualFileSystemToLocalStorage } from "../utils/fileSystem/virtualFileSystem";
 export class MyTerminal extends HTMLElement {
 
     constructor() {
@@ -7,11 +8,15 @@ export class MyTerminal extends HTMLElement {
     }
 
     connectedCallback() {
-
+        saveVirtualFileSystemToLocalStorage();
         document.addEventListener("DOMContentLoaded", () => {
             const input = document.querySelector(
                 ".terminal__input"
             ) as HTMLInputElement;
+            const currentPathElement = document.querySelector(
+                ".terminal__input_container-promt-4"
+            ) as HTMLInputElement;
+            currentPathElement.innerText = getCurrentPath();
             const terminal = document.querySelector(".terminal") as HTMLDivElement;
             const terminalDisplay = document.querySelector(
                 ".terminal__display"
@@ -124,6 +129,11 @@ export class MyTerminal extends HTMLElement {
             margin-left: 5px;
             font-size: 12px;
         }
+        .terminal__input_container-promt-4 {
+            color: #2ac3de;
+            margin-bottom: 25px;
+            font-size: 12px;
+        }
 
         .close-button {
             width: 12px;
@@ -198,6 +208,7 @@ export class MyTerminal extends HTMLElement {
                         <span class="terminal__input_container-promt-1">λ</span>
                         <span class="terminal__input_container-promt-2">~</span>
                         <span class="terminal__input_container-promt-3">&gt;&gt;</span>
+                        <span class="terminal__input_container-promt-4"></span>
                         <input
                             class="terminal__input"
                             id="input-field"
