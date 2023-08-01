@@ -1,7 +1,6 @@
 import keySound from "../../public/sounds/keyboardTyping.wav";
 import { readFile, listFiles, changeDirectory, getCurrentPath } from "./fileSystem/functionality";
 import { currentDirectory } from "./fileSystem/functionality";
-import.meta.env
 
 type Command = {
     name: string;
