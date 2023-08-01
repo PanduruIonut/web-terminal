@@ -159,13 +159,19 @@ export interface FolderSystem {
     [path: string]: FolderEntry;
 }
 
-export function convertToFolderSystem(entry: Entry) {
+function convertToFolderSystem(entry: Entry): FolderEntry {
     if (entry.type === 'directory') {
-        const newContent: { [folderName: string] } = {};
+        const newContent: { [folderName: string]: FolderEntry } = {};
 
         for (const [name, childEntry] of Object.entries(entry.content)) {
             if (childEntry.type === 'directory') {
                 newContent[name] = convertToFolderSystem(childEntry);
+            } else {
+                newContent[name] = {
+                    type: 'directory',
+                    content: {},
+                    permissions: childEntry.permissions,
+                };
             }
         }
 
@@ -184,7 +190,7 @@ export function convertToFolderSystem(entry: Entry) {
 }
 
 export function saveVirtualFileSystemToLocalStorage() {
-    const folderSystem: FolderSystem = convertToFolderSystem(virtualFileSystem['/']);
+    const folderSystem = convertToFolderSystem(virtualFileSystem['/']);
     const serializedFolderSystem = JSON.stringify(folderSystem);
     const encodedFolderSystem = btoa(serializedFolderSystem);
     localStorage.setItem('virtualFileSystem', encodedFolderSystem);
@@ -194,7 +200,7 @@ export function loadVirtualFileSystemFromLocalStorage() {
     const encodedFolderSystem = localStorage.getItem('virtualFileSystem');
     if (encodedFolderSystem) {
         const serializedFolderSystem = atob(encodedFolderSystem);
-        const folderSystem: FolderSystem = JSON.parse(serializedFolderSystem);
+        const folderSystem = JSON.parse(serializedFolderSystem);
         const newFileSystem = convertToVirtualFileSystem('/', folderSystem);
         mergeVirtualFileSystem(virtualFileSystem['/'], newFileSystem);
     }
@@ -210,8 +216,8 @@ function mergeVirtualFileSystem(existingDirEntry: DirectoryEntry, newDirEntry: D
             if (!existingDirEntry.content[fileName]) {
                 existingDirEntry.content[fileName] = {
                     type: 'directory',
-                    content: {},
-                    permissions: {},
+                    content: entry.content,
+                    permissions: entry.permissions,
                 };
             }
             mergeVirtualFileSystem(existingDirEntry.content[fileName] as DirectoryEntry, entry);
