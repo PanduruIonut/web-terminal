@@ -14,6 +14,8 @@
                 "Press &ensp;[ctrl]&ensp; & &ensp;[l]&ensp; to clear the terminal",
                 "Press &ensp;[cmd]&ensp; & &ensp;[esc]&ensp; to clear the input",
                 "Type &ensp;[mute]&ensp; to mute the typing sound",
+                "Type &ensp;[up arrow]&ensp; to navigate through the history",
+                "Type &ensp;[down arrow]&ensp; to navigate through the history",
             ];
             this.hintIndex = 0;
             this.attachShadow({ mode: 'open' });
