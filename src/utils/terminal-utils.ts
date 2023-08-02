@@ -300,7 +300,6 @@ export function displayWelcomeText(terminalDisplay: HTMLDivElement, terminalDisp
     const welcomeText = `Welcome to my personal website!\n\nType "help" to see the list of available commands.\n\nFeel free to explore!\n\n`;
     isCommandRunning = true;
     animateText(terminalDisplay, welcomeText, terminalDisplayContainer).then(() => {
-        input.focus();
         isCommandRunning = false;
     });
 }
@@ -425,7 +424,6 @@ export async function handleKeyUp(event: KeyboardEvent, input: HTMLInputElement,
             }
 
             input.value = "";
-            input.focus();
 
             command = "";
             terminalDisplayContainer.scrollTop =

@@ -33,9 +33,6 @@ export class MyTerminal extends HTMLElement {
 
             input.addEventListener("keyup", (event) => handleKeyUp(event, input, terminalDisplay, terminalDisplayContainer));
             document.addEventListener("keydown", (event) => handleKeyDown(event, terminalDisplay, input,));
-            terminal.addEventListener("click", () => {
-                input.focus();
-            });
 
         });
         this.innerHTML = `
