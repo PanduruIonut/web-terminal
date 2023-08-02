@@ -1,6 +1,7 @@
 import keySound from "../../public/sounds/keyboardTyping.wav";
 import { readFile, listFiles, changeDirectory, getCurrentPath } from "./fileSystem/functionality";
 import { currentDirectory } from "./fileSystem/functionality";
+import { DirectoryEntry, virtualFileSystem } from "./fileSystem/virtualFileSystem";
 
 type Command = {
     name: string;
@@ -303,29 +304,49 @@ export function displayWelcomeText(terminalDisplay: HTMLDivElement, terminalDisp
         isCommandRunning = false;
     });
 }
-function getCommandSuggestions(inputValue: string) {
-    return commands
-        .map((cmd) => cmd.name)
-        .filter((cmd) => cmd.startsWith(inputValue));
-}
 
-export async function handleKeyUp(event: KeyboardEvent, input: HTMLInputElement, terminalDisplay: HTMLDivElement, terminalDisplayContainer: HTMLDivElement) {
-    if (event.keyCode === 39) {
-        event.preventDefault();
-        event.stopPropagation();
-        command = input.value.trim();
-        command = command.toLowerCase();
-        if (command === "") return;
-        const suggestions = getCommandSuggestions(command);
-        if (suggestions.length > 0) {
-            const matchedSuggestion = suggestions.find((suggestion) => suggestion !== command);
-            if (matchedSuggestion) {
-                const inputWithSuggestion = command + matchedSuggestion.slice(command.length);
-                input.value = inputWithSuggestion;
-            }
+function getCurrentDirectoryEntry(currentDirectory: string): DirectoryEntry {
+    const pathParts = currentDirectory.split('/').filter(part => part.trim() !== '');
+    let currentEntry = virtualFileSystem['/'];
+
+    for (const pathPart of pathParts) {
+        if (currentEntry.type === 'directory' && currentEntry.content[pathPart]) {
+            currentEntry = currentEntry.content[pathPart] as DirectoryEntry;
+        } else {
+            throw new Error(`Invalid path: ${currentDirectory}`);
         }
     }
 
+    return currentEntry;
+}
+function getFolderFileSuggestions(
+    inputValue: string,
+    currentDirEntry: DirectoryEntry
+): string[] {
+    const suggestions: string[] = [];
+    if (!inputValue) return suggestions;
+    const inputValueLower = inputValue.toLowerCase();
+
+    for (const folderName in currentDirEntry.content) {
+        const entry = currentDirEntry.content[folderName];
+        if (entry.type === "directory" &&
+            folderName.toLowerCase().startsWith(inputValueLower)) {
+            suggestions.push(folderName);
+        }
+    }
+
+    for (const fileName in currentDirEntry.content) {
+        const entry = currentDirEntry.content[fileName];
+        if (entry.type === "file" &&
+            fileName.toLowerCase().startsWith(inputValueLower)) {
+            suggestions.push(fileName);
+        }
+    }
+
+    return suggestions;
+}
+
+export async function handleKeyUp(event: KeyboardEvent, input: HTMLInputElement, terminalDisplay: HTMLDivElement, terminalDisplayContainer: HTMLDivElement) {
     if (event.key === "Enter") {
         if (isCommandRunning) {
             if (previousTypingSpeed !== typingSpeed) return;
@@ -572,6 +593,24 @@ export async function submitFlags(flag1: string, flag2: string, user: string) {
 }
 
 export function handleKeyDown(event: KeyboardEvent, terminalDisplay: HTMLDivElement, input: HTMLInputElement) {
+    if(event.key === "Tab") {
+        event.preventDefault();
+        command = input.value.trim();
+        command = command.toLowerCase();
+        if (command === "") return;
+        const parsedInput = parseInput(command);
+        if (parsedInput) {
+            const { command: cmd, args } = parsedInput;
+            command = cmd;
+            if (cmd === 'cd' || cmd === 'cat') {
+                const currentDirEntry = getCurrentDirectoryEntry(currentDirectory);
+                const test = getFolderFileSuggestions(args![0], currentDirEntry);
+                if (test.length > 0) {
+                    input.value = cmd + ' ' + test[0];
+                }
+            }
+        }
+    }
     if (event.shiftKey && event.key === "M" || event.ctrlKey && event.key === "M") {
         clickSound.muted = !clickSound.muted;
     }
