@@ -206,6 +206,7 @@ function changePromptLocation() {
     const inputPromptElement = document.querySelector('.terminal__input_container-promt-4');
     if (!inputPromptElement) return;
     inputPromptElement.textContent = getCurrentPath();
+    if(currentDirectory === "/") inputPromptElement.textContent = "";
 
 }
 async function handleCommand(command: string, args?: string[], opts?: string[]): Promise<string> {
@@ -407,7 +408,7 @@ export async function handleKeyUp(event: KeyboardEvent, input: HTMLInputElement,
 
             const promptSpan4 = document.createElement("span");
             promptSpan4.classList.add("terminal__input_container-promt-location");
-            promptSpan4.textContent = currentDirectory === "/" ? null : currentDirectory;
+            promptSpan4.textContent = currentDirectory === "/" ? '' : currentDirectory;
             promptSpan4.style.color = "#2ac3de";
             promptSpan4.style.marginBottom = "25px";
             promptSpan4.style.marginLeft = "5px";

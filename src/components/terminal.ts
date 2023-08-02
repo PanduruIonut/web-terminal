@@ -13,10 +13,6 @@ export class MyTerminal extends HTMLElement {
             const input = document.querySelector(
                 ".terminal__input"
             ) as HTMLInputElement;
-            const currentPathElement = document.querySelector(
-                ".terminal__input_container-promt-4"
-            ) as HTMLInputElement;
-            currentPathElement.innerText = getCurrentPath();
             const terminal = document.querySelector(".terminal") as HTMLDivElement;
             const terminalDisplay = document.querySelector(
                 ".terminal__display"
