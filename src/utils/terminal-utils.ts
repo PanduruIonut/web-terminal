@@ -206,7 +206,7 @@ function changePromptLocation() {
 }
 async function handleCommand(command: string, args?: string[], opts?: string[]): Promise<string> {
 
-    let seletedCommand = commands.find(
+    let selectedCommand = commands.find(
         (cmd) => cmd.name === command
     );
     if (!selectedCommand) {
