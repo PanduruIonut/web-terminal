@@ -4,7 +4,7 @@
         constructor(){
             super();
             this.hints = [
-                "Press &ensp;[right arrow key]&ensp; to autocomplete commands",
+                "Press &ensp;[tab]&ensp; for autocomplete",
                 "Press &ensp;[enter]&ensp; while a command is running to speed it up",
                 "Press &ensp;[shift]&ensp; & &ensp;[>]&ensp; to speed up typing",
                 "Press &ensp;[shift]&ensp; & &ensp;[<]&ensp; to slow down typing",

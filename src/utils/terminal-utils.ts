@@ -3,6 +3,9 @@ import { readFile, listFiles, changeDirectory, getCurrentPath } from "./fileSyst
 import { currentDirectory } from "./fileSystem/functionality";
 import { DirectoryEntry, virtualFileSystem } from "./fileSystem/virtualFileSystem";
 
+let commandHistory: string[] = [];
+let historyIndex = -1;
+
 type Command = {
     name: string;
     description: string;
@@ -347,6 +350,14 @@ function getFolderFileSuggestions(
 }
 
 export async function handleKeyUp(event: KeyboardEvent, input: HTMLInputElement, terminalDisplay: HTMLDivElement, terminalDisplayContainer: HTMLDivElement) {
+    switch (event.key) {
+        case 'ArrowUp':
+            navigateHistory(-1);
+            break;
+        case 'ArrowDown':
+            navigateHistory(1);
+            break;
+    }
     if (event.key === "Enter") {
         if (isCommandRunning) {
             if (previousTypingSpeed !== typingSpeed) return;
@@ -365,6 +376,7 @@ export async function handleKeyUp(event: KeyboardEvent, input: HTMLInputElement,
 
             const output = await handleCommand(command, args, options);
             const formattedCommand = command + (args ? " " + args.join(" ") : "") + (options ? " " + options.join(" ") : "");
+            addToCommandHistory(formattedCommand)
 
 
             const outputContainer = document.createElement("div");
@@ -593,7 +605,7 @@ export async function submitFlags(flag1: string, flag2: string, user: string) {
 }
 
 export function handleKeyDown(event: KeyboardEvent, terminalDisplay: HTMLDivElement, input: HTMLInputElement) {
-    if(event.key === "Tab") {
+    if (event.key === "Tab") {
         event.preventDefault();
         command = input.value.trim();
         command = command.toLowerCase();
@@ -650,3 +662,23 @@ export function handleKeyDown(event: KeyboardEvent, terminalDisplay: HTMLDivElem
     }
 }
 
+
+function addToCommandHistory(command: string) {
+    commandHistory.push(command);
+
+    historyIndex = commandHistory.length - 1;
+}
+function navigateHistory(offset: number) {
+    if (commandHistory.length === 0) {
+        return;
+    }
+
+    historyIndex += offset;
+
+    historyIndex = Math.min(Math.max(historyIndex, -1), commandHistory.length - 1);
+
+    const previousCommand = historyIndex >= 0 ? commandHistory[historyIndex] : '';
+
+    const input = document.querySelector('.terminal__input') as HTMLInputElement;
+    input.value = previousCommand;
+}
