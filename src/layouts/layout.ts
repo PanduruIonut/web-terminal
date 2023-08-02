@@ -27,6 +27,7 @@ export class MyLayout extends HTMLElement {
 			<title>{title}</title>
 			</head>
 			<body>
+			<!-- Hidden stuff, nothing here CTF{not_your_business} -->
 				<h1 data-value='hover-me'>hover-me</h1>
 				<slot></slot>
 			</body>

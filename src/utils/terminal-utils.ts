@@ -29,11 +29,20 @@ export const commands: Command[] = [
     { name: "ping", description: "Contact Me" },
     { name: "top", description: "My Main Tech Stack" },
     { name: "whoami", description: "About Me", },
+    { name: "ctf", description: "CTF Challenges" },
+    { name: "helpctf", description: "CTF Challenges help" },
+];
+
+export const ctfCommands: Command[] = [
     { name: "ls", description: "List files in the current directory", options: ["-l"] },
     { name: "cat", description: "Display the content of a file", args: ["<filename>"] },
     { name: "cd", description: "Change directory", args: ["<dirname>"] },
-    { name: "pwd", description: "whereami" }
+    { name: "pwd", description: "Current directory path" },
+    { name: "hints", description: "hints for ctf challenges" },
+    { name: "owned", description: "submit flags", args: ["<flag1>", "<flag2>", "<user>"] },
+    { name: "userOwns", description: "list of users that submitted flags" },
 ];
+
 const socials = [
     { name: "GitHub", description: "https://github.com/PanduruIonut", text: 'PanduruIonut' },
     { name: "Twitter", description: "https://twitter.com/ThisIsIonut", text: 'ThisIsIonut' },
@@ -47,9 +56,15 @@ const socials = [
 function parseInput(input: string) {
     const [commandName, ...rest] = input.trim().split(/\s+/);
     const command = commands.find(cmd => cmd.name === commandName);
+    if (!command) {
+        const ctfCommand = ctfCommands.find(cmd => cmd.name === commandName);
+        if (ctfCommand) {
+            return { command: ctfCommand.name, options: ctfCommand.options, args: ctfCommand.args }
+        }
+    }
 
     if (!command) {
-        return {command: "Invalid command"}
+        return { command: "Invalid command" }
     }
 
     const parsedInput: { command: string; options?: string[]; args?: string[] } = {
@@ -196,15 +211,20 @@ function changePromptLocation() {
 }
 async function handleCommand(command: string, args?: string[], opts?: string[]): Promise<string> {
 
-    const selectedCommand = commands.find(
+    let selectedCommand = commands.find(
         (cmd) => cmd.name === command
     );
+    if (!selectedCommand) {
+        selectedCommand = ctfCommands.find(
+            (cmd) => cmd.name === command
+        );
+    }
     if (selectedCommand) {
         if (selectedCommand.args && (!args || args.length !== selectedCommand.args.length)) {
             return `Command '${command}' requires args: ${selectedCommand.args.join(", ")}`;
         }
 
-        if (selectedCommand.options && (!opts || opts.some(opt => !selectedCommand.options!.includes(opt)))) {
+        if (selectedCommand.options && (!opts || opts.some(opt => !selectedCommand?.options!.includes(opt)))) {
             return `Invalid option(s) for '${command}'. Available options: ${selectedCommand.options.join(", ")}`;
         }
 
@@ -260,6 +280,19 @@ async function handleCommand(command: string, args?: string[], opts?: string[]):
                 return "Invalid options.";
             case "Invalid number of args":
                 return "Invalid number of args.";
+            case "ctf":
+                return "2 flags are hidden on this website. Find them and submit them in the 'owned' command.\n\nget more info about it using 'helpctf'\n\nGood luck!";
+            case "hints":
+                return "Make use of the developer tools to inspect source code, network requests, cookies."
+            case "userOwns":
+                const users = await getUsers();
+                return users;
+            case "owned":
+                if (args && args.length !== 3) return "Invalid number of args";
+                const result = await submitFlags(args![0], args![1], args![2]);
+                return result;
+            case "helpctf":
+                return ''
             default:
                 return `sh: Unknown command: ${command}. See 'help' for info.`;
         }
@@ -386,7 +419,11 @@ export async function handleKeyUp(event: KeyboardEvent, input: HTMLInputElement,
 
             if (command === "help") {
                 let cmds = commands.filter((cmd) => cmd.name !== "clear");
+                cmds = cmds.filter((cmd) => cmd.name !== "helpctf");
                 displaySidesBlock(cmds, terminalDisplay, terminalDisplayContainer);
+            }
+            if (command === "helpctf") {
+                displaySidesBlock(ctfCommands, terminalDisplay, terminalDisplayContainer);
             }
             if (command === "ping") {
                 displaySidesBlock(socials, terminalDisplay, terminalDisplayContainer);
@@ -398,11 +435,11 @@ export async function handleKeyUp(event: KeyboardEvent, input: HTMLInputElement,
             command = "";
             terminalDisplayContainer.scrollTop =
                 terminalDisplayContainer.scrollHeight;
-        } 
+        }
     } else {
         command = input.value.trim();
         command = command.toLocaleLowerCase();
-        if (commands.find((cmd) => cmd.name === command)) {
+        if (commands.find((cmd) => cmd.name === command) || ctfCommands.find((cmd) => cmd.name === command)) {
             input.classList.add("valid-command");
         } else {
             input.classList.remove("valid-command");
@@ -427,6 +464,117 @@ export async function getFlag(flagNumber: string) {
     } catch (error) {
         console.error("Error fetching data:", error);
         return null;
+    }
+}
+
+export async function getUserOwns() {
+    try {
+        const response = await fetch(`https://organic-silkworm-30652.kv.vercel-storage.com/get/user-owns`, {
+            headers: {
+                Authorization: `Bearer ${import.meta.env.VITE_KV_REST_API_TOKEN}`
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        return data.result;
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        return null;
+    }
+}
+
+export async function submitUser(name: string) {
+    try {
+        const response = await fetch(`https://organic-silkworm-30652.kv.vercel-storage.com/sadd/users`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${import.meta.env.VITE_KV_REST_API_TOKEN}`,
+                "Content-Type": "application/json",
+            },
+            body: name
+        });
+
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        return data.result;
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        return null;
+    }
+}
+
+export async function getUsers() {
+    try {
+        const response = await fetch(`https://organic-silkworm-30652.kv.vercel-storage.com/smembers/users`, {
+            headers: {
+                Authorization: `Bearer ${import.meta.env.VITE_KV_REST_API_TOKEN}`
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        return data.result.join(',').replace(/,/g, '\n');
+
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        return null;
+    }
+}
+
+async function fetchData(flag: string): Promise<boolean> {
+    try {
+        const response = await fetch(
+            `https://organic-silkworm-30652.kv.vercel-storage.com/sismember/flags`,
+            {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${import.meta.env.VITE_KV_REST_API_TOKEN}`,
+                    "Content-Type": "application/json",
+                },
+                body: flag,
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        return data.result;
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        throw error;
+    }
+}
+export async function submitFlags(flag1: string, flag2: string, user: string) {
+    try {
+        const [resFlag1, resFlag2] = await Promise.all([
+            fetchData(flag1),
+            fetchData(flag2),
+        ]);
+
+        if (resFlag1 && resFlag2) {
+            const usr = await submitUser(user);
+            if (usr) {
+                return 'Flag submitted successfully, you can check the list of users that submitted flags with the "userOwns" command.';
+            } else {
+                return 'There was an error submitting the flag(s), please try again.';
+            }
+        } else {
+            return 'Invalid flag(s), please try again.';
+        }
+    } catch (error) {
+        return 'There was an error submitting the flag(s), please try again.';
     }
 }
 
