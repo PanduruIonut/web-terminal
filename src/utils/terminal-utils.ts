@@ -301,7 +301,7 @@ async function handleCommand(command: string, args?: string[], opts?: string[]):
     }
 }
 
-export function displayWelcomeText(terminalDisplay: HTMLDivElement, terminalDisplayContainer: HTMLDivElement, input: HTMLInputElement) {
+export function displayWelcomeText(terminalDisplay: HTMLDivElement, terminalDisplayContainer: HTMLDivElement, _input: HTMLInputElement) {
     const welcomeText = `Welcome to my personal website!\n\nType "help" to see the list of available commands.\n\nFeel free to explore!\n\n`;
     isCommandRunning = true;
     animateText(terminalDisplay, welcomeText, terminalDisplayContainer).then(() => {

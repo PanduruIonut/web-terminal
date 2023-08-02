@@ -1,5 +1,4 @@
 import { displayWelcomeText, handleKeyUp, handleKeyDown } from "../utils/terminal-utils";
-import { getCurrentPath } from "../utils/fileSystem/functionality";
 import { saveVirtualFileSystemToLocalStorage } from "../utils/fileSystem/virtualFileSystem";
 export class MyTerminal extends HTMLElement {
 
