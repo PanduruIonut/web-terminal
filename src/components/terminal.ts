@@ -186,6 +186,9 @@ export class MyTerminal extends HTMLElement {
             position: fixed;
             left: 0;
         }
+        .terminal___input_container-prompt{
+            width: 90%;
+        }
     </style>
         <div class="terminal">
             <div class="terminal__title-container">
