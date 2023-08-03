@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@types/node': ^20.4.5
   install: ^0.13.0
   lit-element: ^3.3.2
   lit-html: ^2.7.5
@@ -13,8 +14,9 @@ dependencies:
   lit-html: 2.7.5
 
 devDependencies:
+  '@types/node': 20.4.5
   typescript: 5.1.6
-  vite: 4.4.6
+  vite: 4.4.6_@types+node@20.4.5
 
 packages:
 
@@ -226,6 +228,10 @@ packages:
       '@lit-labs/ssr-dom-shim': 1.1.1
     dev: false
 
+  /@types/node/20.4.5:
+    resolution: {integrity: sha512-rt40Nk13II9JwQBdeYqmbn2Q6IVTA5uPhvSO+JVqdXw/6/4glI6oR9ezty/A9Hg5u7JH4OmYmuQ+XvjKm0Datg==}
+    dev: true
+
   /@types/trusted-types/2.0.3:
     resolution: {integrity: sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==}
     dev: false
@@ -325,7 +331,7 @@ packages:
     hasBin: true
     dev: true
 
-  /vite/4.4.6:
+  /vite/4.4.6_@types+node@20.4.5:
     resolution: {integrity: sha512-EY6Mm8vJ++S3D4tNAckaZfw3JwG3wa794Vt70M6cNJ6NxT87yhq7EC8Rcap3ahyHdo8AhCmV9PTk+vG1HiYn1A==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -353,6 +359,7 @@ packages:
       terser:
         optional: true
     dependencies:
+      '@types/node': 20.4.5
       esbuild: 0.18.16
       postcss: 8.4.27
       rollup: 3.26.3

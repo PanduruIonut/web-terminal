@@ -1,5 +1,5 @@
 import { displayWelcomeText, handleKeyUp, handleKeyDown } from "../utils/terminal-utils";
-
+import { saveVirtualFileSystemToLocalStorage } from "../utils/fileSystem/virtualFileSystem";
 export class MyTerminal extends HTMLElement {
 
     constructor() {
@@ -7,7 +7,7 @@ export class MyTerminal extends HTMLElement {
     }
 
     connectedCallback() {
-
+        saveVirtualFileSystemToLocalStorage();
         document.addEventListener("DOMContentLoaded", () => {
             const input = document.querySelector(
                 ".terminal__input"
@@ -28,9 +28,6 @@ export class MyTerminal extends HTMLElement {
 
             input.addEventListener("keyup", (event) => handleKeyUp(event, input, terminalDisplay, terminalDisplayContainer));
             document.addEventListener("keydown", (event) => handleKeyDown(event, terminalDisplay, input,));
-            terminal.addEventListener("click", () => {
-                input.focus();
-            });
 
         });
         this.innerHTML = `
@@ -124,6 +121,11 @@ export class MyTerminal extends HTMLElement {
             margin-left: 5px;
             font-size: 12px;
         }
+        .terminal__input_container-promt-4 {
+            color: #2ac3de;
+            margin-bottom: 25px;
+            font-size: 12px;
+        }
 
         .close-button {
             width: 12px;
@@ -179,6 +181,9 @@ export class MyTerminal extends HTMLElement {
             position: fixed;
             left: 0;
         }
+        .terminal___input_container-prompt{
+            width: 90%;
+        }
     </style>
         <div class="terminal">
             <div class="terminal__title-container">
@@ -198,6 +203,7 @@ export class MyTerminal extends HTMLElement {
                         <span class="terminal__input_container-promt-1">λ</span>
                         <span class="terminal__input_container-promt-2">~</span>
                         <span class="terminal__input_container-promt-3">&gt;&gt;</span>
+                        <span class="terminal__input_container-promt-4"></span>
                         <input
                             class="terminal__input"
                             id="input-field"

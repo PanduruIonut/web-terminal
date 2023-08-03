@@ -4,7 +4,7 @@
         constructor(){
             super();
             this.hints = [
-                "Press &ensp;[right arrow key]&ensp; to autocomplete commands",
+                "Press &ensp;[tab]&ensp; for autocomplete",
                 "Press &ensp;[enter]&ensp; while a command is running to speed it up",
                 "Press &ensp;[shift]&ensp; & &ensp;[>]&ensp; to speed up typing",
                 "Press &ensp;[shift]&ensp; & &ensp;[<]&ensp; to slow down typing",
@@ -14,6 +14,8 @@
                 "Press &ensp;[ctrl]&ensp; & &ensp;[l]&ensp; to clear the terminal",
                 "Press &ensp;[cmd]&ensp; & &ensp;[esc]&ensp; to clear the input",
                 "Type &ensp;[mute]&ensp; to mute the typing sound",
+                "Type &ensp;[up arrow]&ensp; to navigate through the history",
+                "Type &ensp;[down arrow]&ensp; to navigate through the history",
             ];
             this.hintIndex = 0;
             this.attachShadow({ mode: 'open' });
