@@ -1,3 +1,4 @@
+import { dir } from "console";
 import { getFlag } from "../terminal-utils";
 import { DirectoryEntry, Entry, loadVirtualFileSystemFromLocalStorage, virtualFileSystem } from "./virtualFileSystem";
 type User = "owner" | "group" | "others";
@@ -94,6 +95,10 @@ export function changeDirectory(newDir: string) {
         const targetDirEntry = currentDirEntry.content[segment] as DirectoryEntry;
         const permissions = getCurrentUserPermissions(targetDirEntry);
 
+        if (!isDirectory(targetDirEntry)) {
+            return `'${segment}' is not a directory.`; // Check if the entry is a directory
+        }
+        
         if (!permissions.execute) {
             return `Permission denied: You do not have execute access to the '${segment}' directory.`;
         }
