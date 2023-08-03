@@ -466,6 +466,7 @@ export async function handleKeyUp(event: KeyboardEvent, input: HTMLInputElement,
     } else {
         command = input.value.trim();
         command = command.toLocaleLowerCase();
+        command = command.split(" ")[0];
         if (commands.find((cmd) => cmd.name === command) || ctfCommands.find((cmd) => cmd.name === command)) {
             input.classList.add("valid-command");
         } else {
