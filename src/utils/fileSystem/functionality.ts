@@ -1,4 +1,3 @@
-import { dir } from "console";
 import { getFlag } from "../terminal-utils";
 import { DirectoryEntry, Entry, loadVirtualFileSystemFromLocalStorage, virtualFileSystem } from "./virtualFileSystem";
 type User = "owner" | "group" | "others";
