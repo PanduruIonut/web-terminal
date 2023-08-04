@@ -368,7 +368,7 @@ export async function handleKeyUp(event: KeyboardEvent, input: HTMLInputElement,
         }
         if (input.value === "") return;
         isCommandRunning = true;
-        const tempCommand = input.value.trim();
+        const tempCommand = input.value.trim().toLowerCase();
         input.value = "";
         const parsedInput = parseInput(tempCommand);
         if (parsedInput) {
