@@ -59,8 +59,8 @@ const socials = [
 
 function parseInput(input: string) {
     const [commandName, ...rest] = input.trim().split(/\s+/);
-    const command = commands.find(cmd => cmd.name === commandName)
-        || ctfCommands.find(cmd => cmd.name === commandName);
+    const command = commands.find(cmd => cmd.name.toLowerCase() === commandName)
+        || ctfCommands.find(cmd => cmd.name.toLowerCase() === commandName);
 
     if (!command) {
         return { command: "Invalid command" }
@@ -211,12 +211,14 @@ function changePromptLocation() {
 }
 async function handleCommand(command: string, args?: string[], opts?: string[]): Promise<string> {
 
+    console.log(command)
     let selectedCommand = commands.find(
-        (cmd) => cmd.name === command
+        (cmd) => cmd.name.toLowerCase() === command
     );
+    console.log(selectedCommand)
     if (!selectedCommand) {
         selectedCommand = ctfCommands.find(
-            (cmd) => cmd.name === command
+            (cmd) => cmd.name.toLowerCase() === command
         );
     }
     if (selectedCommand) {
