@@ -250,11 +250,23 @@ async function handleCommand(command: string, args?: string[], opts?: string[]):
             case "help":
                 return "";
             case "whoami":
-                return `My name is Panduru Ionut\n\nI'm 26 and I'm currently a fullstack web developer.\n\nI love coding and CTF's.`;
+                    return `My name is Panduru Ionut\n\nI'm ${new Date().getFullYear() - 1996} and I'm currently a fullstack web developer.\n\nI love coding and CTF's.`;
             case "history":
                 return `2018 - Graduated from University of Lucian Blaga Sibiu (B.Sc. in ComputerScience)\n\n2018 - Android Developer @ KeepCalling\n\n2020 - Web Developer @ EdelCode\n\n2020 - Graduated from University of Lucian Blaga Sibiu (M.Sc. in ComputerScience)\n\n2020 - Full Stack Web Developer @ Graffino\n\n2022 - Now Working as Freelancer`;
             case "mp":
-                return `Projects i'm currenlty proud of:\n\nWeb app to schedule & organize teams for multiple sports https://sprint-scape.vercel.app\n\nAttempt to recreate apple scroll animation effect https://panduruionut.github.io/leap-of-faith\n\nMore @ https://github.com/PanduruIonut`;
+                return `Projects I'm currently proud of:\n
+                    - stiu.ai — a website where you can stay informed with short news snippets  
+                      👉 https://stiu.ai\n
+                    - Synctify — backs up your liked songs from Spotify  
+                      👉 https://github.com/PanduruIonut/synctify-nuxt\n
+                    - Wedding Share — an app where wedding attendees can scan a QR and upload pictures & videos in real time  
+                      👉 https://github.com/PanduruIonut/wedding-share\n
+                    - Web app to schedule & organize teams for multiple sports  
+                      👉 https://sprint-scape.vercel.app\n
+                    - Attempt to recreate Apple scroll animation effect  
+                      👉 https://panduruionut.github.io/leap-of-faith\n
+                    - More on my GitHub  
+                      👉 https://github.com/PanduruIonut`;
             case "ping":
                 return ``;
             case "top":
