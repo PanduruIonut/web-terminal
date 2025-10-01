@@ -256,22 +256,22 @@ async function handleCommand(command: string, args?: string[], opts?: string[]):
             case "mp":
                return `Projects I'm currently proud of:
 stiu.ai — Stay up to date with the world in seconds.
-\u001b]8;;https://stiu.ai\u0007https://stiu.ai\u001b]8;;\u0007
+https://stiu.ai
 
 Synctify Nuxt — Keep your Spotify playlists safe.
-\u001b]8;;https://github.com/PanduruIonut/synctify-nuxt\u0007https://github.com/PanduruIonut/synctify-nuxt\u001b]8;;\u0007
+https://github.com/PanduruIonut/synctify-nuxt
 
 Wedding Share — Capture the big day together.
-\u001b]8;;https://github.com/PanduruIonut/wedding-share\u0007https://github.com/PanduruIonut/wedding-share\u001b]8;;\u0007
+https://github.com/PanduruIonut/wedding-share
 
 Sprint Scape — A smart web app to schedule and organize sports teams.
-\u001b]8;;https://sprint-scape.vercel.app\u0007https://sprint-scape.vercel.app\u001b]8;;\u0007
+https://sprint-scape.vercel.app
 
 Leap of Faith — A creative attempt to recreate Apple’s smooth scroll animation effects.
-\u001b]8;;https://panduruionut.github.io/leap-of-faith\u0007https://panduruionut.github.io/leap-of-faith\u001b]8;;\u0007
+https://panduruionut.github.io/leap-of-faith
 
 More on my GitHub — Explore experiments, side projects, and open-source contributions.
-\u001b]8;;https://github.com/PanduruIonut\u0007https://github.com/PanduruIonut\u001b]8;;\u0007`;
+https://github.com/PanduruIonut`;
             case "ping":
                 return ``;
             case "top":
