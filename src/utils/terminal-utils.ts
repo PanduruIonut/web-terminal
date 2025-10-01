@@ -254,23 +254,13 @@ async function handleCommand(command: string, args?: string[], opts?: string[]):
             case "history":
                 return `2018 - Graduated from University of Lucian Blaga Sibiu (B.Sc. in ComputerScience)\n\n2018 - Android Developer @ KeepCalling\n\n2020 - Web Developer @ EdelCode\n\n2020 - Graduated from University of Lucian Blaga Sibiu (M.Sc. in ComputerScience)\n\n2020 - Full Stack Web Developer @ Graffino\n\n2022 - Now Working as Freelancer`;
             case "mp":
-               return `Projects I'm currently proud of:
-stiu.ai — Stay up to date with the world in seconds.
-https://stiu.ai\n\n
-Wedding Share — Capture the big day together.
-https://github.com/PanduruIonut/wedding-share
-
-Synctify Nuxt — Keep your Spotify playlists safe.
-https://github.com/PanduruIonut/synctify-nuxt
-
-Sprint Scape — A smart web app to schedule and organize sports teams.
-https://sprint-scape.vercel.app
-
-Leap of Faith — A creative attempt to recreate Apple’s smooth scroll animation effects.
-https://panduruionut.github.io/leap-of-faith
-
-More on my GitHub — Explore experiments, side projects, and open-source contributions.
-https://github.com/PanduruIonut`;
+               return `Projects I'm currently proud of:\n\n
+stiu.ai — Stay up to date with the world in seconds. https://stiu.ai\n\n
+Synctify Nuxt — Keep your Spotify playlists safe. https://github.com/PanduruIonut/synctify-nuxt\n\n
+Wedding Share — Capture the big day together. https://github.com/PanduruIonut/wedding-share\n\n
+Sprint Scape — A smart web app to schedule and organize sports teams. https://sprint-scape.vercel.app\n\n
+Leap of Faith — A creative attempt to recreate Apple’s smooth scroll animation effects. https://panduruionut.github.io/leap-of-faith\n\n
+More on my GitHub — Explore experiments, side projects, and open-source contributions. https://github.com/PanduruIonut`;
             case "ping":
                 return ``;
             case "top":
