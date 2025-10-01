@@ -256,8 +256,7 @@ async function handleCommand(command: string, args?: string[], opts?: string[]):
             case "mp":
                return `Projects I'm currently proud of:
 stiu.ai — Stay up to date with the world in seconds.
-https://stiu.ai
-
+https://stiu.ai\n\n
 Wedding Share — Capture the big day together.
 https://github.com/PanduruIonut/wedding-share
 
