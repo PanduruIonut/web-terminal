@@ -258,11 +258,11 @@ async function handleCommand(command: string, args?: string[], opts?: string[]):
 stiu.ai — Stay up to date with the world in seconds.
 https://stiu.ai
 
-Synctify Nuxt — Keep your Spotify playlists safe.
-https://github.com/PanduruIonut/synctify-nuxt
-
 Wedding Share — Capture the big day together.
 https://github.com/PanduruIonut/wedding-share
+
+Synctify Nuxt — Keep your Spotify playlists safe.
+https://github.com/PanduruIonut/synctify-nuxt
 
 Sprint Scape — A smart web app to schedule and organize sports teams.
 https://sprint-scape.vercel.app
