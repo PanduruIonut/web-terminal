@@ -254,19 +254,12 @@ async function handleCommand(command: string, args?: string[], opts?: string[]):
             case "history":
                 return `2018 - Graduated from University of Lucian Blaga Sibiu (B.Sc. in ComputerScience)\n\n2018 - Android Developer @ KeepCalling\n\n2020 - Web Developer @ EdelCode\n\n2020 - Graduated from University of Lucian Blaga Sibiu (M.Sc. in ComputerScience)\n\n2020 - Full Stack Web Developer @ Graffino\n\n2022 - Now Working as Freelancer`;
             case "mp":
-                return `Projects I'm currently proud of:\n
-                    - stiu.ai — Stay up to date with the world in seconds. Bite-sized, no-fluff news that keeps you informed fast.  
-                      https://stiu.ai\n
-                    - Synctify — Because playlists aren’t forever. This tool automatically backs up your liked Spotify songs so your music is safe.  
-                      https://github.com/PanduruIonut/synctify-nuxt\n
-                    - Wedding Share — Capture the big day together. Guests scan a QR and instantly upload photos & videos to one shared album.  
-                      https://github.com/PanduruIonut/wedding-share\n
-                    - Sprint Scape — A smart web app to schedule and organize sports teams, making group play effortless.  
-                      https://sprint-scape.vercel.app\n
-                    - Leap of Faith — A creative attempt to recreate Apple’s smooth scroll animation effects, purely for fun and challenge.  
-                      https://panduruionut.github.io/leap-of-faith\n
-                    - More on my GitHub — Explore experiments, side projects, and open-source contributions.  
-                      https://github.com/PanduruIonut`;
+                return `Projects I'm currently proud of:\nstiu.ai — Stay up to date with the world in seconds. Bite-sized, no-fluff news that keeps you informed fast.
+https://stiu.ai\nSynctify — Because playlists aren’t forever. This tool automatically backs up your liked Spotify songs so your music is safe.  
+https://github.com/PanduruIonut/synctify-nuxt\nWedding Share — Capture the big day together. Guests scan a QR and instantly upload photos & videos to one shared album.  
+https://github.com/PanduruIonut/wedding-share\nSprint Scape — A smart web app to schedule and organize sports teams, making group play effortless.  
+https://sprint-scape.vercel.app\nLeap of Faith — A creative attempt to recreate Apple’s smooth scroll animation effects, purely for fun and challenge.  
+https://panduruionut.github.io/leap-of-faith\nMore on my GitHub — Explore experiments, side projects, and open-source contributions.\nhttps://github.com/PanduruIonut`;
 
             case "ping":
                 return ``;
