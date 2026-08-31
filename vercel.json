@@ -2,17 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
-      "source": "/",
-      "has": [
-        {
-          "type": "header",
-          "key": "user-agent",
-          "value": ".*([Cc]url|[Ww]get|HTTPie|httpie).*"
-        }
-      ],
-      "destination": "/cv.txt"
-    },
-    {
       "source": "/cv",
       "destination": "/cv.txt"
     }
