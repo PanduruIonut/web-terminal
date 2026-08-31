@@ -198,6 +198,53 @@ export class MyTerminal extends HTMLElement {
             position: fixed;
             left: 0;
         }
+
+        /* Window-chrome glyphs, revealed on hover the way macOS does it.
+           Only the close button is wired to anything, so it is the only one
+           that gets a pointer cursor. */
+        .terminal__buttons > div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: inherit;
+            font-size: 10px;
+            font-weight: 700;
+            line-height: 1;
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        .terminal__buttons > div::before {
+            opacity: 0;
+            transition: opacity 0.15s ease;
+        }
+
+        .terminal__buttons:hover > div::before {
+            opacity: 1;
+        }
+
+        .close-button::before {
+            content: "×";
+            font-size: 12px;
+        }
+
+        .hide-button::before {
+            content: "−";
+        }
+
+        .resize-button::before {
+            content: "+";
+        }
+
+        .hide-button,
+        .resize-button {
+            cursor: default;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .terminal__buttons > div::before {
+                transition: none;
+            }
+        }
         .terminal___input_container-prompt{
             width: 90%;
         }
