@@ -1,0 +1,265 @@
+<!doctype html>
+<!--
+  Source for public/og.png, the link preview card for ionut.codes.
+
+  To regenerate: copy this file into public/ so it is served from the site
+  root, run `pnpm dev`, open http://localhost:5173/og-card.html, capture the
+  1200x630 body, save it as public/og.png, then delete the copy.
+
+  The capture has to be exactly 1200x630. index.html declares those numbers
+  in og:image:width and og:image:height, and anything else gets cropped or
+  rescaled by whatever is rendering the preview.
+
+  Serving it from the site root is not optional: the @font-face rules below
+  reference /fonts/*.woff2 by absolute path, so over file:// the fonts fail
+  silently and the card renders in a fallback face. The greek subset is
+  needed as much as the latin one — the prompt character λ lives in it.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>ionut.codes — og card</title>
+    <style>
+      /* The site's own self-hosted face. Latin subset only; the prompt's λ
+         (U+03BB) lives in the greek file and falls back to the system mono,
+         which carries Greek everywhere this gets rendered. */
+      @font-face {
+        font-family: "JetBrains Mono";
+        font-style: normal;
+        font-weight: 100 800;
+        font-display: block;
+        src: url("/fonts/jetbrains-mono-latin.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "JetBrains Mono";
+        src: url("/fonts/jetbrains-mono-greek.woff2") format("woff2");
+        unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+      }
+
+      body {
+        position: relative;
+        background: #1a1b26;
+        font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: geometricPrecision;
+      }
+
+      /* Lifts the window off an otherwise flat field. Barely there on purpose. */
+      .glow {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse 780px 520px at 50% 44%,
+          rgba(131, 171, 218, 0.11),
+          rgba(26, 27, 38, 0) 68%
+        );
+      }
+
+      .stage {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .window {
+        width: 1000px;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: rgba(0, 0, 0, 0.45) 0 18px 50px;
+      }
+
+      .titlebar {
+        position: relative;
+        height: 32px;
+        background: #c8c8c8;
+        border-bottom: 1px solid #000;
+        display: flex;
+        align-items: center;
+      }
+
+      .dots {
+        display: flex;
+        align-items: center;
+        margin-left: 14px;
+        gap: 8px;
+      }
+
+      .dot {
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 1;
+        color: rgba(0, 0, 0, 0.6);
+      }
+
+      .dot--close {
+        background: #ff605c;
+        font-size: 12px;
+      }
+      .dot--hide {
+        background: #ffbd44;
+      }
+      .dot--resize {
+        background: #00ca4e;
+      }
+
+      .title {
+        position: absolute;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 700;
+        color: #000;
+        pointer-events: none;
+      }
+
+      /* Mirrors .terminal__content: output pinned to the top, prompt to the
+         bottom, exactly as the live terminal lays itself out. */
+      .screen {
+        box-sizing: border-box;
+        height: 410px;
+        padding: 34px 44px 30px;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .prompt {
+        display: flex;
+        align-items: baseline;
+        font-size: 22px;
+        line-height: 1;
+        white-space: nowrap;
+      }
+
+      .p-lambda {
+        color: #ff9e64;
+      }
+      .p-tilde {
+        color: #af91e8;
+        margin-left: 9px;
+      }
+      .p-chevron {
+        color: #2ac3de;
+        font-size: 19px;
+        margin-left: 9px;
+      }
+      .echo {
+        color: #7699c4;
+        margin-left: 13px;
+      }
+
+      .cursor {
+        display: inline-block;
+        width: 11px;
+        height: 22px;
+        margin-left: 13px;
+        background: #83abda;
+        opacity: 0.85;
+        transform: translateY(3px);
+      }
+
+      .name {
+        margin: 30px 0 0;
+        font-size: 70px;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -1.5px;
+        color: #fff;
+        white-space: nowrap;
+      }
+
+      .role {
+        margin: 19px 0 0;
+        font-size: 30px;
+        font-weight: 400;
+        line-height: 1;
+        color: #83abda;
+        white-space: nowrap;
+      }
+
+      .note {
+        margin: 24px 0 0;
+        font-size: 20px;
+        line-height: 1.35;
+        color: #83abda;
+        opacity: 0.72;
+        white-space: nowrap;
+      }
+
+      /* The live page carries a dim hint line under the terminal. Same slot. */
+      .caption {
+        margin-top: 38px;
+        font-size: 20px;
+        line-height: 1;
+        color: #fff;
+        opacity: 0.62;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="glow"></div>
+
+    <div class="stage">
+      <div class="window">
+        <div class="titlebar">
+          <div class="dots">
+            <div class="dot dot--close">&times;</div>
+            <div class="dot dot--hide">&minus;</div>
+            <div class="dot dot--resize">+</div>
+          </div>
+          <div class="title">ionut@MacBook-Air:~</div>
+        </div>
+
+        <div class="screen">
+          <div>
+            <div class="prompt">
+              <span class="p-lambda">&#955;</span>
+              <span class="p-tilde">~</span>
+              <span class="p-chevron">&gt;&gt;</span>
+              <span class="echo">whoami</span>
+            </div>
+
+            <div class="name">Panduru Ionut</div>
+            <div class="role">Full stack developer in Sibiu.</div>
+            <div class="note">
+              Paid to build game integration services. Unpaid, I build side
+              products.
+            </div>
+          </div>
+
+          <div class="prompt">
+            <span class="p-lambda">&#955;</span>
+            <span class="p-tilde">~</span>
+            <span class="p-chevron">&gt;&gt;</span>
+            <span class="cursor"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="caption">ionut.codes &mdash; a terminal pretending to be a homepage.</div>
+    </div>
+  </body>
+</html>

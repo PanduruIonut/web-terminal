@@ -4,6 +4,18 @@ feel free to use it as a template
 
 check out the [demo](https://ionut.codes)
 
+## CV content
+
+`src/data/cv.json` is the single source for everything on the CV. The CV page
+imports it directly, and `scripts/generate-cv-txt.mjs` renders `public/cv.txt`
+from the same file as the first step of `pnpm build`, so the two cannot drift
+apart. That also means `cv.txt` must never be edited by hand — the next build
+overwrites it. `pnpm generate:cv` re-renders it without a full build.
+
+`scripts/og-card.html` is the source of `public/og.png`, the link preview image.
+To remake it, serve that file from the site root, capture the 1200x630 body and
+save it over `public/og.png`; the comment at the top of the file has the rest.
+
 ## CTF storage
 
 The two CTF flags and the `userOwns` leaderboard live in a Redis store, reached
