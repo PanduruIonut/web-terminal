@@ -252,7 +252,7 @@ async function handleCommand(command: string, args?: string[], opts?: string[]):
             case "help":
                 return "";
             case "whoami":
-                return `Panduru Ionut, ${new Date().getFullYear() - 1996}, full stack developer in Sibiu.\n\nPaid to build game integration services at Betfair.\nUnpaid, I put GPS trackers on motorbikes and ship apps nobody asked for.\n\nThose last two overlap more than you'd expect.`;
+                return `Panduru Ionut, ${new Date().getFullYear() - 1996}, full stack developer in Sibiu.\n\nPaid to build game integration services.\nUnpaid, I put GPS trackers on motorbikes and ship apps nobody asked for.\n\nThose last two overlap more than you'd expect.`;
             case "history":
                 return `2018 - Graduated from Lucian Blaga University of Sibiu (B.Sc. in Computer Science)\n\n2018 - Android Developer @ KeepCalling\n\n2020 - Graduated from Lucian Blaga University of Sibiu (M.Sc. in Advanced Informatics Systems)\n\n2020 - Full Stack Developer @ EdelCode\n\n2020 - Full Stack Developer @ Graffino\n\n2022 - Full Stack Developer @ Evo Primes / Plutus Inc\n\n2022 - Full Stack Developer @ Thiele & Close\n\n2024 - Now Software Engineer @ Betfair`;
             case "mp":
