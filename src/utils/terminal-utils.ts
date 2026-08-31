@@ -374,6 +374,17 @@ const idleLines = [
     "Still there?",
     "The cursor has been blinking on its own for a while now.",
     "'help' is still there, if you have run out of ideas.",
+    "Two minutes of nothing. That is a kind of dedication.",
+    "This terminal has nowhere else to be.",
+    "The flags are still hidden. They keep well.",
+    "You can type into this. That is the entire interface.",
+    "Still nothing. The cursor is starting to take it personally.",
+    "The sky above the port is the colour of a dead channel.",
+    "Somewhere a side project is still marked defunct.",
+    "No input detected. No judgement either.",
+    "Nothing is happening. Technically that is still a state.",
+    "The uptime counter and the productivity counter disagree.",
+    "You found a terminal on a website and then stopped. Fair enough.",
 ];
 let idleTimer: ReturnType<typeof setTimeout> | undefined;
 let idleIndex = 0;
