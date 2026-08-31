@@ -58,6 +58,7 @@ const socials = [
         description: "https://www.linkedin.com/in/ionut-panduru/", text: 'Ionut-Panduru'
     },
     { name: "E-mail", description: "panduru.ionut@hotmail.com" },
+    { name: "Location", description: "Sibiu, Romania" },
 ];
 
 function parseInput(input: string) {
@@ -168,42 +169,28 @@ function displaySidesBlock(content: Command[], terminalDisplay: HTMLElement, ter
 }
 
 function highlightLinks(element: HTMLElement, text: string) {
-    const links = text.match(/https?:\/\/[^\s]+/g);
-    const mail = text.match(/\S+@\S+\.\S+/g);
-    if (links) {
-        links.forEach((link) => {
-            const anchorTag = document.createElement("a");
-            anchorTag.href = link;
-            anchorTag.textContent = link;
-            anchorTag.style.color = "#2498AF";
-            anchorTag.style.textDecoration = "underline";
-            anchorTag.style.cursor = "pointer";
-            anchorTag.style.fontWeight = "bold";
-            anchorTag.textContent = socials.find(
-                (social) => social.description === link
-            )?.text || link;
-            element.innerHTML = element.innerHTML.replace(
-                link,
-                anchorTag.outerHTML
-            );
+    if (!/https?:\/\/[^\s]+/.test(text) && !/\S+@\S+\.\S+/.test(text)) return;
 
-        });
-    }
-    if (mail) {
-        mail.forEach((email) => {
-            const anchorTag = document.createElement("a");
-            anchorTag.href = `mailto:${email}`;
-            anchorTag.textContent = email;
-            anchorTag.style.color = "#2498AF";
-            anchorTag.style.textDecoration = "underline";
-            anchorTag.style.cursor = "pointer";
-            anchorTag.style.fontWeight = "bold";
-            element.innerHTML = element.innerHTML.replace(
-                email,
-                anchorTag.outerHTML
-            );
-        });
-    }
+    // Replaced in a single pass over the text. Substituting one match at a time
+    // let a short URL match inside the href of a longer one already linkified
+    // (github.com/PanduruIonut inside github.com/PanduruIonut/synctify-nuxt).
+    const anchor = (href: string, label: string) => {
+        const anchorTag = document.createElement("a");
+        anchorTag.href = href;
+        anchorTag.textContent = label;
+        anchorTag.style.color = "#2498AF";
+        anchorTag.style.textDecoration = "underline";
+        anchorTag.style.cursor = "pointer";
+        anchorTag.style.fontWeight = "bold";
+        return anchorTag.outerHTML;
+    };
+
+    element.innerHTML = element.innerHTML
+        .replace(/https?:\/\/[^\s]+/g, (link) => {
+            const label = socials.find((social) => social.description === link)?.text || link;
+            return anchor(link, label);
+        })
+        .replace(/\S+@\S+\.\S+/g, (email) => anchor(`mailto:${email}`, email));
 }
 function stopTyping(clickSound: HTMLAudioElement, terminalDisplay: HTMLElement) {
     clearTimeout(typingTimeout);
@@ -265,21 +252,15 @@ async function handleCommand(command: string, args?: string[], opts?: string[]):
             case "help":
                 return "";
             case "whoami":
-                    return `My name is Panduru Ionut\n\nI'm ${new Date().getFullYear() - 1996} and I'm currently a fullstack web developer.\n\nI love coding and CTF's.`;
+                return `My name is Panduru Ionut\n\nI'm ${new Date().getFullYear() - 1996} and I'm a full stack developer based in Sibiu, Romania.\n\nI enjoy being involved in every step of the process, from planning and design to solving real-world problems with code.\n\nWhen I'm not online, you'll probably find me exploring the world on my motorbike.\n\nI love coding and CTF's.`;
             case "history":
-                return `2018 - Graduated from University of Lucian Blaga Sibiu (B.Sc. in ComputerScience)\n\n2018 - Android Developer @ KeepCalling\n\n2020 - Web Developer @ EdelCode\n\n2020 - Graduated from University of Lucian Blaga Sibiu (M.Sc. in ComputerScience)\n\n2020 - Full Stack Web Developer @ Graffino\n\n2022 - Now Working as Freelancer`;
+                return `2018 - Graduated from Lucian Blaga University of Sibiu (B.Sc. in Computer Science)\n\n2018 - Android Developer @ KeepCalling\n\n2020 - Graduated from Lucian Blaga University of Sibiu (M.Sc. in Advanced Informatics Systems)\n\n2020 - Full Stack Developer @ EdelCode\n\n2020 - Full Stack Developer @ Graffino\n\n2022 - Full Stack Developer @ Evo Primes / Plutus Inc\n\n2022 - Full Stack Developer @ Thiele & Close\n\n2024 - Now Software Engineer @ Betfair`;
             case "mp":
-               return `Projects I'm currently proud of:\n\n
-stiu.ai — Stay up to date with the world in seconds. https://stiu.ai\n\n
-Synctify Nuxt — Keep your Spotify playlists safe. https://github.com/PanduruIonut/synctify-nuxt\n\n
-Wedding Share — Capture the big day together. https://github.com/PanduruIonut/wedding-share\n\n
-Sprint Scape — A smart web app to schedule and organize sports teams. https://sprint-scape.vercel.app\n\n
-Leap of Faith — A creative attempt to recreate Apple’s smooth scroll animation effects. https://panduruionut.github.io/leap-of-faith\n\n
-More on my GitHub — Explore experiments, side projects, and open-source contributions. https://github.com/PanduruIonut`;
+                return `Projects I'm currently proud of:\n\nMoto-Tracker - IoT motorcycle tracking platform: custom ESP32 firmware, Node.js/Express, PostgreSQL, MQTT and a MapLibre GL PWA with live GPS, trip history, crash & theft detection.\n\nStiu.ai - News intelligence platform that scrapes, deduplicates and AI-enriches Romanian news, with summaries, Q&A and a credibility trust score. https://stiu.ai\n\nUs - Real-time app for couples, shipped natively on both platforms: SwiftUI on iOS, Kotlin & Jetpack Compose on Android, Supabase behind it.\n\nWedding Share - Guest photo sharing with QR pairing and multithreaded uploads. https://github.com/PanduruIonut/wedding-share\n\nSynctify - Spotify liked-songs sync with previews, built with Laravel and Nuxt. https://github.com/PanduruIonut/synctify-nuxt\n\nSprint Scape - Venue booking and team scheduling for sports activities. https://sprint-scape.vercel.app\n\nFC Skill Trainer - iOS & Android trainer teaching EA Sports FC skill moves through real input practice, on touchscreen or a paired DualSense/Xbox controller.\n\nLeap of Faith - A creative attempt to recreate Apple's smooth scroll animation effects. https://panduruionut.github.io/leap-of-faith\n\nMore experiments and open-source work @ https://github.com/PanduruIonut`;
             case "ping":
                 return ``;
             case "top":
-                return `My current main tech stack is VueJs with Typescript for fronted & Laravel for backend.\n\nI'm currently trying out NextJS with Typescript & TailwindCSS.\n\nI'm also trying to learn more about AWS & Docker.`;
+                return `Front-End: React, Vue.js, TypeScript, JavaScript, HTML, CSS\n\nBack-End: Node.js, NestJS, Java (Spring Boot), PHP (Laravel), GraphQL, gRPC\n\nData: PostgreSQL, MySQL, Cassandra, Redis, Kafka, Solr, Qdrant\n\nDevOps & Cloud: Docker, Kubernetes, ArgoCD, GitHub Actions, Nginx, AWS (EC2, ECR, S3, SQS, Lambda, SES, IAM)\n\nTesting: Jest, Vitest, Cypress\n\nMobile: Android (Java, RxJava, Dagger, Firebase)`;
             case "clear":
                 return "";
             case "mute":
