@@ -11,6 +11,18 @@ const CRT_CLASS = "crt-effect";
 const MATRIX_CLASS = "matrix-rain";
 const TERMINAL_SELECTOR = ".terminal__content";
 
+/**
+ * Layer order matters when both effects are on. The rain repaints a dark fill
+ * every frame to draw its trails, so it turns nearly opaque within a second or
+ * two; if it sat above the CRT it would bury it. The canvas is fixed-position on
+ * body and the CRT overlays are absolutely positioned inside .terminal__content,
+ * but neither ancestor creates a stacking context, so both resolve against the
+ * root and a plain z-index comparison decides the winner.
+ */
+const MATRIX_Z_INDEX = 900;
+const CRT_TINT_Z_INDEX = 901;
+const CRT_SCANLINE_Z_INDEX = 902;
+
 const MATRIX_DURATION = 8000;
 const MATRIX_FONT_SIZE = 14;
 const MATRIX_FRAME_INTERVAL = 55;
@@ -39,7 +51,7 @@ function ensureStyles(): void {
             content: "";
             position: absolute;
             inset: 0;
-            z-index: 5;
+            z-index: ${CRT_SCANLINE_Z_INDEX};
             pointer-events: none;
             border-radius: inherit;
             background: repeating-linear-gradient(
@@ -58,7 +70,7 @@ function ensureStyles(): void {
             content: "";
             position: absolute;
             inset: 0;
-            z-index: 4;
+            z-index: ${CRT_TINT_Z_INDEX};
             pointer-events: none;
             border-radius: inherit;
             background:
@@ -89,7 +101,7 @@ function ensureStyles(): void {
 
         .${MATRIX_CLASS} {
             position: fixed;
-            z-index: 999;
+            z-index: ${MATRIX_Z_INDEX};
             pointer-events: none;
             border-bottom-left-radius: 7px;
             border-bottom-right-radius: 7px;
