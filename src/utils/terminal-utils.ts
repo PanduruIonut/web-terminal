@@ -3,6 +3,7 @@ import { readFile, listFiles, changeDirectory, getCurrentPath } from "./fileSyst
 import { currentDirectory } from "./fileSystem/functionality";
 import { DirectoryEntry, virtualFileSystem } from "./fileSystem/virtualFileSystem";
 import { htopOutput, runMatrix, toggleCrt } from "./easterEggs";
+import { applyTheme, themeNames } from "./themes";
 
 let commandHistory: string[] = [];
 let historyIndex = -1;
@@ -40,6 +41,7 @@ export const commands: Command[] = [
     { name: "top", description: "My Main Tech Stack" },
     { name: "whoami", description: "About Me", },
     { name: "ctf", description: "CTF Challenges" },
+    { name: "theme", description: themeNames().join(", "), args: ["<name>"] },
     { name: "helpctf", description: "CTF Challenges help" },
 ];
 
@@ -324,6 +326,8 @@ async function handleCommand(command: string, args?: string[], opts?: string[]):
                 const result = await submitFlags(args![0], args![1], args![2]);
                 return result;
             }
+            case "theme":
+                return applyTheme(args![0]);
             case "htop":
                 return htopOutput();
             case "matrix":

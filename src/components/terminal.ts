@@ -1,6 +1,7 @@
 import { displayWelcomeText, handleKeyUp, handleKeyDown } from "../utils/terminal-utils";
 import { saveVirtualFileSystemToLocalStorage } from "../utils/fileSystem/virtualFileSystem";
 import { setHintCookie } from "../utils/hintCookie";
+import { restoreTheme } from "../utils/themes";
 export class MyTerminal extends HTMLElement {
 
     constructor() {
@@ -10,6 +11,7 @@ export class MyTerminal extends HTMLElement {
     connectedCallback() {
         saveVirtualFileSystemToLocalStorage();
         setHintCookie();
+        restoreTheme();
         document.addEventListener("DOMContentLoaded", () => {
             const input = document.querySelector(
                 ".terminal__input"
