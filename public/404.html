@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <meta name="description" content="404 - No such file or directory. ionut.codes" />
+    <title>404 - Ionut.codes</title>
+    <style>
+      html {
+        background-color: #1a1b26;
+        font-family: "Consolas", "Menlo", "Fira Code", monospace;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #1a1b26;
+        overflow-x: hidden;
+      }
+
+      main {
+        box-sizing: border-box;
+        width: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
+        padding: 20px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .terminal {
+        width: 800px;
+        max-width: 100%;
+        animation: moveTerminal 1s ease-in-out;
+      }
+
+      @keyframes moveTerminal {
+        0% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(10px);
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+
+      .terminal__title-container {
+        position: relative;
+        box-sizing: border-box;
+        background-color: #c8c8c8;
+        border-top-left-radius: 7px;
+        border-top-right-radius: 7px;
+        color: black;
+        font-weight: bold;
+        width: 100%;
+        align-items: center;
+        display: flex;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        justify-content: center;
+        font-size: 12px;
+        border-bottom: black 1px solid;
+      }
+
+      .terminal__buttons {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        left: 0;
+      }
+
+      .close-button {
+        width: 12px;
+        height: 12px;
+        margin-left: 10px;
+        border-radius: 50%;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        background-color: #ff605c;
+      }
+
+      .hide-button {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-left: 8px;
+        margin-right: 8px;
+        background-color: #ffbd44;
+      }
+
+      .resize-button {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: #00ca4e;
+      }
+
+      .terminal__title {
+        flex-grow: 1;
+        text-align: center;
+      }
+
+      .terminal__content {
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background-color: rgba(0, 0, 0, 0.6);
+        height: 400px;
+        width: 100%;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        border-bottom-left-radius: 7px;
+        border-bottom-right-radius: 7px;
+      }
+
+      @media only screen and (max-width: 800px) {
+        .terminal {
+          width: 90vw;
+        }
+
+        .terminal__content {
+          height: 60vh;
+        }
+      }
+
+      .terminal__display-container {
+        flex: 1;
+        overflow: auto;
+        margin-left: 10px;
+        margin-top: 20px;
+      }
+
+      .terminal__display {
+        color: #83abda;
+        padding: 10px;
+        padding-right: 20px;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        font-size: 14px;
+      }
+
+      .output-container {
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+
+      .output {
+        margin-bottom: 14px;
+      }
+
+      .prompt-1 {
+        color: #ff9e64;
+      }
+
+      .prompt-2 {
+        color: #af91e8;
+        margin-left: 5px;
+      }
+
+      .prompt-3 {
+        color: #2ac3de;
+        margin-left: 5px;
+        font-size: 12px;
+      }
+
+      .command-input {
+        color: #7699c4;
+        margin-left: 10px;
+      }
+
+      .terminal__input_container {
+        display: flex;
+        overflow: hidden;
+        align-items: center;
+        white-space: nowrap;
+        font-size: 14px;
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-bottom: 25px;
+      }
+
+      .command-link {
+        color: #2498af;
+        text-decoration: underline;
+        font-weight: bold;
+        cursor: pointer;
+        margin-left: 10px;
+      }
+
+      .command-link:focus-visible {
+        outline: 1px solid #2ac3de;
+        outline-offset: 2px;
+      }
+
+      .cursor {
+        display: inline-block;
+        width: 8px;
+        height: 14px;
+        margin-left: 8px;
+        background-color: #83abda;
+        animation: blink 1.1s step-end infinite;
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .terminal {
+          animation: none;
+        }
+
+        .cursor {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1 class="visually-hidden">404 - No such file or directory</h1>
+      <div class="terminal">
+        <div class="terminal__title-container">
+          <div class="terminal__buttons">
+            <div class="close-button"></div>
+            <div class="hide-button"></div>
+            <div class="resize-button"></div>
+          </div>
+          <div class="terminal__title">ionut@MacBook-Air:~</div>
+        </div>
+        <div class="terminal__content">
+          <div class="terminal__display-container">
+            <div class="terminal__display"><div class="output-container"
+              ><span class="prompt-1">&lambda;</span
+              ><span class="prompt-2">~</span
+              ><span class="prompt-3">&gt;&gt;</span
+              ><span class="command-input">cat <span data-path>&lt;path&gt;</span></span
+            ></div
+            ><div class="output">sh: <span data-path>&lt;path&gt;</span>: No such file or directory</div
+            ><div class="output">There is one page on this site. This is not it.</div
+          ></div>
+          </div>
+          <div class="terminal__input_container">
+            <span class="prompt-1">&lambda;</span
+            ><span class="prompt-2">~</span
+            ><span class="prompt-3">&gt;&gt;</span
+            ><a class="command-link" href="/">cd /</a
+            ><span class="cursor" aria-hidden="true"></span>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script>
+      (function () {
+        var raw = window.location.pathname + window.location.search;
+        try {
+          raw = decodeURI(raw);
+        } catch (error) {
+          /* keep the raw, still-encoded path */
+        }
+        if (!raw || raw === "/") return;
+        if (raw.length > 64) raw = raw.slice(0, 63) + "…";
+        var nodes = document.querySelectorAll("[data-path]");
+        for (var i = 0; i < nodes.length; i++) {
+          nodes[i].textContent = raw;
+        }
+      })();
+    </script>
+  </body>
+</html>

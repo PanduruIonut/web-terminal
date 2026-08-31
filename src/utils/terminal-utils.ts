@@ -2,9 +2,12 @@ import keySound from "../../public/sounds/keyboardTyping.wav";
 import { readFile, listFiles, changeDirectory, getCurrentPath } from "./fileSystem/functionality";
 import { currentDirectory } from "./fileSystem/functionality";
 import { DirectoryEntry, virtualFileSystem } from "./fileSystem/virtualFileSystem";
+import { htopOutput, runMatrix, toggleCrt } from "./easterEggs";
 
 let commandHistory: string[] = [];
 let historyIndex = -1;
+
+const REPO_URL = "https://github.com/PanduruIonut/web-terminal";
 
 const STORE_UNAVAILABLE =
     "The scoreboard is offline right now, so this is unavailable. Everything else still works.";
@@ -50,6 +53,21 @@ export const ctfCommands: Command[] = [
     { name: "userOwns", description: "list of users that submitted flags" },
 ];
 
+/**
+ * Not listed by `help` or `helpctf` — found by poking around. parseInput still
+ * has to know about them, otherwise they are rejected before reaching the switch
+ * (which is what used to happen to `mute`, despite the hints advertising it).
+ */
+const hiddenCommands: Command[] = [
+    { name: "mute", description: "Toggle the typing sound" },
+    { name: "!!", description: "Run the previous command" },
+    { name: "htop", description: "What is running" },
+    { name: "ssh", description: "Connect somewhere", args: ["<user@host>"] },
+    { name: "source", description: "Where this came from" },
+    { name: "matrix", description: "Character rain" },
+    { name: "crt", description: "Toggle the CRT effect" },
+];
+
 const socials = [
     { name: "GitHub", description: "https://github.com/PanduruIonut", text: 'PanduruIonut' },
     { name: "Twitter", description: "https://twitter.com/ThisIsIonut", text: 'ThisIsIonut' },
@@ -67,7 +85,8 @@ function parseInput(input: string) {
     // case, because flags and usernames are matched verbatim by the store.
     const commandName = rawCommandName.toLowerCase();
     const command = commands.find(cmd => cmd.name.toLowerCase() === commandName)
-        || ctfCommands.find(cmd => cmd.name.toLowerCase() === commandName);
+        || ctfCommands.find(cmd => cmd.name.toLowerCase() === commandName)
+        || hiddenCommands.find(cmd => cmd.name.toLowerCase() === commandName);
 
     if (!command) {
         return { command: "Invalid command" }
@@ -223,6 +242,11 @@ async function handleCommand(command: string, args?: string[], opts?: string[]):
             (cmd) => cmd.name.toLowerCase() === command
         );
     }
+    if (!selectedCommand) {
+        selectedCommand = hiddenCommands.find(
+            (cmd) => cmd.name.toLowerCase() === command
+        );
+    }
     if (selectedCommand) {
         if (selectedCommand.args && (!args || args.length !== selectedCommand.args.length)) {
             return `Command '${command}' requires args: ${selectedCommand.args.join(", ")}`;
@@ -243,6 +267,9 @@ async function handleCommand(command: string, args?: string[], opts?: string[]):
             case "cat":
                 if (args && args.length > 0) {
                     const filename = args[0];
+                    if (filename === "/proc/self") {
+                        return `You are reading it.\n\n${REPO_URL}`;
+                    }
                     const result = await readFile(filename)
                     return result ?? STORE_UNAVAILABLE;
 
@@ -297,6 +324,20 @@ async function handleCommand(command: string, args?: string[], opts?: string[]):
                 const result = await submitFlags(args![0], args![1], args![2]);
                 return result;
             }
+            case "htop":
+                return htopOutput();
+            case "matrix":
+                return runMatrix();
+            case "crt":
+                return toggleCrt();
+            case "ssh":
+                return "Permission denied (publickey).";
+            case "source":
+                return `This terminal is open source.\n\n${REPO_URL}`;
+            case "!!":
+                // Reached only with an empty history; otherwise handleKeyUp has
+                // already swapped !! for the previous command.
+                return "sh: !!: event not found";
             case "helpctf":
                 return ''
             default:
@@ -307,11 +348,52 @@ async function handleCommand(command: string, args?: string[], opts?: string[]):
     }
 }
 
+const IDLE_DELAY = 120000;
+const idleLines = [
+    "Still there?",
+    "The cursor has been blinking on its own for a while now.",
+    "'help' is still there, if you have run out of ideas.",
+];
+let idleTimer: ReturnType<typeof setTimeout> | undefined;
+let idleIndex = 0;
+
+/**
+ * Prints a line after a couple of minutes of silence. Rescheduled on every
+ * keystroke, and skipped while a command is still typing itself out.
+ */
+function scheduleIdleNudge(terminalDisplay: HTMLDivElement, terminalDisplayContainer: HTMLDivElement) {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+        if (isCommandRunning) {
+            scheduleIdleNudge(terminalDisplay, terminalDisplayContainer);
+            return;
+        }
+
+        const line = document.createElement("div");
+        line.style.color = "#565f89";
+        line.style.marginTop = "10px";
+        terminalDisplay.appendChild(line);
+
+        isCommandRunning = true;
+        animateText(line, idleLines[idleIndex % idleLines.length], terminalDisplayContainer).then(() => {
+            isCommandRunning = false;
+            idleIndex += 1;
+            scheduleIdleNudge(terminalDisplay, terminalDisplayContainer);
+        });
+    }, IDLE_DELAY);
+}
+
 export function displayWelcomeText(terminalDisplay: HTMLDivElement, terminalDisplayContainer: HTMLDivElement, _input: HTMLInputElement) {
-    const welcomeText = `A terminal pretending to be a homepage.\n\n'help' lists what it does. Not all of it.\n\n`;
+    const hour = new Date().getHours();
+    const lateNight = hour < 5;
+    const welcomeText = lateNight
+        ? `It's ${hour === 0 ? 12 : hour}am. This site will still be here tomorrow.\n\n'help' lists what it does. Not all of it.\n\n`
+        : `A terminal pretending to be a homepage.\n\n'help' lists what it does. Not all of it.\n\n`;
+
     isCommandRunning = true;
     animateText(terminalDisplay, welcomeText, terminalDisplayContainer).then(() => {
         isCommandRunning = false;
+        scheduleIdleNudge(terminalDisplay, terminalDisplayContainer);
     });
 }
 
@@ -357,6 +439,8 @@ function getFolderFileSuggestions(
 }
 
 export async function handleKeyUp(event: KeyboardEvent, input: HTMLInputElement, terminalDisplay: HTMLDivElement, terminalDisplayContainer: HTMLDivElement) {
+    scheduleIdleNudge(terminalDisplay, terminalDisplayContainer);
+
     switch (event.key) {
         case 'ArrowUp':
             navigateHistory(-1);
@@ -374,7 +458,13 @@ export async function handleKeyUp(event: KeyboardEvent, input: HTMLInputElement,
         }
         if (input.value === "") return;
         isCommandRunning = true;
-        const tempCommand = input.value.trim();
+        let tempCommand = input.value.trim();
+        if (tempCommand === "!!") {
+            const previous = commandHistory[commandHistory.length - 1];
+            // With no history it falls through to the "!!" case, which reports
+            // the same thing bash does.
+            if (previous) tempCommand = previous;
+        }
         input.value = "";
         input.focus();
         const parsedInput = parseInput(tempCommand);

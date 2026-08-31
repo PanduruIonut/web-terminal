@@ -1,0 +1,6 @@
+# If you are reading this, you are probably not a crawler. Two flags are hidden
+# on this site; neither is in this file. Try 'ctf' in the terminal.
+
+User-agent: *
+Allow: /
+Disallow:
