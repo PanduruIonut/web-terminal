@@ -16,9 +16,12 @@ export async function randomizeText(text: HTMLElement) {
                 flag = await getFlag('flag-1');
             } catch (error) {
                 console.error("Error fetching flag:", error);
-                return;
             }
         }
+
+        // Without a flag the scramble below never reaches its exit condition,
+        // so leave the label alone instead of spinning letters forever.
+        if (flag === null) return;
 
         intervalId = setInterval(() => {
             text.innerText = text.innerText
