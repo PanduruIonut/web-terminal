@@ -3,6 +3,7 @@ import { saveVirtualFileSystemToLocalStorage } from "../utils/fileSystem/virtual
 import { setHintCookie } from "../utils/hintCookie";
 import { restoreTheme } from "../utils/themes";
 import { openCv } from "./cvPage";
+import { initBlockCursor } from "../utils/blockCursor";
 export class MyTerminal extends HTMLElement {
 
     constructor() {
@@ -30,6 +31,8 @@ export class MyTerminal extends HTMLElement {
                 terminal.style.transform = "translateY(0)";
                 displayWelcomeText(terminalDisplay, terminalDisplayContainer, input)
             }, 1000);
+
+            initBlockCursor(input);
 
             input.addEventListener("keyup", (event) => handleKeyUp(event, input, terminalDisplay, terminalDisplayContainer));
             document.addEventListener("keydown", (event) => handleKeyDown(event, terminalDisplay, input,));
@@ -96,7 +99,36 @@ export class MyTerminal extends HTMLElement {
             font-size: 14px;
         }
 
+        .terminal___input_container-prompt {
+            position: relative;
+        }
+
+        /* The native I-beam is hidden and a block drawn in its place; see
+           utils/blockCursor.ts for the positioning. */
+        .terminal__cursor {
+            position: absolute;
+            background-color: #83abda;
+            pointer-events: none;
+            animation: terminalCursorBlink 1.05s step-end infinite;
+        }
+
+        @keyframes terminalCursorBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* A blinking block is exactly the kind of motion this opts out of. */
+        @media (prefers-reduced-motion: reduce) {
+            .terminal__cursor { animation: none; }
+        }
+
+        .terminal__input:not(:focus) ~ .terminal__cursor {
+            opacity: .35;
+            animation: none;
+        }
+
         .terminal__input {
+            caret-color: transparent;
             font-family: inherit;
             margin: 0 auto;
             bottom: 0%;

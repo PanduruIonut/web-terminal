@@ -79,18 +79,18 @@
   │ Express, PostgreSQL, MQTT, OSRM road-matching, and a MapLibre GL PWA.
   │ Live GPS, trip history, crash and theft detection, geofencing, and a BLE
   │ anti-theft key fob with HMAC-SHA256 rolling-code auth. Self-hosted on a
-  │ Raspberry Pi.
+  └ Raspberry Pi.
 
   Stiu.ai                                                    https://stiu.ai
   │ News intelligence platform. Scrapes, deduplicates and AI-enriches
   │ Romanian news, roughly 96,000 articles from 6 major sources. Laravel
   │ REST API, Python and FastAPI scraping microservice, AWS Lambda trust
-  │ scoring, Qdrant vector search, React SPA.
+  └ scoring, Qdrant vector search, React SPA.
 
   Us
   │ Real-time app for couples, native on both platforms: SwiftUI on iOS,
   │ Kotlin and Jetpack Compose on Android, Supabase with row-level security
-  │ and realtime channels.
+  └ and realtime channels.
 
   Wedding-Share
   └ Guest photo sharing with QR pairing and multithreaded uploads.
@@ -100,7 +100,7 @@
 
   FC Skill Trainer
   │ iOS and Android trainer for EA Sports FC skill moves, via touchscreen or
-  │ a paired DualSense or Xbox controller.
+  └ a paired DualSense or Xbox controller.
 
 -- EDUCATION ---------------------------------------------------------------
 

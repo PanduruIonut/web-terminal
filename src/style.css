@@ -30,3 +30,36 @@ html {
   font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas,
     "DejaVu Sans Mono", monospace;
 }
+
+/*
+ * Skip link. Off-screen until focused, then a normal visible control — the
+ * standard pattern, so it costs sighted mouse users nothing.
+ */
+.skip-to-cv {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 100;
+  padding: 10px 14px;
+  font: inherit;
+  font-size: 14px;
+  color: #1a1b26;
+  background: #83abda;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  transform: translateY(-250%);
+  transition: transform 0.15s ease;
+}
+
+.skip-to-cv:focus {
+  transform: translateY(0);
+  outline: 2px solid #2ac3de;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skip-to-cv {
+    transition: none;
+  }
+}

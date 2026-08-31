@@ -1,0 +1,109 @@
+{
+  "name": "Panduru Ionut",
+  "title": "Full Stack Developer",
+  "location": "Sibiu, Romania",
+  "contact": {
+    "email": "panduru.ionut@hotmail.com",
+    "web": "https://ionut.codes",
+    "github": "github.com/PanduruIonut",
+    "linkedin": "linkedin.com/in/ionut-panduru"
+  },
+  "profile": "Full-stack developer based in Sibiu. Involved in every step from planning and design through to solving real problems in code. Rides a motorbike when not at a keyboard.",
+  "stack": [
+    ["Front-end", "React, Vue.js (Vuex, Element UI, BootstrapVue), TypeScript, HTML, CSS, JavaScript"],
+    ["Back-end", "Node.js, NestJS, PHP (Laravel), Java (Spring Boot), GraphQL, gRPC"],
+    ["Data", "PostgreSQL, MySQL, Cassandra, Redis, Solr, Qdrant, Kafka"],
+    ["DevOps", "Docker, Kubernetes, ArgoCD, GitHub Actions, Nginx, AWS (EC2, ECR, S3, SQS, Lambda, SES, IAM)"],
+    ["Testing", "Jest, Vitest, Cypress"],
+    ["Mobile", "Android (Java, RxJava, Dagger, Firebase)"]
+  ],
+  "roles": [
+    {
+      "title": "Software Engineer",
+      "place": "Betfair",
+      "when": "04/2024 — present",
+      "whenShort": "04/2024 - present",
+      "detail": "Multi-game compatibility layer standardising workflows across 64 slot and roulette games. Owns 7 microservices end to end, supports external game studios onboarding titles, and debugs production issues across Kubernetes. On-call with Grafana and Prometheus.",
+      "stack": "React, Node.js, Java Spring Boot, NestJS, gRPC, Cassandra, Kafka, Docker, AWS, ArgoCD, Kubernetes"
+    },
+    {
+      "title": "Full Stack Developer",
+      "place": "Thiele & Close",
+      "when": "09/2022 — 04/2024",
+      "whenShort": "09/2022 - 04/2024",
+      "detail": "Backend for news content, subscriptions and regional preferences across multiple sites. Article recommendations and dynamic feeds, SSO, chatbot integration.",
+      "stack": "Vue.js, Node.js, GraphQL, Solr, TypeScript, Cypress, Jest"
+    },
+    {
+      "title": "Full Stack Developer",
+      "place": "Evo Primes / Plutus Inc.",
+      "when": "01/2022 — 09/2022",
+      "whenShort": "01/2022 - 09/2022",
+      "detail": "Main developer on a Laravel backend powering the Aureus POS system: orders, purchases, inventory and gold transactions. eBay marketplace API integration, MySQL query optimisation and full-page caching.",
+      "stack": "PHP, Laravel, Vue.js, Docker, MySQL"
+    },
+    {
+      "title": "Full Stack Developer",
+      "place": "Graffino",
+      "when": "09/2020 — 01/2022",
+      "whenShort": "09/2020 - 01/2022",
+      "detail": "Primary full-stack developer across several projects: a task management app, a parcel distribution system for international warehouses, and factory worker scheduling.",
+      "stack": "PHP, Laravel, Vue.js, TypeScript, MySQL, Docker, Nginx"
+    },
+    {
+      "title": "Full Stack Developer",
+      "place": "EdelCode",
+      "when": "03/2020 — 08/2020",
+      "whenShort": "03/2020 - 08/2020",
+      "detail": "Company management app and a sports meetup platform, with unit and integration tests.",
+      "stack": "React.js, TypeScript, NestJS, TypeORM, GraphQL, RxJS"
+    },
+    {
+      "title": "Android Developer",
+      "place": "KeepCalling",
+      "when": "09/2018 — 03/2020",
+      "whenShort": "09/2018 - 03/2020",
+      "detail": "Features, UI and performance work across multiple Android apps.",
+      "stack": "Java, Android SDK, Dagger, RxJava, Firebase, ButterKnife"
+    }
+  ],
+  "projects": [
+    {
+      "name": "Moto-Tracker",
+      "detail": "IoT motorcycle tracking. Custom ESP32/ESPHome firmware, Node.js and Express, PostgreSQL, MQTT, OSRM road-matching, and a MapLibre GL PWA. Live GPS, trip history, crash and theft detection, geofencing, and a BLE anti-theft key fob with HMAC-SHA256 rolling-code auth. Self-hosted on a Raspberry Pi."
+    },
+    {
+      "name": "Stiu.ai",
+      "link": "https://stiu.ai",
+      "detail": "News intelligence platform. Scrapes, deduplicates and AI-enriches Romanian news, roughly 96,000 articles from 6 major sources. Laravel REST API, Python and FastAPI scraping microservice, AWS Lambda trust scoring, Qdrant vector search, React SPA."
+    },
+    {
+      "name": "Us",
+      "detail": "Real-time app for couples, native on both platforms: SwiftUI on iOS, Kotlin and Jetpack Compose on Android, Supabase with row-level security and realtime channels."
+    },
+    {
+      "name": "Wedding-Share",
+      "detail": "Guest photo sharing with QR pairing and multithreaded uploads."
+    },
+    {
+      "name": "Synctify",
+      "detail": "Spotify liked-songs sync with previews. Laravel and Nuxt."
+    },
+    {
+      "name": "FC Skill Trainer",
+      "detail": "iOS and Android trainer for EA Sports FC skill moves, via touchscreen or a paired DualSense or Xbox controller."
+    }
+  ],
+  "education": [
+    { "degree": "M.Sc. Advanced Informatics Systems", "when": "2018 — 2020", "whenShort": "2018 - 2020", "place": "Lucian Blaga University of Sibiu" },
+    { "degree": "B.Sc. Computer Science", "when": "graduated 2018", "whenShort": "graduated 2018", "place": "Lucian Blaga University of Sibiu" }
+  ],
+  "certificates": [
+    "AWS Cloud Practitioner Essentials",
+    "Developing on AWS",
+    "AWS Cost Optimization",
+    "CompTIA Pentest+ learning path, TryHackMe",
+    "Security Engineer learning path, TryHackMe"
+  ],
+  "closing": "The same information is at https://ionut.codes, where it is a terminal pretending to be a homepage."
+}

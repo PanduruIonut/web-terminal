@@ -9,6 +9,8 @@
  * returns. If you edit one, edit the other.
  */
 
+import cvData from "../data/cv.json";
+
 const PAGE_ID = "cv-page";
 const STYLE_ID = "cv-page-style";
 
@@ -26,87 +28,29 @@ interface Project {
     readonly detail: string;
 }
 
-const ROLES: Role[] = [
-    {
-        title: "Software Engineer",
-        place: "Betfair",
-        when: "04/2024 — present",
-        detail: "Multi-game compatibility layer standardising workflows across 64 slot and roulette games. Owns 7 microservices end to end, supports external game studios onboarding titles, and debugs production issues across Kubernetes. On-call with Grafana and Prometheus.",
-        stack: "React · Node.js · Java Spring Boot · NestJS · gRPC · Cassandra · Kafka · Docker · AWS · ArgoCD · Kubernetes",
-    },
-    {
-        title: "Full Stack Developer",
-        place: "Thiele & Close",
-        when: "09/2022 — 04/2024",
-        detail: "Backend for news content, subscriptions and regional preferences across multiple sites. Article recommendations and dynamic feeds, SSO, chatbot integration.",
-        stack: "Vue.js · Node.js · GraphQL · Solr · TypeScript · Cypress · Jest",
-    },
-    {
-        title: "Full Stack Developer",
-        place: "Evo Primes / Plutus Inc.",
-        when: "01/2022 — 09/2022",
-        detail: "Main developer on a Laravel backend powering the Aureus POS system: orders, purchases, inventory and gold transactions. eBay marketplace API integration, MySQL query optimisation and full-page caching.",
-        stack: "PHP · Laravel · Vue.js · Docker · MySQL",
-    },
-    {
-        title: "Full Stack Developer",
-        place: "Graffino",
-        when: "09/2020 — 01/2022",
-        detail: "Primary full-stack developer across several projects: a task management app, a parcel distribution system for international warehouses, and factory worker scheduling.",
-        stack: "PHP · Laravel · Vue.js · TypeScript · MySQL · Docker · Nginx",
-    },
-    {
-        title: "Full Stack Developer",
-        place: "EdelCode",
-        when: "03/2020 — 08/2020",
-        detail: "Company management app and a sports meetup platform, with unit and integration tests.",
-        stack: "React.js · TypeScript · NestJS · TypeORM · GraphQL · RxJS",
-    },
-    {
-        title: "Android Developer",
-        place: "KeepCalling",
-        when: "09/2018 — 03/2020",
-        detail: "Features, UI and performance work across multiple Android apps.",
-        stack: "Java · Android SDK · Dagger · RxJava · Firebase · ButterKnife",
-    },
-];
+interface Education {
+    readonly degree: string;
+    readonly when: string;
+    readonly place: string;
+}
 
-const PROJECTS: Project[] = [
-    {
-        name: "Moto-Tracker",
-        detail: "IoT motorcycle tracking. Custom ESP32/ESPHome firmware, Node.js and Express, PostgreSQL, MQTT, OSRM road-matching, and a MapLibre GL PWA. Live GPS, trip history, crash and theft detection, geofencing, and a BLE anti-theft key fob with HMAC-SHA256 rolling-code auth. Self-hosted on a Raspberry Pi.",
-    },
-    {
-        name: "Stiu.ai",
-        link: "https://stiu.ai",
-        detail: "News intelligence platform. Scrapes, deduplicates and AI-enriches Romanian news, roughly 96,000 articles from 6 major sources. Laravel REST API, Python and FastAPI scraping microservice, AWS Lambda trust scoring, Qdrant vector search, React SPA.",
-    },
-    {
-        name: "Us",
-        detail: "Real-time app for couples, native on both platforms: SwiftUI on iOS, Kotlin and Jetpack Compose on Android, Supabase with row-level security and realtime channels.",
-    },
-    {
-        name: "Wedding-Share",
-        detail: "Guest photo sharing with QR pairing and multithreaded uploads.",
-    },
-    {
-        name: "Synctify",
-        detail: "Spotify liked-songs sync with previews. Laravel and Nuxt.",
-    },
-    {
-        name: "FC Skill Trainer",
-        detail: "iOS and Android trainer for EA Sports FC skill moves, via touchscreen or a paired DualSense or Xbox controller.",
-    },
-];
+interface CvData {
+    readonly name: string;
+    readonly title: string;
+    readonly location: string;
+    readonly contact: { email: string; web: string; github: string; linkedin: string };
+    readonly profile: string;
+    readonly stack: ReadonlyArray<readonly string[]>;
+    readonly roles: readonly Role[];
+    readonly projects: readonly Project[];
+    readonly education: readonly Education[];
+    readonly certificates: readonly string[];
+}
 
-const STACK: ReadonlyArray<readonly [string, string]> = [
-    ["Front-end", "React, Vue.js (Vuex, Element UI, BootstrapVue), TypeScript, HTML, CSS, JavaScript"],
-    ["Back-end", "Node.js, NestJS, PHP (Laravel), Java (Spring Boot), GraphQL, gRPC"],
-    ["Data", "PostgreSQL, MySQL, Cassandra, Redis, Solr, Qdrant, Kafka"],
-    ["DevOps", "Docker, Kubernetes, ArgoCD, GitHub Actions, Nginx, AWS (EC2, ECR, S3, SQS, Lambda, SES, IAM)"],
-    ["Testing", "Jest, Vitest, Cypress"],
-    ["Mobile", "Android (Java, RxJava, Dagger, Firebase)"],
-];
+// JSON, so scripts/generate-cv-txt.mjs can read the same file without needing
+// to run TypeScript. The cast gives the shape back; JSON inference alone turns
+// the optional project link into an awkward union.
+const cv = cvData as unknown as CvData;
 
 const CSS = `
 /*
@@ -314,33 +258,35 @@ function build(): HTMLElement {
     const page = document.createElement("div");
     page.id = PAGE_ID;
     page.hidden = true;
+    // While it is open the terminal is hidden, so this is the main landmark.
+    page.setAttribute("role", "main");
+    page.setAttribute("aria-label", "CV");
 
     page.innerHTML = `
 <div class="cv-inner">
   <button type="button" class="cv-theme"></button>
   <button type="button" class="cv-terminal-tab" aria-label="Open the terminal">&gt;_</button>
   <header>
-    <h1>Panduru Ionut</h1>
-    <div class="cv-role">Full Stack Developer</div>
-    <div class="cv-where">Sibiu, Romania</div>
+    <h1>${escape(cv.name)}</h1>
+    <div class="cv-role">${escape(cv.title)}</div>
+    <div class="cv-where">${escape(cv.location)}</div>
     <div class="cv-links">
-      <a href="mailto:panduru.ionut@hotmail.com">panduru.ionut@hotmail.com</a>
-      <a href="https://github.com/PanduruIonut" target="_blank" rel="noopener">github.com/PanduruIonut</a>
-      <a href="https://www.linkedin.com/in/ionut-panduru/" target="_blank" rel="noopener">linkedin.com/in/ionut-panduru</a>
+      <a href="mailto:${escape(cv.contact.email)}">${escape(cv.contact.email)}</a>
+      <a href="https://${escape(cv.contact.github)}" target="_blank" rel="noopener">${escape(cv.contact.github)}</a>
+      <a href="https://www.${escape(cv.contact.linkedin)}/" target="_blank" rel="noopener">${escape(cv.contact.linkedin)}</a>
     </div>
   </header>
 
   <h2>Profile</h2>
-  <p class="cv-detail">Full-stack developer based in Sibiu. Involved in every step from planning
-  and design through to solving real problems in code. Rides a motorbike when not at a keyboard.</p>
+  <p class="cv-detail">${escape(cv.profile)}</p>
 
   <h2>Stack</h2>
   <div class="cv-grid">
-    ${STACK.map(([k, v]) => `<div class="cv-key">${escape(k)}</div><div>${escape(v)}</div>`).join("")}
+    ${cv.stack.map(([k, v]) => `<div class="cv-key">${escape(k)}</div><div>${escape(v)}</div>`).join("")}
   </div>
 
   <h2>Experience</h2>
-  ${ROLES.map((r) => `
+  ${cv.roles.map((r) => `
     <div class="cv-entry">
       <div class="cv-head">
         <div><span class="cv-title">${escape(r.title)}</span> <span class="cv-at">${escape(r.place)}</span></div>
@@ -351,7 +297,7 @@ function build(): HTMLElement {
     </div>`).join("")}
 
   <h2>Projects</h2>
-  ${PROJECTS.map((p) => `
+  ${cv.projects.map((p) => `
     <div class="cv-entry">
       <div class="cv-head">
         <div class="cv-title">${escape(p.name)}</div>
@@ -361,28 +307,18 @@ function build(): HTMLElement {
     </div>`).join("")}
 
   <h2>Education</h2>
-  <div class="cv-entry">
-    <div class="cv-head">
-      <div><span class="cv-title">M.Sc. Advanced Informatics Systems</span></div>
-      <div class="cv-when">2018 — 2020</div>
-    </div>
-    <div class="cv-stack">Lucian Blaga University of Sibiu</div>
-  </div>
-  <div class="cv-entry">
-    <div class="cv-head">
-      <div><span class="cv-title">B.Sc. Computer Science</span></div>
-      <div class="cv-when">graduated 2018</div>
-    </div>
-    <div class="cv-stack">Lucian Blaga University of Sibiu</div>
-  </div>
+  ${cv.education.map((e) => `
+    <div class="cv-entry">
+      <div class="cv-head">
+        <div><span class="cv-title">${escape(e.degree)}</span></div>
+        <div class="cv-when">${escape(e.when)}</div>
+      </div>
+      <div class="cv-stack">${escape(e.place)}</div>
+    </div>`).join("")}
 
   <h2>Certificates</h2>
   <ul class="cv-certs">
-    <li>AWS Cloud Practitioner Essentials</li>
-    <li>Developing on AWS</li>
-    <li>AWS Cost Optimization</li>
-    <li>CompTIA Pentest+ learning path, TryHackMe</li>
-    <li>Security Engineer learning path, TryHackMe</li>
+    ${cv.certificates.map((c) => `<li>${escape(c)}</li>`).join("")}
   </ul>
 
   <div class="cv-back">

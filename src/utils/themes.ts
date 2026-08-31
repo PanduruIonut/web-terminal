@@ -192,8 +192,12 @@ body {
 
 .terminal__input {
     color: ${p.text} !important;
-    caret-color: ${p.caret} !important;
-    text-shadow: ${p.glow};
+    caret-color: transparent !important;
+    text-shadow: ${p.glow}
+
+.terminal__cursor {
+    background-color: ${p.caret} !important;
+};
 }
 
 .terminal__input.valid-command {

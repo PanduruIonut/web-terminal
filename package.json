@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "node scripts/generate-cv-txt.mjs && tsc && vite build",
+    "preview": "vite preview",
+    "generate:cv": "node scripts/generate-cv-txt.mjs"
   },
   "devDependencies": {
     "@types/node": "^20.4.5",

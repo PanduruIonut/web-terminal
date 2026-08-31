@@ -16,10 +16,27 @@ import { openCv } from './components/cvPage'
  */
 const PREFERS_PLAIN_PAGE = "(pointer: coarse) and (max-width: 820px)";
 
+/**
+ * The terminal is a div of animated text with no headings or landmarks, so on
+ * its own it leaves assistive tech with nothing to work with. The CV page is
+ * the semantic version of the same content; this puts it one Tab away. Hidden
+ * until focused, which is the usual skip-link behaviour.
+ */
+function addSkipToCvLink(): void {
+  const link = document.createElement('button');
+  link.type = 'button';
+  link.className = 'skip-to-cv';
+  link.textContent = 'Skip the terminal and read the CV';
+  link.addEventListener('click', () => openCv());
+  document.body.insertBefore(link, document.body.firstChild);
+}
+
 const appElement = document.querySelector<HTMLDivElement>('#app');
 if (appElement) {
   const home = new Home();
   appElement.appendChild(home);
+
+  addSkipToCvLink();
 
   // The terminal is still mounted behind it, so "reopen the terminal" on the
   // CV works on mobile exactly as it does everywhere else.

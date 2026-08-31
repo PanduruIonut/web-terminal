@@ -1,4 +1,4 @@
-import keySound from "../../public/sounds/keyboardTyping.wav";
+import keySound from "../../public/sounds/keyboardTyping.mp3";
 import { readFile, listFiles, changeDirectory, getCurrentPath } from "./fileSystem/functionality";
 import { currentDirectory } from "./fileSystem/functionality";
 import { DirectoryEntry, virtualFileSystem } from "./fileSystem/virtualFileSystem";
@@ -27,9 +27,16 @@ let typingSpeed = 50;
 let skipKeys = [">", "<"];
 let typingTimeout: ReturnType<typeof setTimeout> | undefined;
 
+/*
+ * A 3s mono loop rather than the 25s stereo wav this used to be: that file was
+ * 4.5MB, downloaded on every visit before anyone had typed anything, and made
+ * up 98% of the page weight. Looping means long output still types over sound,
+ * which the old file did not manage either — it simply ran out after 25s.
+ */
 const clickSound = new Audio(keySound);
 clickSound.volume = 0.4;
 clickSound.playbackRate = 1.4;
+clickSound.loop = true;
 
 
 export const commands: Command[] = [
@@ -109,12 +116,22 @@ function parseInput(input: string) {
     return parsedInput;
 }
 
+const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
+
 export function animateText(
     element: HTMLElement,
     text: string | null | undefined,
     terminalDisplayContainer: HTMLElement,
 ): Promise<void> {
     const content = text ?? "";
+
+    // The typing animation is the dominant motion on this site. Someone who has
+    // asked for less of it gets the text at once, and no keystroke sound either.
+    if (window.matchMedia(REDUCED_MOTION).matches) {
+        element.innerHTML += content;
+        terminalDisplayContainer.scrollTop = terminalDisplayContainer.scrollHeight;
+        return Promise.resolve();
+    }
 
     clickSound.play().catch((error) => {
         console.error("Audio playback error:", error);
