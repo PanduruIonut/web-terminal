@@ -2,6 +2,7 @@ import { displayWelcomeText, handleKeyUp, handleKeyDown } from "../utils/termina
 import { saveVirtualFileSystemToLocalStorage } from "../utils/fileSystem/virtualFileSystem";
 import { setHintCookie } from "../utils/hintCookie";
 import { restoreTheme } from "../utils/themes";
+import { openCv } from "./cvPage";
 export class MyTerminal extends HTMLElement {
 
     constructor() {
@@ -34,6 +35,15 @@ export class MyTerminal extends HTMLElement {
             document.addEventListener("keydown", (event) => handleKeyDown(event, terminalDisplay, input,));
             terminal.addEventListener("click", () => {
                 input.focus();
+            });
+
+            // Closing the window reveals the plain page behind it. Registered on
+            // the button itself and stops the click reaching the terminal's own
+            // focus handler above.
+            const closeButton = document.querySelector(".close-button");
+            closeButton?.addEventListener("click", (event) => {
+                event.stopPropagation();
+                openCv();
             });
         });
         this.innerHTML = `
@@ -134,6 +144,7 @@ export class MyTerminal extends HTMLElement {
         }
 
         .close-button {
+            cursor: pointer;
             width: 12px;
             height: 12px;
             margin-left: 10px;
