@@ -7,9 +7,26 @@
     <meta name="description" content="404 - No such file or directory. ionut.codes" />
     <title>404 - Ionut.codes</title>
     <style>
+      /* Same self-hosted face as the site, so a 404 does not change fonts. */
+      @font-face {
+        font-family: "JetBrains Mono";
+        font-style: normal;
+        font-weight: 100 800;
+        font-display: swap;
+        src: url("/fonts/jetbrains-mono-latin.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "JetBrains Mono";
+        font-style: normal;
+        font-weight: 100 800;
+        font-display: swap;
+        src: url("/fonts/jetbrains-mono-greek.woff2") format("woff2");
+        unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+      }
       html {
         background-color: #1a1b26;
-        font-family: "Consolas", "Menlo", "Fira Code", monospace;
+        font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo,
+          Consolas, "DejaVu Sans Mono", monospace;
       }
 
       body {

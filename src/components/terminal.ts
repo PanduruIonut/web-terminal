@@ -87,7 +87,7 @@ export class MyTerminal extends HTMLElement {
         }
 
         .terminal__input {
-            font-family: monospace;
+            font-family: inherit;
             margin: 0 auto;
             bottom: 0%;
             width: 90%;
