@@ -109,12 +109,63 @@ const STACK: ReadonlyArray<readonly [string, string]> = [
 ];
 
 const CSS = `
+/*
+ * Three-state theming. Bare #cv-page carries the dark palette; the media query
+ * swaps it for light unless the reader has explicitly asked for dark; the
+ * [data-theme] rules let the toggle win over the OS in both directions. Every
+ * colour is defined on the bare selector first, so nothing is only ever set
+ * inside a media query.
+ */
+#${PAGE_ID} {
+    --cv-bg: #1a1b26;
+    --cv-text: #a9b1d6;
+    --cv-heading: #c0caf5;
+    --cv-role: #ff9e64;
+    --cv-muted: #565f89;
+    --cv-section: #af91e8;
+    --cv-key: #7aa2f7;
+    --cv-link: #2ac3de;
+    --cv-link-underline: rgba(42, 195, 222, .35);
+    --cv-rule: #2a2b3d;
+    --cv-chip: rgba(255, 255, 255, .04);
+}
+
+@media (prefers-color-scheme: light) {
+    #${PAGE_ID}:not([data-theme="dark"]) {
+        --cv-bg: #f7f7fb;
+        --cv-text: #3d4059;
+        --cv-heading: #191a24;
+        --cv-role: #c2410c;
+        --cv-muted: #6e7391;
+        --cv-section: #7c3aed;
+        --cv-key: #2563eb;
+        --cv-link: #0e7490;
+        --cv-link-underline: rgba(14, 116, 144, .35);
+        --cv-rule: #e2e2ee;
+        --cv-chip: rgba(0, 0, 0, .03);
+    }
+}
+
+#${PAGE_ID}[data-theme="light"] {
+    --cv-bg: #f7f7fb;
+    --cv-text: #3d4059;
+    --cv-heading: #191a24;
+    --cv-role: #c2410c;
+    --cv-muted: #6e7391;
+    --cv-section: #7c3aed;
+    --cv-key: #2563eb;
+    --cv-link: #0e7490;
+    --cv-link-underline: rgba(14, 116, 144, .35);
+    --cv-rule: #e2e2ee;
+    --cv-chip: rgba(0, 0, 0, .03);
+}
+
 #${PAGE_ID} {
     position: fixed;
     inset: 0;
     overflow-y: auto;
-    background: #1a1b26;
-    color: #a9b1d6;
+    background: var(--cv-bg);
+    color: var(--cv-text);
     font-size: 15px;
     line-height: 1.65;
     opacity: 0;
@@ -122,46 +173,102 @@ const CSS = `
     z-index: 50;
 }
 #${PAGE_ID}.is-open { opacity: 1; }
-#${PAGE_ID} .cv-inner { max-width: 760px; margin: 0 auto; padding: 72px 24px 96px; }
-#${PAGE_ID} h1 { color: #c0caf5; font-size: 30px; margin: 0; letter-spacing: -.4px; }
-#${PAGE_ID} .cv-role { color: #ff9e64; margin: 6px 0 2px; }
-#${PAGE_ID} .cv-where { color: #565f89; font-size: 14px; }
+#${PAGE_ID} .cv-inner { position: relative; max-width: 760px; margin: 0 auto; padding: 72px 24px 96px; }
+#${PAGE_ID} h1 { color: var(--cv-heading); font-size: 30px; margin: 0; letter-spacing: -.4px; }
+#${PAGE_ID} .cv-role { color: var(--cv-role); margin: 6px 0 2px; }
+#${PAGE_ID} .cv-where { color: var(--cv-muted); font-size: 14px; }
 #${PAGE_ID} .cv-links { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; }
-#${PAGE_ID} a { color: #2ac3de; text-decoration: none; border-bottom: 1px solid rgba(42,195,222,.35); }
-#${PAGE_ID} a:hover { border-bottom-color: #2ac3de; }
+#${PAGE_ID} a { color: var(--cv-link); text-decoration: none; border-bottom: 1px solid var(--cv-link-underline); }
+#${PAGE_ID} a:hover { border-bottom-color: var(--cv-link); }
 #${PAGE_ID} h2 {
-    color: #af91e8; font-size: 12px; font-weight: 700; letter-spacing: 1.6px;
+    color: var(--cv-section); font-size: 12px; font-weight: 700; letter-spacing: 1.6px;
     text-transform: uppercase; margin: 46px 0 4px;
-    padding-bottom: 8px; border-bottom: 1px solid #2a2b3d;
+    padding-bottom: 8px; border-bottom: 1px solid var(--cv-rule);
 }
 #${PAGE_ID} .cv-entry { margin-top: 24px; }
 #${PAGE_ID} .cv-head { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: baseline; }
-#${PAGE_ID} .cv-title { color: #c0caf5; font-weight: 700; }
-#${PAGE_ID} .cv-at { color: #7aa2f7; }
-#${PAGE_ID} .cv-when { color: #565f89; font-size: 13px; white-space: nowrap; }
+#${PAGE_ID} .cv-title { color: var(--cv-heading); font-weight: 700; }
+#${PAGE_ID} .cv-at { color: var(--cv-key); }
+#${PAGE_ID} .cv-when { color: var(--cv-muted); font-size: 13px; white-space: nowrap; }
 #${PAGE_ID} .cv-detail { margin: 6px 0 0; }
-#${PAGE_ID} .cv-stack { color: #565f89; font-size: 13px; margin-top: 6px; }
+#${PAGE_ID} .cv-stack { color: var(--cv-muted); font-size: 13px; margin-top: 6px; }
 #${PAGE_ID} .cv-grid { display: grid; grid-template-columns: 116px 1fr; gap: 10px 18px; margin-top: 18px; font-size: 14px; }
-#${PAGE_ID} .cv-key { color: #7aa2f7; }
+#${PAGE_ID} .cv-key { color: var(--cv-key); }
 #${PAGE_ID} .cv-certs { margin: 14px 0 0; padding-left: 18px; }
 #${PAGE_ID} .cv-certs li { margin-bottom: 4px; }
 #${PAGE_ID} .cv-back {
-    margin-top: 64px; padding-top: 22px; border-top: 1px solid #2a2b3d;
+    margin-top: 64px; padding-top: 22px; border-top: 1px solid var(--cv-rule);
     display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
-    font-size: 14px; color: #565f89;
+    font-size: 14px; color: var(--cv-muted);
 }
-#${PAGE_ID} .cv-reopen { background: none; border: 0; padding: 0; cursor: pointer;
-    font: inherit; color: #2ac3de; border-bottom: 1px solid rgba(42,195,222,.35); }
-#${PAGE_ID} .cv-reopen:hover { border-bottom-color: #2ac3de; }
+#${PAGE_ID} .cv-reopen, #${PAGE_ID} .cv-theme {
+    background: none; border: 0; padding: 0; cursor: pointer;
+    font: inherit; color: var(--cv-link); border-bottom: 1px solid var(--cv-link-underline);
+}
+#${PAGE_ID} .cv-reopen:hover, #${PAGE_ID} .cv-theme:hover { border-bottom-color: var(--cv-link); }
+#${PAGE_ID} .cv-theme {
+    position: absolute; top: 26px; right: 24px;
+    font-size: 13px; color: var(--cv-muted);
+    border: 1px solid var(--cv-rule); border-radius: 999px;
+    padding: 5px 12px; background: var(--cv-chip);
+}
+#${PAGE_ID} .cv-theme:hover { color: var(--cv-text); border-color: var(--cv-muted); }
 @media (max-width: 620px) {
-    #${PAGE_ID} .cv-inner { padding: 48px 18px 72px; }
+    #${PAGE_ID} .cv-inner { padding: 58px 18px 72px; }
     #${PAGE_ID} .cv-grid { grid-template-columns: 1fr; gap: 2px 0; }
     #${PAGE_ID} .cv-key { margin-top: 10px; }
+    #${PAGE_ID} .cv-theme { top: 14px; right: 18px; }
 }
 @media (prefers-reduced-motion: reduce) {
     #${PAGE_ID} { transition: none; }
 }
 `;
+
+const THEME_KEY = "cv-theme";
+const DARK_PREFERRED = "(prefers-color-scheme: dark)";
+
+/** Storage throws in private mode, and a colour scheme is not worth an error. */
+function storedTheme(): string | null {
+    try {
+        const value = localStorage.getItem(THEME_KEY);
+        return value === "light" || value === "dark" ? value : null;
+    } catch {
+        return null;
+    }
+}
+
+function rememberTheme(theme: string): void {
+    try {
+        localStorage.setItem(THEME_KEY, theme);
+    } catch {
+        /* ignore */
+    }
+}
+
+/** What is actually on screen: the explicit choice, else the OS preference. */
+function effectiveTheme(page: HTMLElement): "light" | "dark" {
+    const chosen = page.dataset.theme;
+    if (chosen === "light" || chosen === "dark") return chosen;
+    return window.matchMedia(DARK_PREFERRED).matches ? "dark" : "light";
+}
+
+function paintThemeButton(page: HTMLElement): void {
+    const button = page.querySelector<HTMLButtonElement>(".cv-theme");
+    if (!button) return;
+
+    // The label names where the click leads, not where you are.
+    const next = effectiveTheme(page) === "dark" ? "light" : "dark";
+    button.textContent = next;
+    button.setAttribute("aria-label", `Switch to the ${next} theme`);
+    button.title = `Switch to the ${next} theme`;
+}
+
+function applyStoredTheme(page: HTMLElement): void {
+    const stored = storedTheme();
+    if (stored) page.dataset.theme = stored;
+    else delete page.dataset.theme;
+    paintThemeButton(page);
+}
 
 function escape(value: string): string {
     const node = document.createElement("span");
@@ -176,6 +283,7 @@ function build(): HTMLElement {
 
     page.innerHTML = `
 <div class="cv-inner">
+  <button type="button" class="cv-theme"></button>
   <header>
     <h1>Panduru Ionut</h1>
     <div class="cv-role">Full Stack Developer</div>
@@ -250,6 +358,21 @@ function build(): HTMLElement {
 
     const reopen = page.querySelector(".cv-reopen");
     reopen?.addEventListener("click", () => closeCv());
+
+    const themeButton = page.querySelector(".cv-theme");
+    themeButton?.addEventListener("click", () => {
+        const next = effectiveTheme(page) === "dark" ? "light" : "dark";
+        page.dataset.theme = next;
+        rememberTheme(next);
+        paintThemeButton(page);
+    });
+
+    // Follow the OS while no explicit choice has been made.
+    window.matchMedia(DARK_PREFERRED).addEventListener("change", () => {
+        if (!storedTheme()) paintThemeButton(page);
+    });
+
+    applyStoredTheme(page);
 
     return page;
 }
