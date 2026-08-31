@@ -213,6 +213,40 @@ const CSS = `
     padding: 5px 12px; background: var(--cv-chip);
 }
 #${PAGE_ID} .cv-theme:hover { color: var(--cv-text); border-color: var(--cv-muted); }
+/*
+ * Phones get a permanent way back to the terminal pinned to the right edge.
+ * The footer link is a long scroll away on a small screen, and on mobile the CV
+ * is the landing page, so without this the terminal is effectively unreachable.
+ * Desktop already has the window's own close button, so it stays hidden there.
+ */
+#${PAGE_ID} .cv-terminal-tab {
+    display: none;
+    position: fixed;
+    top: 50%;
+    right: max(12px, env(safe-area-inset-right));
+    transform: translateY(-50%);
+    z-index: 60;
+    align-items: center;
+    gap: 7px;
+    padding: 13px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--cv-rule);
+    background: var(--cv-bg);
+    color: var(--cv-link);
+    font: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, .3);
+}
+
+@media (pointer: coarse) and (max-width: 820px) {
+    #${PAGE_ID} .cv-terminal-tab { display: flex; }
+    /* The tab replaces it, so the footer would just say the same thing twice. */
+    #${PAGE_ID} .cv-reopen { display: none; }
+}
+
 @media (max-width: 620px) {
     #${PAGE_ID} .cv-inner { padding: 58px 18px 72px; }
     #${PAGE_ID} .cv-grid { grid-template-columns: 1fr; gap: 2px 0; }
@@ -284,6 +318,7 @@ function build(): HTMLElement {
     page.innerHTML = `
 <div class="cv-inner">
   <button type="button" class="cv-theme"></button>
+  <button type="button" class="cv-terminal-tab" aria-label="Open the terminal">&gt;_</button>
   <header>
     <h1>Panduru Ionut</h1>
     <div class="cv-role">Full Stack Developer</div>
@@ -358,6 +393,9 @@ function build(): HTMLElement {
 
     const reopen = page.querySelector(".cv-reopen");
     reopen?.addEventListener("click", () => closeCv());
+
+    const terminalTab = page.querySelector(".cv-terminal-tab");
+    terminalTab?.addEventListener("click", () => closeCv());
 
     const themeButton = page.querySelector(".cv-theme");
     themeButton?.addEventListener("click", () => {
