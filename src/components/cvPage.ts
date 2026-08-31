@@ -288,6 +288,13 @@ export function openCv(): void {
     page.scrollTop = 0;
 }
 
+/**
+ * Touch devices get no autofocus: focusing the input pops the soft keyboard
+ * over half the screen the instant the terminal reappears. Tapping the terminal
+ * still focuses it, which is the deliberate act that should raise the keyboard.
+ */
+const RAISES_SOFT_KEYBOARD = "(pointer: coarse)";
+
 export function closeCv(): void {
     const page = document.getElementById(PAGE_ID);
     const shell = terminalShell();
@@ -300,5 +307,7 @@ export function closeCv(): void {
         page.hidden = true;
     }, 350);
 
-    document.querySelector<HTMLInputElement>(".terminal__input")?.focus();
+    if (!window.matchMedia(RAISES_SOFT_KEYBOARD).matches) {
+        document.querySelector<HTMLInputElement>(".terminal__input")?.focus();
+    }
 }
