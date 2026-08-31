@@ -252,7 +252,7 @@ async function handleCommand(command: string, args?: string[], opts?: string[]):
             case "help":
                 return "";
             case "whoami":
-                return `My name is Panduru Ionut\n\nI'm ${new Date().getFullYear() - 1996} and I'm a full stack developer based in Sibiu, Romania.\n\nI enjoy being involved in every step of the process, from planning and design to solving real-world problems with code.\n\nWhen I'm not online, you'll probably find me exploring the world on my motorbike.\n\nI love coding and CTF's.`;
+                return `Panduru Ionut, ${new Date().getFullYear() - 1996}, full stack developer in Sibiu.\n\nPaid to build game integration services at Betfair.\nUnpaid, I put GPS trackers on motorbikes and ship apps nobody asked for.\n\nThose last two overlap more than you'd expect.`;
             case "history":
                 return `2018 - Graduated from Lucian Blaga University of Sibiu (B.Sc. in Computer Science)\n\n2018 - Android Developer @ KeepCalling\n\n2020 - Graduated from Lucian Blaga University of Sibiu (M.Sc. in Advanced Informatics Systems)\n\n2020 - Full Stack Developer @ EdelCode\n\n2020 - Full Stack Developer @ Graffino\n\n2022 - Full Stack Developer @ Evo Primes / Plutus Inc\n\n2022 - Full Stack Developer @ Thiele & Close\n\n2024 - Now Software Engineer @ Betfair`;
             case "mp":
@@ -308,7 +308,7 @@ async function handleCommand(command: string, args?: string[], opts?: string[]):
 }
 
 export function displayWelcomeText(terminalDisplay: HTMLDivElement, terminalDisplayContainer: HTMLDivElement, _input: HTMLInputElement) {
-    const welcomeText = `Welcome to my personal website!\n\nType "help" to see the list of available commands.\n\nFeel free to explore!\n\n`;
+    const welcomeText = `A terminal pretending to be a homepage.\n\n'help' lists what it does. Not all of it.\n\n`;
     isCommandRunning = true;
     animateText(terminalDisplay, welcomeText, terminalDisplayContainer).then(() => {
         isCommandRunning = false;
