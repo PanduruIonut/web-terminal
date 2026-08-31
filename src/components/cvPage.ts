@@ -145,11 +145,11 @@ const CSS = `
     display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
     font-size: 14px; color: var(--cv-muted);
 }
-#${PAGE_ID} .cv-reopen, #${PAGE_ID} .cv-theme {
+#${PAGE_ID} .cv-theme {
     background: none; border: 0; padding: 0; cursor: pointer;
     font: inherit; color: var(--cv-link); border-bottom: 1px solid var(--cv-link-underline);
 }
-#${PAGE_ID} .cv-reopen:hover, #${PAGE_ID} .cv-theme:hover { border-bottom-color: var(--cv-link); }
+#${PAGE_ID} .cv-theme:hover { border-bottom-color: var(--cv-link); }
 #${PAGE_ID} .cv-theme {
     position: absolute; top: 26px; right: 24px;
     font-size: 13px; color: var(--cv-muted);
@@ -158,13 +158,12 @@ const CSS = `
 }
 #${PAGE_ID} .cv-theme:hover { color: var(--cv-text); border-color: var(--cv-muted); }
 /*
- * Phones get a permanent way back to the terminal pinned to the right edge.
- * The footer link is a long scroll away on a small screen, and on mobile the CV
- * is the landing page, so without this the terminal is effectively unreachable.
- * Desktop already has the window's own close button, so it stays hidden there.
+ * The way back to the terminal, pinned to the right edge at every size. Once
+ * the CV is open the terminal's own close button is gone with it, so this is
+ * the only route back — a footer link would mean scrolling to find it.
  */
 #${PAGE_ID} .cv-terminal-tab {
-    display: none;
+    display: flex;
     position: fixed;
     top: 50%;
     right: max(12px, env(safe-area-inset-right));
@@ -183,12 +182,6 @@ const CSS = `
     line-height: 1;
     cursor: pointer;
     box-shadow: 0 6px 22px rgba(0, 0, 0, .3);
-}
-
-@media (pointer: coarse) and (max-width: 820px) {
-    #${PAGE_ID} .cv-terminal-tab { display: flex; }
-    /* The tab replaces it, so the footer would just say the same thing twice. */
-    #${PAGE_ID} .cv-reopen { display: none; }
 }
 
 @media (max-width: 620px) {
@@ -323,12 +316,8 @@ function build(): HTMLElement {
 
   <div class="cv-back">
     <span>Also available as plain text: <a href="/cv.txt">curl ionut.codes</a></span>
-    <button type="button" class="cv-reopen">reopen the terminal</button>
   </div>
 </div>`;
-
-    const reopen = page.querySelector(".cv-reopen");
-    reopen?.addEventListener("click", () => closeCv());
 
     const terminalTab = page.querySelector(".cv-terminal-tab");
     terminalTab?.addEventListener("click", () => closeCv());
