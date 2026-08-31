@@ -1,0 +1,124 @@
+
+   ____                    _
+  |  _ \  __ _  _ __    __| | _   _  _ __  _   _
+  | |_) |/ _` || '_ \  / _` || | | || '__|| | | |
+  |  __/| (_| || | | || (_| || |_| || |   | |_| |
+  |_|    \__,_||_| |_| \__,_| \__,_||_|    \__,_|
+   ___                      _
+  |_ _| ___   _ __   _   _ | |_
+   | | / _ \ | '_ \ | | | || __|
+   | || (_) || | | || |_| || |_
+  |___|\___/ |_| |_| \__,_| \__|
+
+  Full Stack Developer                                        Sibiu, Romania
+----------------------------------------------------------------------------
+  email      panduru.ionut@hotmail.com
+  web        https://ionut.codes
+  github     github.com/PanduruIonut
+  linkedin   linkedin.com/in/ionut-panduru
+
+-- PROFILE -----------------------------------------------------------------
+
+  Full-stack developer based in Sibiu. Involved in every step from planning
+  and design through to solving real problems in code. Rides a motorbike
+  when not at a keyboard.
+
+-- STACK -------------------------------------------------------------------
+
+  front-end  React, Vue.js (Vuex, Element UI, BootstrapVue), TypeScript,
+             HTML, CSS, JavaScript
+  back-end   Node.js, NestJS, PHP (Laravel), Java (Spring Boot), GraphQL,
+             gRPC
+  data       PostgreSQL, MySQL, Cassandra, Redis, Solr, Qdrant, Kafka
+  devops     Docker, Kubernetes, ArgoCD, GitHub Actions, Nginx, AWS (EC2,
+             ECR, S3, SQS, Lambda, SES, IAM)
+  testing    Jest, Vitest, Cypress
+  mobile     Android (Java, RxJava, Dagger, Firebase)
+
+-- EXPERIENCE --------------------------------------------------------------
+
+  Software Engineer · Betfair                      04/2024 - present · Sibiu
+  │ Multi-game compatibility layer standardising workflows across 64 slot
+  │ and roulette games. Owns 7 microservices end to end, supports external
+  │ game studios onboarding titles, and debugs production issues across
+  │ Kubernetes. On-call with Grafana and Prometheus.
+  └ React, Node.js, Java Spring Boot, NestJS, gRPC, Cassandra, Kafka,
+    Docker, AWS, ArgoCD, Kubernetes
+
+  Full Stack Developer · Thiele & Close            09/2022 - 04/2024 · Sibiu
+  │ Backend for news content, subscriptions and regional preferences across
+  │ multiple sites. Article recommendations and dynamic feeds, SSO, chatbot
+  │ integration.
+  └ Vue.js, Node.js, GraphQL, Solr, TypeScript, Cypress, Jest
+
+  Full Stack Developer · Evo Primes / Plutus Inc.  01/2022 - 09/2022 · Sibiu
+  │ Main developer on a Laravel backend powering the Aureus POS system:
+  │ orders, purchases, inventory and gold transactions. eBay marketplace API
+  │ integration, MySQL query optimisation and full-page caching.
+  └ PHP, Laravel, Vue.js, Docker, MySQL
+
+  Full Stack Developer · Graffino                  09/2020 - 01/2022 · Sibiu
+  │ Primary full-stack developer across several projects: a task management
+  │ app, a parcel distribution system for international warehouses, and
+  │ factory worker scheduling.
+  └ PHP, Laravel, Vue.js, TypeScript, MySQL, Docker, Nginx
+
+  Full Stack Developer · EdelCode                  03/2020 - 08/2020 · Sibiu
+  │ Company management app and a sports meetup platform, with unit and
+  │ integration tests.
+  └ React.js, TypeScript, NestJS, TypeORM, GraphQL, RxJS
+
+  Android Developer · KeepCalling                  09/2018 - 03/2020 · Sibiu
+  │ Features, UI and performance work across multiple Android apps.
+  └ Java, Android SDK, Dagger, RxJava, Firebase, ButterKnife
+
+-- PROJECTS ----------------------------------------------------------------
+
+  Moto-Tracker
+  │ IoT motorcycle tracking. Custom ESP32/ESPHome firmware, Node.js and
+  │ Express, PostgreSQL, MQTT, OSRM road-matching, and a MapLibre GL PWA.
+  │ Live GPS, trip history, crash and theft detection, geofencing, and a BLE
+  │ anti-theft key fob with HMAC-SHA256 rolling-code auth. Self-hosted on a
+  │ Raspberry Pi.
+
+  Stiu.ai                                                    https://stiu.ai
+  │ News intelligence platform. Scrapes, deduplicates and AI-enriches
+  │ Romanian news, roughly 96,000 articles from 6 major sources. Laravel
+  │ REST API, Python and FastAPI scraping microservice, AWS Lambda trust
+  │ scoring, Qdrant vector search, React SPA.
+
+  Us
+  │ Real-time app for couples, native on both platforms: SwiftUI on iOS,
+  │ Kotlin and Jetpack Compose on Android, Supabase with row-level security
+  │ and realtime channels.
+
+  Wedding-Share
+  └ Guest photo sharing with QR pairing and multithreaded uploads.
+
+  Synctify
+  └ Spotify liked-songs sync with previews. Laravel and Nuxt.
+
+  FC Skill Trainer
+  │ iOS and Android trainer for EA Sports FC skill moves, via touchscreen or
+  │ a paired DualSense or Xbox controller.
+
+-- EDUCATION ---------------------------------------------------------------
+
+  M.Sc. Advanced Informatics Systems                             2018 - 2020
+  └ Lucian Blaga University of Sibiu
+
+  B.Sc. Computer Science                                      graduated 2018
+  └ Lucian Blaga University of Sibiu
+
+-- CERTIFICATES ------------------------------------------------------------
+
+  · AWS Cloud Practitioner Essentials
+  · Developing on AWS
+  · AWS Cost Optimization
+  · CompTIA Pentest+ learning path, TryHackMe
+  · Security Engineer learning path, TryHackMe
+
+----------------------------------------------------------------------------
+
+  The same information is at https://ionut.codes, where it is a terminal
+  pretending to be a homepage.
