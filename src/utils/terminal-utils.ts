@@ -6,6 +6,9 @@ import { DirectoryEntry, virtualFileSystem } from "./fileSystem/virtualFileSyste
 let commandHistory: string[] = [];
 let historyIndex = -1;
 
+const STORE_UNAVAILABLE =
+    "The scoreboard is offline right now, so this is unavailable. Everything else still works.";
+
 type Command = {
     name: string;
     description: string;
@@ -18,7 +21,7 @@ let isCommandRunning = false;
 let previousTypingSpeed = 50;
 let typingSpeed = 50;
 let skipKeys = [">", "<"];
-let typingTimeout: ReturnType<typeof setTimeout>;
+let typingTimeout: ReturnType<typeof setTimeout> | undefined;
 
 const clickSound = new Audio(keySound);
 clickSound.volume = 0.4;
@@ -58,7 +61,10 @@ const socials = [
 ];
 
 function parseInput(input: string) {
-    const [commandName, ...rest] = input.trim().split(/\s+/);
+    const [rawCommandName, ...rest] = input.trim().split(/\s+/);
+    // Only the command name is case-insensitive. Arguments keep their original
+    // case, because flags and usernames are matched verbatim by the store.
+    const commandName = rawCommandName.toLowerCase();
     const command = commands.find(cmd => cmd.name.toLowerCase() === commandName)
         || ctfCommands.find(cmd => cmd.name.toLowerCase() === commandName);
 
@@ -83,9 +89,11 @@ function parseInput(input: string) {
 
 export function animateText(
     element: HTMLElement,
-    text: string,
+    text: string | null | undefined,
     terminalDisplayContainer: HTMLElement,
 ): Promise<void> {
+    const content = text ?? "";
+
     clickSound.play().catch((error) => {
         console.error("Audio playback error:", error);
     });
@@ -93,15 +101,22 @@ export function animateText(
     return new Promise((resolve) => {
         let index = 0;
 
+        if (content.length === 0) {
+            clickSound.pause();
+            typingSpeed = previousTypingSpeed;
+            resolve();
+            return;
+        }
+
         function type() {
-            if (index < text.length) {
-                element.innerHTML += text.charAt(index);
+            if (index < content.length) {
+                element.innerHTML += content.charAt(index);
                 index++;
 
                 terminalDisplayContainer.scrollTop =
                     terminalDisplayContainer.scrollHeight;
 
-                if (index === text.length) {
+                if (index === content.length) {
                     clickSound.pause();
                     typingSpeed = previousTypingSpeed;
                     resolve();
@@ -242,7 +257,7 @@ async function handleCommand(command: string, args?: string[], opts?: string[]):
                 if (args && args.length > 0) {
                     const filename = args[0];
                     const result = await readFile(filename)
-                    return result;
+                    return result ?? STORE_UNAVAILABLE;
 
                 } else {
                     return "Missing filename. Usage: cat <filename>";
@@ -292,13 +307,15 @@ More on my GitHub — Explore experiments, side projects, and open-source contri
                 return "2 flags are hidden on this website. Find them and submit them in the 'owned' command.\n\nget more info about it using 'helpctf'\n\nGood luck!";
             case "hints":
                 return "Make use of the developer tools to inspect source code, network requests, cookies."
-            case "userOwns":
+            case "userOwns": {
                 const users = await getUsers();
-                return users;
-            case "owned":
+                return users ?? STORE_UNAVAILABLE;
+            }
+            case "owned": {
                 if (args && args.length !== 3) return "Invalid number of args";
                 const result = await submitFlags(args![0], args![1], args![2]);
                 return result;
+            }
             case "helpctf":
                 return ''
             default:
@@ -376,7 +393,7 @@ export async function handleKeyUp(event: KeyboardEvent, input: HTMLInputElement,
         }
         if (input.value === "") return;
         isCommandRunning = true;
-        const tempCommand = input.value.trim().toLowerCase();
+        const tempCommand = input.value.trim();
         input.value = "";
         input.focus();
         const parsedInput = parseInput(tempCommand);
@@ -473,9 +490,8 @@ export async function handleKeyUp(event: KeyboardEvent, input: HTMLInputElement,
                 terminalDisplayContainer.scrollHeight;
         }
     } else {
-        command = input.value.trim();
-        command = command.split(" ")[0];
-        if (commands.find((cmd) => cmd.name === command) || ctfCommands.find((cmd) => cmd.name === command)) {
+        command = input.value.trim().split(" ")[0].toLowerCase();
+        if (commands.find((cmd) => cmd.name.toLowerCase() === command) || ctfCommands.find((cmd) => cmd.name.toLowerCase() === command)) {
             input.classList.add("valid-command");
         } else {
             input.classList.remove("valid-command");
@@ -485,132 +501,61 @@ export async function handleKeyUp(event: KeyboardEvent, input: HTMLInputElement,
 
 export async function getFlag(flagNumber: string) {
     try {
-        const response = await fetch(`https://organic-silkworm-30652.kv.vercel-storage.com/get/${flagNumber}`, {
-            headers: {
-                Authorization: `Bearer ${import.meta.env.VITE_KV_REST_API_TOKEN}`
-            },
-        });
-
+        const response = await fetch(`/api/flag?id=${encodeURIComponent(flagNumber)}`);
         if (!response.ok) {
-            throw new Error("Network response was not ok");
+            throw new Error(`Flag request failed with ${response.status}`);
         }
 
         const data = await response.json();
-        return data.result;
+        return data.flag as string;
     } catch (error) {
-        console.error("Error fetching data:", error);
-        return null;
-    }
-}
-
-export async function getUserOwns() {
-    try {
-        const response = await fetch(`https://organic-silkworm-30652.kv.vercel-storage.com/get/user-owns`, {
-            headers: {
-                Authorization: `Bearer ${import.meta.env.VITE_KV_REST_API_TOKEN}`
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error("Network response was not ok");
-        }
-
-        const data = await response.json();
-        return data.result;
-    } catch (error) {
-        console.error("Error fetching data:", error);
-        return null;
-    }
-}
-
-export async function submitUser(name: string) {
-    try {
-        const response = await fetch(`https://organic-silkworm-30652.kv.vercel-storage.com/sadd/users`, {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${import.meta.env.VITE_KV_REST_API_TOKEN}`,
-                "Content-Type": "application/json",
-            },
-            body: name
-        });
-
-        if (!response.ok) {
-            throw new Error("Network response was not ok");
-        }
-
-        const data = await response.json();
-        return data.result;
-    } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching flag:", error);
         return null;
     }
 }
 
 export async function getUsers() {
     try {
-        const response = await fetch(`https://organic-silkworm-30652.kv.vercel-storage.com/smembers/users`, {
-            headers: {
-                Authorization: `Bearer ${import.meta.env.VITE_KV_REST_API_TOKEN}`
-            },
-        });
-
+        const response = await fetch("/api/users");
         if (!response.ok) {
-            throw new Error("Network response was not ok");
+            throw new Error(`User request failed with ${response.status}`);
         }
 
         const data = await response.json();
-        return data.result.join(',').replace(/,/g, '\n');
+        const users = (data.users ?? []) as string[];
+        if (users.length === 0) {
+            return "Nobody has submitted the flags yet. Be the first.";
+        }
 
+        return users.join("\n");
     } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching users:", error);
         return null;
     }
 }
 
-async function fetchData(flag: string): Promise<boolean> {
-    try {
-        const response = await fetch(
-            `https://organic-silkworm-30652.kv.vercel-storage.com/sismember/flags`,
-            {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${import.meta.env.VITE_KV_REST_API_TOKEN}`,
-                    "Content-Type": "application/json",
-                },
-                body: flag,
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error("Network response was not ok");
-        }
-
-        const data = await response.json();
-        return data.result;
-    } catch (error) {
-        console.error("Error fetching data:", error);
-        throw error;
-    }
-}
 export async function submitFlags(flag1: string, flag2: string, user: string) {
     try {
-        const [resFlag1, resFlag2] = await Promise.all([
-            fetchData(flag1),
-            fetchData(flag2),
-        ]);
+        const response = await fetch("/api/owned", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ flag1, flag2, user }),
+        });
 
-        if (resFlag1 && resFlag2) {
-            const usr = await submitUser(user);
-            if (usr) {
-                return 'Flag submitted successfully, you can check the list of users that submitted flags with the "userOwns" command.';
-            } else {
-                return 'There was an error submitting the flag(s), please try again.';
-            }
-        } else {
-            return 'Invalid flag(s), please try again.';
+        const data = await response.json().catch(() => null);
+
+        if (!response.ok) {
+            return data?.error ?? "There was an error submitting the flag(s), please try again.";
         }
+
+        if (!data?.ok) {
+            return data?.reason ?? "Invalid flag(s), please try again.";
+        }
+
+        return 'Flag submitted successfully, you can check the list of users that submitted flags with the "userOwns" command.';
     } catch (error) {
-        return 'There was an error submitting the flag(s), please try again.';
+        console.error("Error submitting flags:", error);
+        return "There was an error submitting the flag(s), please try again.";
     }
 }
 
@@ -618,7 +563,6 @@ export function handleKeyDown(event: KeyboardEvent, terminalDisplay: HTMLDivElem
     if (event.key === "Tab") {
         event.preventDefault();
         command = input.value.trim();
-        command = command.toLowerCase();
         if (command === "") return;
         const parsedInput = parseInput(command);
         if (parsedInput) {
