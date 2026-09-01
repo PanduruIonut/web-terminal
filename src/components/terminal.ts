@@ -56,11 +56,55 @@ export class MyTerminal extends HTMLElement {
             flex-direction: column;
             justify-content: space-between;
             background-color: rgba(0, 0, 0, 0.6);
-            height: 400px;
-            width: 800px;
+            /* Was a hard 800x400, which is a stamp in the middle of a large
+               display. Grows with the viewport and stops before it sprawls;
+               the floors match the old size so nothing shrinks. */
+            width: clamp(800px, 62vw, 1100px);
+            height: clamp(400px, 58vh, 620px);
             box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
             border-bottom-left-radius: 7px;
             border-bottom-right-radius: 7px;
+            transition: box-shadow 0.25s ease, opacity 0.25s ease;
+        }
+
+        /* 3. A terminal you have clicked away from goes quiet. The window
+           loses its lift and dims slightly, the way a real app window does.
+           Pointer-gated: on touch the input is frequently not focused at all,
+           so an ungated rule would leave the terminal permanently dimmed. */
+        @media (pointer: fine) {
+            .terminal:not(:focus-within) .terminal__content {
+                box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 8px;
+                opacity: 0.82;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .terminal__content { transition: none; }
+        }
+
+        /* 4. The default scrollbar is a light stock widget inside a black
+           window. themes.ts restyles it per palette, but the untouched Tokyo
+           default had nothing, so this is the base every theme starts from. */
+        .terminal__display-container {
+            scrollbar-width: thin;
+            scrollbar-color: #3b4261 transparent;
+        }
+
+        .terminal__display-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .terminal__display-container::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
+
+        .terminal__display-container::-webkit-scrollbar-thumb {
+            background-color: #3b4261;
+            border-radius: 4px;
+        }
+
+        .terminal__display-container::-webkit-scrollbar-thumb:hover {
+            background-color: #565f89;
         }
         @media only screen and (max-width: 800px) {
             .terminal__content {
