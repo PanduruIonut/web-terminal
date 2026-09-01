@@ -472,6 +472,33 @@ function getFolderFileSuggestions(
     return suggestions;
 }
 
+/**
+ * Command names matching what has been typed so far.
+ *
+ * Deliberately excludes hiddenCommands: they are not in `help` either, and
+ * completing them would hand them over instead of leaving them to be found.
+ */
+function getCommandSuggestions(prefix: string): string[] {
+    const lower = prefix.toLowerCase();
+    return [...commands, ...ctfCommands]
+        .map((cmd) => cmd.name)
+        .filter((name) => name.toLowerCase().startsWith(lower));
+}
+
+/** How far several candidates agree, so Tab can advance without guessing. */
+function sharedPrefix(values: string[]): string {
+    if (values.length === 0) return "";
+
+    let prefix = values[0];
+    for (const value of values.slice(1)) {
+        while (prefix && !value.toLowerCase().startsWith(prefix.toLowerCase())) {
+            prefix = prefix.slice(0, -1);
+        }
+    }
+
+    return prefix;
+}
+
 export async function handleKeyUp(event: KeyboardEvent, input: HTMLInputElement, terminalDisplay: HTMLDivElement, terminalDisplayContainer: HTMLDivElement) {
     scheduleIdleNudge(terminalDisplay, terminalDisplayContainer);
 
@@ -669,6 +696,25 @@ export function handleKeyDown(event: KeyboardEvent, terminalDisplay: HTMLDivElem
         event.preventDefault();
         command = input.value.trim();
         if (command === "") return;
+
+        // No whitespace yet means the command name is still being typed, and
+        // parseInput would reject a partial one as invalid before we got here.
+        if (!/\s/.test(command)) {
+            const matches = getCommandSuggestions(command);
+
+            if (matches.length === 1) {
+                // Trailing space the way a shell does, ready for an argument.
+                input.value = matches[0] + " ";
+            } else if (matches.length > 1) {
+                const shared = sharedPrefix(matches);
+                // Only rewrite if it actually advances; otherwise leave the
+                // line alone rather than replacing it with what was typed.
+                if (shared.length > command.length) input.value = shared;
+            }
+
+            return;
+        }
+
         const parsedInput = parseInput(command);
         if (parsedInput) {
             const { command: cmd, args } = parsedInput;
