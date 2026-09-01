@@ -4,6 +4,7 @@ import { setHintCookie } from "../utils/hintCookie";
 import { restoreTheme } from "../utils/themes";
 import { openCv } from "./cvPage";
 import { initBlockCursor } from "../utils/blockCursor";
+import { initWindowControls } from "../utils/windowControls";
 export class MyTerminal extends HTMLElement {
 
     constructor() {
@@ -43,6 +44,10 @@ export class MyTerminal extends HTMLElement {
             // Closing the window reveals the plain page behind it. Registered on
             // the button itself and stops the click reaching the terminal's own
             // focus handler above.
+            // Drag, minimise and maximise. Registered after the close button so
+            // the red dot keeps its own handler untouched.
+            initWindowControls(terminal);
+
             const closeButton = document.querySelector(".close-button");
             closeButton?.addEventListener("click", (event) => {
                 event.stopPropagation();
