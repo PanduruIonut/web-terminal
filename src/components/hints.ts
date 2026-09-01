@@ -6,8 +6,8 @@
             this.hints = [
                 "Press &ensp;[tab]&ensp; for autocomplete",
                 "Press &ensp;[enter]&ensp; while a command is running to speed it up",
-                "Press &ensp;[shift]&ensp; & &ensp;[>]&ensp; to speed up typing",
-                "Press &ensp;[shift]&ensp; & &ensp;[<]&ensp; to slow down typing",
+                "Press &ensp;[ctrl]&ensp; & &ensp;[>]&ensp; to speed up typing",
+                "Press &ensp;[ctrl]&ensp; & &ensp;[<]&ensp; to slow down typing",
                 "Press &ensp;[cmd]&ensp; & &ensp;[k]&ensp; to clear the terminal",
                 "Press &ensp;[shift]&ensp; & &ensp;[m]&ensp; to toggle sounds",
                 "Press &ensp;[ctrl]&ensp; & &ensp;[c]&ensp; to cancel the current command",

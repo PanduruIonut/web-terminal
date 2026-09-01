@@ -24,7 +24,6 @@ let command = "";
 let isCommandRunning = false;
 let previousTypingSpeed = 50;
 let typingSpeed = 50;
-let skipKeys = [">", "<"];
 let typingTimeout: ReturnType<typeof setTimeout> | undefined;
 
 /*
@@ -235,12 +234,6 @@ function stopTyping(clickSound: HTMLAudioElement, terminalDisplay: HTMLElement) 
     clickSound.pause();
     terminalDisplay.innerHTML = "";
     isCommandRunning = false;
-}
-function preventTyping(event: KeyboardEvent) {
-    if (skipKeys.includes(event.key)) {
-        event.preventDefault();
-        return;
-    }
 }
 function changePromptLocation() {
     const inputPromptElement = document.querySelector('.terminal__input_container-promt-4');
@@ -738,29 +731,21 @@ export function handleKeyDown(event: KeyboardEvent, terminalDisplay: HTMLDivElem
         stopTyping(clickSound, terminalDisplay);
     } else if (event.ctrlKey && event.key === "l") {
         stopTyping(clickSound, terminalDisplay);
-    } else if (event.shiftKey && event.key === ">") {
+    // Ctrl/Cmd rather than plain Shift. On most layouts `>` IS Shift+`.`, so
+    // binding the shortcut to Shift meant the terminal swallowed the keystroke
+    // and neither `>` nor `<` could be typed at all. The two branches that used
+    // to follow these were unreachable — identical conditions to these ones.
+    } else if ((event.ctrlKey || event.metaKey) && event.key === ">") {
+        event.preventDefault();
         if (typingSpeed < 10) return;
         typingSpeed -= 10;
         clickSound.playbackRate += 0.1;
-        preventTyping(event);
-    } else if (event.shiftKey && event.key === "<") {
+    } else if ((event.ctrlKey || event.metaKey) && event.key === "<") {
+        event.preventDefault();
         if (typingSpeed > 100) return;
         typingSpeed += 10;
         if (clickSound.playbackRate < 1.3) return;
         clickSound.playbackRate -= 0.1;
-        preventTyping(event);
-    } else if (event.shiftKey && event.key === ">") {
-        if (typingSpeed < 150) return;
-        typingSpeed -= 10;
-        if (clickSound.playbackRate > 2.1) return;
-        clickSound.playbackRate += 0.1;
-        preventTyping(event);
-    } else if (event.shiftKey && event.key === "<") {
-        if (typingSpeed > 100) return;
-        typingSpeed += 10;
-        if (clickSound.playbackRate < 1.3) return;
-        clickSound.playbackRate += 0.1;
-        preventTyping(event);
     }
     if (event.key === "Escape") {
         input.value = "";
