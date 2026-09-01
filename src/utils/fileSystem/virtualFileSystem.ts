@@ -189,20 +189,44 @@ function convertToFolderSystem(entry: Entry): FolderEntry {
     };
 }
 
+/*
+ * Both of these guard localStorage, which is not optional here.
+ *
+ * setItem throws outright in Safari private browsing, when the quota is full,
+ * and when site data is blocked. This function is the first statement of the
+ * terminal's connectedCallback, so an uncaught throw took the rest of it with
+ * it — the hint cookie, the theme, and the whole DOMContentLoaded block that
+ * registers every listener and prints the welcome text. The visitor was left
+ * with a terminal that accepted no input at all.
+ *
+ * The virtual filesystem lives in memory regardless; localStorage only carries
+ * the permission bits between commands, so losing it costs the CTF's second
+ * flag and nothing else.
+ */
 export function saveVirtualFileSystemToLocalStorage() {
-    const folderSystem = convertToFolderSystem(virtualFileSystem['/']);
-    const serializedFolderSystem = JSON.stringify(folderSystem);
-    const encodedFolderSystem = btoa(serializedFolderSystem);
-    localStorage.setItem('virtualFileSystem', encodedFolderSystem);
+    try {
+        const folderSystem = convertToFolderSystem(virtualFileSystem['/']);
+        const serializedFolderSystem = JSON.stringify(folderSystem);
+        const encodedFolderSystem = btoa(serializedFolderSystem);
+        localStorage.setItem('virtualFileSystem', encodedFolderSystem);
+    } catch (error) {
+        console.warn('Could not persist the virtual filesystem:', error);
+    }
 }
 
 export function loadVirtualFileSystemFromLocalStorage() {
-    const encodedFolderSystem = localStorage.getItem('virtualFileSystem');
-    if (encodedFolderSystem) {
+    try {
+        const encodedFolderSystem = localStorage.getItem('virtualFileSystem');
+        if (!encodedFolderSystem) return;
+
         const serializedFolderSystem = atob(encodedFolderSystem);
         const folderSystem = JSON.parse(serializedFolderSystem);
         const newFileSystem = convertToVirtualFileSystem('/', folderSystem);
         mergeVirtualFileSystem(virtualFileSystem['/'], newFileSystem);
+    } catch (error) {
+        // Also covers a player hand-editing the stored value into something
+        // atob or JSON.parse cannot read — ls and cd keep working either way.
+        console.warn('Could not read the stored virtual filesystem:', error);
     }
 }
 

@@ -38,9 +38,16 @@ if (appElement) {
 
   addSkipToCvLink();
 
-  // The terminal is still mounted behind it, so "reopen the terminal" on the
-  // CV works on mobile exactly as it does everywhere else.
-  if (window.matchMedia(PREFERS_PLAIN_PAGE).matches) {
+  // ionut.codes/#cv opens straight onto the CV, so it can be linked to from a
+  // signature or a message. The terminal stays mounted behind it either way.
+  const askedForCv = window.location.hash === '#cv';
+
+  if (askedForCv || window.matchMedia(PREFERS_PLAIN_PAGE).matches) {
     openCv();
   }
+
+  // Someone editing the hash in the address bar of an already-open page.
+  window.addEventListener('hashchange', () => {
+    if (window.location.hash === '#cv') openCv();
+  });
 }

@@ -193,6 +193,59 @@ const CSS = `
 @media (prefers-reduced-motion: reduce) {
     #${PAGE_ID} { transition: none; }
 }
+
+/*
+ * Printing a CV is a thing people actually do, and Cmd+P on a dark page wastes
+ * a cartridge and comes out unreadable. Force ink-on-paper colours, drop the
+ * on-screen controls, and keep entries from splitting across a page break.
+ * Fixed positioning is undone too: a fixed element prints only on page one.
+ */
+@page {
+    margin: 15mm;
+}
+
+@media print {
+    #${PAGE_ID} {
+        position: static;
+        overflow: visible;
+        opacity: 1;
+        background: #fff;
+        color: #000;
+        font-size: 11pt;
+    }
+
+    #${PAGE_ID} .cv-inner { max-width: none; padding: 0; }
+    #${PAGE_ID} h1 { color: #000; font-size: 20pt; }
+    #${PAGE_ID} .cv-role,
+    #${PAGE_ID} .cv-title,
+    #${PAGE_ID} .cv-at,
+    #${PAGE_ID} .cv-key { color: #000; }
+    #${PAGE_ID} .cv-where,
+    #${PAGE_ID} .cv-when,
+    #${PAGE_ID} .cv-stack { color: #444; }
+    #${PAGE_ID} a { color: #000; border-bottom: 0; text-decoration: underline; }
+
+    #${PAGE_ID} h2 {
+        color: #000;
+        border-bottom: 1px solid #999;
+        margin-top: 18pt;
+        page-break-after: avoid;
+        break-after: avoid;
+    }
+
+    /* Never strand a role's heading at the foot of a page. */
+    #${PAGE_ID} .cv-entry {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    /* Screen-only controls. */
+    #${PAGE_ID} .cv-theme,
+    #${PAGE_ID} .cv-terminal-tab,
+    #${PAGE_ID} .cv-back,
+    .skip-to-cv,
+    main { display: none !important; }
+}
 `;
 
 const THEME_KEY = "cv-theme";
@@ -353,6 +406,25 @@ function terminalShell(): HTMLElement | null {
     return document.querySelector("main");
 }
 
+const CV_HASH = "#cv";
+
+/**
+ * Keeps the address bar in step so the CV can be linked to directly, using
+ * replaceState rather than a hash assignment: it updates the URL without
+ * pushing a history entry, so the back button still leaves the site rather
+ * than toggling this panel. There is still only one route.
+ */
+function syncHash(open: boolean): void {
+    try {
+        const url = open
+            ? `${location.pathname}${location.search}${CV_HASH}`
+            : `${location.pathname}${location.search}`;
+        history.replaceState(null, "", url);
+    } catch {
+        /* replaceState can throw on exotic origins; the panel still works */
+    }
+}
+
 export function openCv(): void {
     ensureStyles();
 
@@ -372,6 +444,7 @@ export function openCv(): void {
     void page.offsetWidth;
     page.classList.add("is-open");
     page.scrollTop = 0;
+    syncHash(true);
 }
 
 /**
@@ -385,6 +458,7 @@ export function closeCv(): void {
     const page = document.getElementById(PAGE_ID);
     const shell = terminalShell();
 
+    syncHash(false);
     if (shell) shell.hidden = false;
     if (!page) return;
 
