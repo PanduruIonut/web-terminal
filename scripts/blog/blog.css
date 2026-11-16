@@ -294,6 +294,48 @@ h1 {
   .b-next { text-align: left; }
 }
 
+/*
+ * Motion. Only for people who haven't asked their system for less of it.
+ *
+ * Between blog pages the content crossfades while the frame (menu, breadcrumb)
+ * holds still; a browser without cross-page view transitions simply changes
+ * page, as before. On arrival the page's own content rises a few pixels into
+ * place, title first, then the rest in reading order. Fill mode is `backwards`
+ * so nothing is left behind once it has played: no lingering transform, no
+ * stacking context, nothing invisible if an animation never runs.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  .b-menu { view-transition-name: b-menu; }
+  .b-top { view-transition-name: b-top; }
+  ::view-transition-group(root), ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .22s; }
+
+  @keyframes b-rise { from { opacity: 0; transform: translateY(10px); } }
+  .b-head > *, .b-cover, .b-body, .b-pager, .b-problems, .b-list > li {
+    animation: b-rise .5s cubic-bezier(.2, .7, .2, 1) backwards;
+  }
+  .b-head > :nth-child(2) { animation-delay: 60ms; }
+  .b-head > :nth-child(3) { animation-delay: 120ms; }
+  .b-cover { animation-delay: 170ms; }
+  .b-body, .b-problems { animation-delay: 220ms; }
+  .b-pager { animation-delay: 300ms; }
+  .b-list > li { animation-delay: 420ms; }
+  .b-list > li:nth-child(1) { animation-delay: 140ms; }
+  .b-list > li:nth-child(2) { animation-delay: 190ms; }
+  .b-list > li:nth-child(3) { animation-delay: 240ms; }
+  .b-list > li:nth-child(4) { animation-delay: 290ms; }
+  .b-list > li:nth-child(5) { animation-delay: 340ms; }
+  .b-list > li:nth-child(6) { animation-delay: 380ms; }
+
+  /* The photo viewer grows in; closing stays instant. */
+  @keyframes b-fade-in { from { opacity: 0; } }
+  @keyframes b-grow-in { from { opacity: 0; transform: scale(.96); } }
+  .b-zoom:not([hidden]) { animation: b-fade-in .18s ease-out; }
+  .b-zoom:not([hidden]) .b-zoom-stage img { animation: b-grow-in .26s cubic-bezier(.2, .7, .2, 1); }
+
+  .b-menu a, .b-crumbs a, .b-list-title, .b-foot a, .b-theme { transition: color .15s ease, border-color .15s ease; }
+}
+
 @media print {
   :root { --bg: #fff; --text: #000; --heading: #000; --accent: #333; --muted: #444; --section: #000; --link: #000; --rule: #999; --chip: transparent; }
   .b-theme, .b-menu, .b-pager, .b-foot, .b-preview { display: none !important; }

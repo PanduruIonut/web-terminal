@@ -37,6 +37,29 @@ clickSound.volume = 0.4;
 clickSound.playbackRate = 1.4;
 clickSound.loop = true;
 
+/*
+ * Held while the CV is open. The terminal keeps typing behind the CV, and
+ * nobody reading a CV wants keystrokes in their ears. Kept apart from `mute`
+ * (clickSound.muted), so closing the CV gives back whatever the visitor chose.
+ * Output still typing when the CV closes picks its sound back up.
+ */
+let typingSoundHeld = false;
+/** Outputs typing right now. Every one runs to its last character, so this always returns to 0. */
+let typingNow = 0;
+
+function playTypingSound(): void {
+    if (typingSoundHeld) return;
+    clickSound.play().catch((error) => {
+        console.error("Audio playback error:", error);
+    });
+}
+
+export function holdTypingSound(hold: boolean): void {
+    typingSoundHeld = hold;
+    if (hold) clickSound.pause();
+    else if (typingNow > 0) playTypingSound();
+}
+
 
 export const commands: Command[] = [
     { name: "clear", description: "Clear the terminal" },
@@ -132,9 +155,7 @@ export function animateText(
         return Promise.resolve();
     }
 
-    clickSound.play().catch((error) => {
-        console.error("Audio playback error:", error);
-    });
+    playTypingSound();
 
     return new Promise((resolve) => {
         let index = 0;
@@ -146,6 +167,7 @@ export function animateText(
             return;
         }
 
+        typingNow++;
         function type() {
             if (index < content.length) {
                 element.innerHTML += content.charAt(index);
@@ -155,6 +177,7 @@ export function animateText(
                     terminalDisplayContainer.scrollHeight;
 
                 if (index === content.length) {
+                    typingNow--;
                     clickSound.pause();
                     typingSpeed = previousTypingSpeed;
                     resolve();

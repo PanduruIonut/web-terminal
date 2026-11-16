@@ -11,6 +11,7 @@
 
 import cvData from "../data/cv.json";
 import posts from "virtual:blog";
+import { holdTypingSound } from "../utils/terminal-utils";
 
 const PAGE_ID = "cv-page";
 
@@ -234,6 +235,23 @@ const CSS = `
     #${PAGE_ID} .cv-grid { grid-template-columns: 1fr; gap: 2px 0; }
     #${PAGE_ID} .cv-key { margin-top: 10px; }
     #${PAGE_ID} .cv-theme { top: 14px; right: auto; left: 18px; }
+}
+/*
+ * Each time the CV opens, its content rises into place in reading order while
+ * the page fades in. The buttons are left out: the terminal tab is fixed and
+ * centred by its own transform, and the toggle is part of the frame.
+ * The "backwards" fill leaves nothing behind once it has played.
+ */
+@media (prefers-reduced-motion: no-preference) {
+    @keyframes cv-rise { from { opacity: 0; transform: translateY(10px); } }
+    #${PAGE_ID}.is-open .cv-inner > :not(button) { animation: cv-rise .5s cubic-bezier(.2, .7, .2, 1) 380ms backwards; }
+    #${PAGE_ID}.is-open .cv-inner > :not(button):nth-child(3) { animation-delay: 60ms; }
+    #${PAGE_ID}.is-open .cv-inner > :not(button):nth-child(4) { animation-delay: 120ms; }
+    #${PAGE_ID}.is-open .cv-inner > :not(button):nth-child(5) { animation-delay: 160ms; }
+    #${PAGE_ID}.is-open .cv-inner > :not(button):nth-child(6) { animation-delay: 220ms; }
+    #${PAGE_ID}.is-open .cv-inner > :not(button):nth-child(7) { animation-delay: 260ms; }
+    #${PAGE_ID}.is-open .cv-inner > :not(button):nth-child(8) { animation-delay: 320ms; }
+    #${PAGE_ID} .cv-site-nav a { transition: color .15s ease; }
 }
 @media (prefers-reduced-motion: reduce) {
     #${PAGE_ID} { transition: none; }
@@ -497,6 +515,7 @@ export function openCv(): void {
         document.body.appendChild(page);
     }
 
+    holdTypingSound(true);
     const shell = terminalShell();
     if (shell) shell.hidden = true;
 
@@ -522,6 +541,7 @@ export function closeCv(): void {
     const shell = terminalShell();
 
     syncHash(false);
+    holdTypingSound(false);
     if (shell) shell.hidden = false;
     if (!page) return;
 

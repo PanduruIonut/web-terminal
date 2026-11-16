@@ -102,6 +102,13 @@ main[hidden] .site-nav {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* The menu arrives just after the terminal, so the terminal is seen first. */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes site-nav-in { from { opacity: 0; } }
+  .site-nav { animation: site-nav-in .6s ease-out .5s backwards; }
+  .site-nav a { transition: color .15s ease, opacity .15s ease; }
+}
+
 @media (hover: hover) {
   .site-nav a:hover {
     opacity: 1;
