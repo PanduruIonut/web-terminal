@@ -63,3 +63,66 @@ html {
     transition: none;
   }
 }
+
+/*
+ * Blog and CV links, top right of the terminal page. Quiet like the hint line
+ * under the terminal, so the terminal is still the first thing seen; each link
+ * is a 44px target for a thumb.
+ */
+.site-nav {
+  position: fixed;
+  top: max(8px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  z-index: 10;
+  display: flex;
+  gap: 4px;
+}
+
+/*
+ * openCv() sets main.hidden, but the home page's own `main { display: flex }`
+ * outranks the hidden attribute, so the terminal stays laid out under the CV
+ * (the CV's crossfade relies on that). The links are hidden on their own, so
+ * Tab can't land on them behind the CV.
+ */
+main[hidden] .site-nav {
+  display: none;
+}
+
+.site-nav a {
+  display: block;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 12px 12px;
+  font-size: 15px;
+  line-height: 20px;
+  color: white;
+  opacity: 0.7;
+  text-decoration: none;
+  border-radius: 6px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (hover: hover) {
+  .site-nav a:hover {
+    opacity: 1;
+    color: #2ac3de;
+  }
+}
+
+/*
+ * A phone held sideways (or any short window) gets a terminal taller than the
+ * screen, so the links sit on the terminal itself; a backing keeps terminal
+ * text from running underneath them.
+ */
+@media (max-height: 500px) {
+  .site-nav {
+    background: rgba(26, 27, 38, 0.92);
+    border-radius: 8px;
+  }
+}
+
+.site-nav a:focus-visible {
+  opacity: 1;
+  outline: 2px solid #2ac3de;
+  outline-offset: -2px;
+}
