@@ -170,6 +170,9 @@ const CSS = `
  */
 #${PAGE_ID} .cv-site-nav {
     position: absolute;
+    /* Above .cv-inner, which is positioned and comes later: on a narrow screen
+       its empty top padding covers the menu and took every tap meant for it. */
+    z-index: 1;
     top: max(8px, env(safe-area-inset-top));
     right: max(12px, env(safe-area-inset-right));
     display: flex;
