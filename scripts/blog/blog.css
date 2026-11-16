@@ -1,0 +1,266 @@
+/*
+ * The blog's stylesheet, inlined into every page by site.mjs. The palette is
+ * the CV page's (src/components/cvPage.ts), under the same three-state rule:
+ * dark by default, light when the OS asks for it, and an explicit choice on
+ * <html data-theme> beating the OS either way.
+ */
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  --bg: #1a1b26;
+  --text: #a9b1d6;
+  --heading: #c0caf5;
+  --accent: #ff9e64;
+  --muted: #565f89;
+  --section: #af91e8;
+  --link: #2ac3de;
+  --link-underline: rgba(42, 195, 222, .35);
+  --rule: #2a2b3d;
+  --chip: rgba(255, 255, 255, .04);
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f7f7fb;
+    --text: #3d4059;
+    --heading: #191a24;
+    --accent: #c2410c;
+    --muted: #6e7391;
+    --section: #7c3aed;
+    --link: #0e7490;
+    --link-underline: rgba(14, 116, 144, .35);
+    --rule: #e2e2ee;
+    --chip: rgba(0, 0, 0, .03);
+    color-scheme: light;
+  }
+}
+
+:root[data-theme="light"] {
+  --bg: #f7f7fb;
+  --text: #3d4059;
+  --heading: #191a24;
+  --accent: #c2410c;
+  --muted: #6e7391;
+  --section: #7c3aed;
+  --link: #0e7490;
+  --link-underline: rgba(14, 116, 144, .35);
+  --rule: #e2e2ee;
+  --chip: rgba(0, 0, 0, .03);
+  color-scheme: light;
+}
+
+[hidden] { display: none !important; }
+
+html { background: var(--bg); -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.b-page { max-width: 720px; margin: 0 auto; padding: 26px 24px 96px; }
+
+a { color: var(--link); text-decoration: none; border-bottom: 1px solid var(--link-underline); }
+a:hover { border-bottom-color: var(--link); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; border-radius: 3px; }
+
+.b-preview {
+  margin: 0 0 18px; padding: 8px 12px; border-radius: 6px;
+  background: var(--accent); color: #1a1b26; font-size: 13px; line-height: 1.5;
+}
+
+.b-problems {
+  margin: 0 0 32px; padding: 12px 16px; border-radius: 8px;
+  border: 1px solid var(--accent); color: var(--text); font-size: 13px;
+}
+.b-problems p { margin: 0 0 8px; }
+.b-problems pre { margin: 0 0 8px; white-space: pre-wrap; color: var(--accent); font: inherit; }
+
+.b-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 14px; }
+.b-crumbs { display: flex; flex-wrap: wrap; gap: 0 8px; color: var(--muted); }
+.b-crumbs a { color: var(--muted); border-bottom-color: transparent; }
+.b-crumbs a:hover { color: var(--text); }
+
+.b-theme {
+  font: inherit; font-size: 13px; line-height: 1.4; cursor: pointer;
+  color: var(--muted); background: var(--chip);
+  border: 1px solid var(--rule); border-radius: 999px; padding: 5px 12px;
+}
+.b-theme:hover { color: var(--text); border-color: var(--muted); }
+
+.b-head { margin: 64px 0 40px; }
+.b-meta { margin: 0 0 10px; color: var(--muted); font-size: 13px; }
+.b-draft {
+  margin-left: 10px; padding: 1px 8px; border-radius: 999px;
+  border: 1px solid var(--accent); color: var(--accent); font-size: 12px;
+}
+
+h1 {
+  margin: 0; color: var(--heading);
+  font-size: 30px; line-height: 1.25; letter-spacing: -.4px; text-wrap: balance;
+}
+.b-lede { margin: 14px 0 0; color: var(--accent); font-size: 15px; line-height: 1.65; text-wrap: pretty; }
+
+.b-body p, .b-body ul, .b-body ol { margin: 0 0 1.15em; text-wrap: pretty; }
+.b-body h2, .b-body h3, .b-body h4 { color: var(--heading); line-height: 1.35; text-wrap: balance; }
+.b-body h2 { margin: 52px 0 14px; font-size: 19px; }
+.b-body h2::before { content: "## "; content: "## " / ""; color: var(--section); }
+.b-body h3 { margin: 36px 0 10px; font-size: 16px; }
+.b-body h4 { margin: 28px 0 8px; font-size: 15px; }
+.b-body strong { color: var(--heading); }
+.b-body ul, .b-body ol { padding-left: 1.4em; }
+.b-body li { margin: .3em 0; }
+.b-body hr { border: 0; border-top: 1px solid var(--rule); margin: 44px 0; }
+.b-body :is(h2, h3, h4) { clear: both; }
+
+/* > a line on its own: a pull quote, the line a section turns on. */
+.b-body blockquote {
+  clear: both; margin: 40px 0; padding: 2px 0 2px 22px; border-left: 3px solid var(--accent);
+  color: var(--heading); font-size: 1.35em; line-height: 1.5; text-wrap: balance;
+}
+.b-body blockquote p { margin: 0 0 .6em; }
+.b-body blockquote p:last-child { margin-bottom: 0; }
+
+/* > **number**, then a line: the number callout. */
+.b-body .b-stat {
+  display: flex; align-items: center; gap: 24px; padding: 20px 24px;
+  border: 1px solid var(--rule); border-radius: 12px; background: var(--chip);
+  color: var(--text); font-size: 1em; line-height: 1.6; text-wrap: pretty;
+}
+.b-stat .b-stat-n {
+  flex: none; margin: 0; font-size: 38px; font-weight: 800; line-height: 1.1;
+  letter-spacing: -1px; color: var(--accent);
+}
+.b-body code {
+  font-family: inherit; font-size: .92em;
+  padding: .1em .35em; border-radius: 4px; background: var(--chip); border: 1px solid var(--rule);
+}
+.b-body pre {
+  margin: 0 0 1.15em; padding: 14px 16px; overflow-x: auto; line-height: 1.6;
+  border-radius: 8px; background: var(--chip); border: 1px solid var(--rule);
+}
+.b-body pre code { padding: 0; border: 0; background: none; }
+
+.b-body figure { margin: 34px 0; }
+/* A figure never gets taller than 75% of the screen; it narrows instead, and
+   the width/height attributes keep its ratio. Full column width made the
+   7-day map four screens tall. */
+.b-body img {
+  display: block; width: auto; height: auto; max-width: 100%; max-height: 75vh; margin: 0 auto;
+  border-radius: 8px; border: 1px solid var(--rule); background: var(--chip);
+}
+.b-body figcaption { margin-top: 10px; text-align: left; color: var(--muted); font-size: 13px; line-height: 1.6; text-wrap: pretty; }
+
+/* Laid out by shape (content.mjs sets the class): a landscape photo runs wider
+   than the text on a wide screen, a phone screenshot sits beside the paragraphs
+   that talk about it, anything else stays in the column. Phones stack them all. */
+@media (min-width: 900px) {
+  .b-body .b-fig-wide { margin-inline: calc(50% - min(520px, 50vw - 32px)); }
+  .b-body .b-fig-wide figcaption { max-width: 672px; margin-inline: auto; }
+}
+@media (min-width: 621px) {
+  .b-body .b-fig-tall { float: right; width: 40%; margin: 6px 0 20px 32px; }
+}
+/* A post may end on a floated photo; the pager and footer start below it, not beside it. */
+.b-body::after { content: ""; display: block; clear: both; }
+
+/* The cover, under the title: as wide as a wide figure, and always 16:9 so every
+   post opens the same way whatever shape the photo was. */
+.b-cover { margin: -4px 0 44px; }
+.b-cover img {
+  display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover;
+  border-radius: 10px; border: 1px solid var(--rule); background: var(--chip);
+}
+@media (min-width: 900px) { .b-cover { margin-inline: calc(50% - min(520px, 50vw - 32px)); } }
+
+/* A click (or Enter) shows a photo whole; the script is in site.mjs. */
+.b-body figure img[tabindex], .b-cover img[tabindex] { cursor: zoom-in; }
+/* The enlarged photo: an × in the corner, the photo fitted whole in the space above, and its caption
+   (the cover's description, for a cover) in a band along the bottom. The photo's limits come from its
+   own stage, a flex row whose height is definite (what is left of the screen after the band): a
+   percentage read against a grid row instead grows with the photo, which once let tall photos run off
+   the bottom with page scrolling switched off. The stage can still scroll as a fallback. A click
+   anywhere closes, as does Escape. */
+.b-zoom {
+  position: fixed; inset: 0; z-index: 20; display: flex; flex-direction: column;
+  background: rgba(10, 11, 18, .94); cursor: zoom-out;
+}
+.b-zoom-stage {
+  flex: 1 1 0; min-height: 0; display: flex; padding: 16px;
+  overflow: auto; overscroll-behavior: contain;
+}
+.b-zoom-stage img {
+  margin: auto; min-width: 0; min-height: 0; max-width: 100%; max-height: 100%;
+  border-radius: 8px;
+}
+.b-zoom-close {
+  position: absolute; z-index: 1;
+  top: max(10px, env(safe-area-inset-top)); right: max(10px, env(safe-area-inset-right));
+  width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%;
+  background: rgba(255, 255, 255, .14); color: #fff;
+  font: 400 30px/44px system-ui, sans-serif; cursor: pointer;
+}
+.b-zoom-close:hover { background: rgba(255, 255, 255, .26); }
+.b-zoom-close:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.b-zoom-cap {
+  flex: none; margin: 0; max-height: 30vh; overflow: auto;
+  padding: 12px max(20px, calc((100% - 760px) / 2)) calc(14px + env(safe-area-inset-bottom));
+  background: rgba(0, 0, 0, .5); border-top: 1px solid rgba(255, 255, 255, .08);
+  color: #e4e4ea; font-size: 15px; line-height: 1.5; text-align: center;
+}
+
+.b-pager {
+  margin-top: 64px; padding-top: 22px; border-top: 1px solid var(--rule);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+.b-pager a { border: 0; color: var(--heading); font-weight: 700; line-height: 1.45; }
+.b-pager a:hover { color: var(--link); }
+.b-pager span {
+  display: block; margin-bottom: 4px;
+  color: var(--section); font-size: 12px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase;
+}
+.b-next { text-align: right; }
+
+.b-list { list-style: none; margin: 0; padding: 0; }
+.b-list li { padding: 22px 0; border-top: 1px solid var(--rule); }
+.b-list time { color: var(--muted); font-size: 13px; }
+.b-list-title { display: block; margin-top: 4px; color: var(--heading); font-size: 17px; font-weight: 700; line-height: 1.4; border-bottom: 0; }
+.b-list-title:hover { color: var(--link); }
+.b-list p { margin: 6px 0 0; }
+
+.b-foot {
+  margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--rule);
+  display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 13px;
+}
+.b-foot a { color: var(--muted); border-bottom-color: transparent; }
+.b-foot a:hover { color: var(--text); }
+
+@media (max-width: 620px) {
+  .b-page { padding: 18px 18px 72px; }
+  .b-head { margin: 44px 0 32px; }
+  h1 { font-size: 25px; }
+  .b-body figure { margin: 28px 0; }
+  .b-body blockquote { margin: 32px 0; font-size: 1.25em; }
+  .b-body .b-stat { flex-direction: column; align-items: flex-start; gap: 6px; font-size: 1em; }
+  .b-pager { grid-template-columns: 1fr; }
+  .b-next { text-align: left; }
+}
+
+@media print {
+  :root { --bg: #fff; --text: #000; --heading: #000; --accent: #333; --muted: #444; --section: #000; --link: #000; --rule: #999; --chip: transparent; }
+  .b-theme, .b-pager, .b-foot, .b-preview { display: none !important; }
+  a { border-bottom: 0; text-decoration: underline; }
+  .b-body figure { break-inside: avoid; float: none !important; width: auto !important; margin-inline: 0 !important; }
+}

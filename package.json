@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "node scripts/generate-cv-txt.mjs && tsc && vite build",
     "preview": "vite preview",
-    "generate:cv": "node scripts/generate-cv-txt.mjs"
+    "generate:cv": "node scripts/generate-cv-txt.mjs",
+    "blog:import": "node scripts/import-blog.mjs",
+    "test:blog": "node --test scripts/blog/content.test.mjs"
   },
   "devDependencies": {
     "@types/node": "^20.4.5",

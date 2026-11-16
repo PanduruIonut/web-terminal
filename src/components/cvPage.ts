@@ -10,8 +10,12 @@
  */
 
 import cvData from "../data/cv.json";
+import posts from "virtual:blog";
 
 const PAGE_ID = "cv-page";
+
+/** The newest few; the rest are one link away on /blog/. */
+const POSTS_ON_CV = 3;
 const STYLE_ID = "cv-page-style";
 
 interface Role {
@@ -132,6 +136,8 @@ const CSS = `
 #${PAGE_ID} .cv-entry { margin-top: 24px; }
 #${PAGE_ID} .cv-head { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: baseline; }
 #${PAGE_ID} .cv-title { color: var(--cv-heading); font-weight: 700; }
+#${PAGE_ID} a.cv-title { border-bottom-color: var(--cv-rule); }
+#${PAGE_ID} a.cv-title:hover { color: var(--cv-link); border-bottom-color: var(--cv-link); }
 #${PAGE_ID} .cv-at { color: var(--cv-key); }
 #${PAGE_ID} .cv-when { color: var(--cv-muted); font-size: 13px; white-space: nowrap; }
 #${PAGE_ID} .cv-detail { margin: 6px 0 0; }
@@ -320,6 +326,7 @@ function build(): HTMLElement {
       <a href="mailto:${escape(cv.contact.email)}">${escape(cv.contact.email)}</a>
       <a href="https://${escape(cv.contact.github)}" target="_blank" rel="noopener">${escape(cv.contact.github)}</a>
       <a href="https://www.${escape(cv.contact.linkedin)}/" target="_blank" rel="noopener">${escape(cv.contact.linkedin)}</a>
+      ${posts.length ? `<a href="/blog/">blog</a>` : ""}
     </div>
   </header>
 
@@ -351,6 +358,18 @@ function build(): HTMLElement {
       </div>
       <p class="cv-detail">${escape(p.detail)}</p>
     </div>`).join("")}
+
+  ${posts.length ? `
+  <h2>Blog</h2>
+  ${posts.slice(0, POSTS_ON_CV).map((post) => `
+    <div class="cv-entry">
+      <div class="cv-head">
+        <a class="cv-title" href="${escape(post.url)}">${escape(post.title)}</a>
+        <div class="cv-when">${escape(post.dateLabel)}</div>
+      </div>
+      <p class="cv-detail">${escape(post.description)}</p>
+    </div>`).join("")}
+  ${posts.length > POSTS_ON_CV ? `<p class="cv-detail"><a href="/blog/">All ${posts.length} posts</a></p>` : ""}` : ""}
 
   <h2>Education</h2>
   ${cv.education.map((e) => `
