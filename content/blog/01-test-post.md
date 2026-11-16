@@ -38,10 +38,10 @@ And a numbered one:
 > **3 minutes**
 > A number callout: a quote whose first line is only bold text shows that text large, with the rest of the quote beside it.
 
+#### The smallest heading
+
 ![The homepage on a phone: a terminal window that says it is pretending to be a homepage](images/01/phone.jpg)
 *A phone screenshot. On a wide screen it sits beside the text; on a phone it stacks like any other photo.*
-
-#### The smallest heading
 
 A few paragraphs to see how the text wraps around the phone screenshot on a wide screen, and how the page reads on a narrow one.
 
