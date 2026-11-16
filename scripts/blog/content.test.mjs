@@ -339,7 +339,17 @@ test("content/blog/: each series in its own folder, numbered on its own, with it
     const page = (url) => files.get(`${url}index.html`)?.body.toString();
     assert.match(page("/blog/moto-tracker/"), /<h1>Moto Tracker<\/h1>[\s\S]*where-it-started[\s\S]*tunnels/);
     const first = page("/blog/moto-tracker/where-it-started/");
-    assert.match(first, /<a href="\/blog\/">blog<\/a><span aria-hidden="true">\/<\/span><a href="\/blog\/moto-tracker\/">moto-tracker<\/a><\/nav>/);
+    assert.match(first, /<a href="\/blog\/">blog<\/a><span aria-hidden="true">\/<\/span><a href="\/blog\/moto-tracker\/">Moto Tracker<\/a><\/nav>/, "the breadcrumb names the series, not its folder");
+    // The blog index says which series a post is in and where; the series page doesn't repeat itself.
+    const index = page("/blog/");
+    const item = (slug) => index.split("<li>").find((li) => li.includes(`/${slug}/"`));
+    assert.match(item("where-it-started"), /<a class="b-series" href="\/blog\/moto-tracker\/">Moto Tracker<\/a>, part&nbsp;1</);
+    assert.match(item("tunnels"), /Moto Tracker<\/a>, part&nbsp;2</);
+    assert.doesNotMatch(item("a-standalone"), /class="b-series"/);
+    assert.doesNotMatch(page("/blog/moto-tracker/"), /class="b-list-series"/);
+    assert.match(first, /class="b-meta">[^\n]*Moto Tracker<\/a>, part&nbsp;1&nbsp;of&nbsp;2</);
+    assert.match(page("/blog/moto-tracker/tunnels/"), /class="b-meta">[^\n]*part&nbsp;2&nbsp;of&nbsp;2</);
+    assert.doesNotMatch(page("/blog/a-standalone/"), /class="b-series"/);
     assert.match(first, /href="\/blog\/moto-tracker\/tunnels\/" rel="next"/);
     assert.doesNotMatch(first, /a-standalone/, "previous/next stay inside the series");
     assert.doesNotMatch(page("/blog/a-standalone/"), /rel="(?:next|prev)"/);

@@ -100,6 +100,37 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--link); outline-
 }
 .b-theme:hover { color: var(--text); border-color: var(--muted); }
 
+/*
+ * The site menu from the terminal page and the CV (src/style.css, cvPage.ts),
+ * in the same corner, so "blog" stays put between the three. Here "blog" is
+ * marked as where you are; on a post it also leads back to the list. Home is
+ * "ionut.codes" at the start of the breadcrumb.
+ */
+.b-menu {
+  position: absolute;
+  top: max(8px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  display: flex; gap: 4px;
+  font-size: 15px; line-height: 20px;
+}
+.b-menu > * {
+  display: block; min-height: 44px; box-sizing: border-box;
+  padding: 12px; border: 0; border-radius: 6px;
+}
+.b-menu a { color: var(--text); -webkit-tap-highlight-color: transparent; }
+@media (hover: hover) { .b-menu a:hover { color: var(--link); } }
+.b-menu a:focus-visible { outline: 2px solid var(--link); outline-offset: -2px; }
+.b-menu [aria-current] { color: var(--heading); text-decoration: underline 2px var(--link); text-underline-offset: 6px; }
+/*
+ * Where the menu would run into the theme toggle, the toggle moves to the top
+ * left, level with the menu, and the breadcrumb starts on the line below:
+ * the CV does the same.
+ */
+@media (max-width: 980px) {
+  .b-page { position: relative; padding-top: 62px; }
+  .b-theme { position: absolute; top: max(15px, calc(env(safe-area-inset-top) + 7px)); left: 24px; }
+}
+
 .b-head { margin: 64px 0 40px; }
 .b-meta { margin: 0 0 10px; color: var(--muted); font-size: 13px; }
 .b-draft {
@@ -236,6 +267,7 @@ h1 {
 .b-list { list-style: none; margin: 0; padding: 0; }
 .b-list li { padding: 22px 0; border-top: 1px solid var(--rule); }
 .b-list time { color: var(--muted); font-size: 13px; }
+.b-list-series { color: var(--muted); font-size: 13px; }
 .b-list-title { display: block; margin-top: 4px; color: var(--heading); font-size: 17px; font-weight: 700; line-height: 1.4; border-bottom: 0; }
 .b-list-title:hover { color: var(--link); }
 .b-list p { margin: 6px 0 0; }
@@ -248,7 +280,8 @@ h1 {
 .b-foot a:hover { color: var(--text); }
 
 @media (max-width: 620px) {
-  .b-page { padding: 18px 18px 72px; }
+  .b-page { padding: 62px 18px 72px; }
+  .b-theme { left: 18px; }
   .b-head { margin: 44px 0 32px; }
   h1 { font-size: 25px; }
   .b-body figure { margin: 28px 0; }
@@ -260,7 +293,7 @@ h1 {
 
 @media print {
   :root { --bg: #fff; --text: #000; --heading: #000; --accent: #333; --muted: #444; --section: #000; --link: #000; --rule: #999; --chip: transparent; }
-  .b-theme, .b-pager, .b-foot, .b-preview { display: none !important; }
+  .b-theme, .b-menu, .b-pager, .b-foot, .b-preview { display: none !important; }
   a { border-bottom: 0; text-decoration: underline; }
   .b-body figure { break-inside: avoid; float: none !important; width: auto !important; margin-inline: 0 !important; }
 }

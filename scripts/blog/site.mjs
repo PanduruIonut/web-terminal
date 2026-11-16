@@ -71,9 +71,10 @@ ${published ? `<meta property="article:published_time" content="${published}">\n
 <style>${CSS}</style>
 </head>
 <body>
+<nav class="b-menu" aria-label="Site">${path === "/blog/" ? `<span aria-current="page">blog</span>` : `<a href="/blog/" aria-current="true">blog</a>`}<a href="/#cv">cv</a></nav>
 <div class="b-page">
 ${preview ? `<p class="b-preview">Preview of the writing folder: drafts included. Never deployed.</p>\n` : ""}<header class="b-top">
-<nav class="b-crumbs" aria-label="Site"><a href="/#cv">${esc(SITE.name)}</a><span aria-hidden="true">/</span><a href="/blog/">blog</a>${series ? `<span aria-hidden="true">/</span><a href="/blog/${series}/">${esc(series)}</a>` : ""}</nav>
+<nav class="b-crumbs" aria-label="Breadcrumb"><a href="/">${esc(SITE.name)}</a><span aria-hidden="true">/</span><a href="/blog/">blog</a>${series ? `<span aria-hidden="true">/</span><a href="/blog/${series}/">${esc(seriesTitle(series))}</a>` : ""}</nav>
 <button type="button" class="b-theme" hidden></button>
 </header>
 <main>
@@ -95,7 +96,20 @@ ${body}
 
 const newestFirst = (posts) => [...posts].sort((a, b) => b.date.localeCompare(a.date) || b.number - a.number);
 
-function postBody(post, previous, next) {
+/**
+ * "Moto Tracker, part 3", or "… part 3 of 4" on the post itself: where a post
+ * sits in its series, counted the way the series page and previous/next count
+ * (the published posts, in file-number order). Empty for a post in no series.
+ */
+function seriesLabel(post, posts, { of = false } = {}) {
+    if (!post.series) return "";
+    const siblings = posts.filter((other) => other.series === post.series);
+    const part = siblings.indexOf(post) + 1;
+    // Non-breaking inside "part 3 of 5", so a narrow line breaks after the comma, never before the number.
+    return `<a class="b-series" href="/blog/${post.series}/">${esc(seriesTitle(post.series))}</a>, part&nbsp;${part}${of ? `&nbsp;of&nbsp;${siblings.length}` : ""}`;
+}
+
+function postBody(post, previous, next, series = "") {
     const pager = previous || next
         ? `
 <nav class="b-pager" aria-label="Previous and next post">
@@ -105,7 +119,7 @@ ${next ? `<a class="b-next" href="${next.url}" rel="next"><span>Next</span>${esc
         : "";
     return `<article class="b-post">
 <header class="b-head">
-<p class="b-meta"><time datetime="${post.date}">${esc(post.dateLabel)}</time><span aria-hidden="true"> · </span>${post.minutes} min read${post.draft ? `<span class="b-draft">draft</span>` : ""}</p>
+<p class="b-meta"><time datetime="${post.date}">${esc(post.dateLabel)}</time><span aria-hidden="true"> · </span>${post.minutes} min read${series ? `<span aria-hidden="true"> · </span>${series}` : ""}${post.draft ? `<span class="b-draft">draft</span>` : ""}</p>
 <h1>${esc(post.title)}</h1>
 <p class="b-lede">${esc(post.description)}</p>
 </header>${post.cover ? `
@@ -125,8 +139,9 @@ ${problems.map((problem) => `<pre>${esc(problem.message)}</pre>`).join("\n")}
 </div>`;
 }
 
-const listItems = (posts) => posts.map((post) => `<li>
-<time datetime="${post.date}">${esc(post.dateLabel)}</time>${post.draft ? `<span class="b-draft">draft</span>` : ""}
+/** `all` given (the blog index): each post in a series says which, and where in it. */
+const listItems = (posts, all = null) => posts.map((post) => `<li>
+<time datetime="${post.date}">${esc(post.dateLabel)}</time>${all && post.series ? `<span class="b-list-series"><span aria-hidden="true"> · </span>${seriesLabel(post, all)}</span>` : ""}${post.draft ? `<span class="b-draft">draft</span>` : ""}
 <a class="b-list-title" href="${post.url}">${esc(post.title)}</a>
 <p>${esc(post.description)}</p>
 </li>`).join("\n");
@@ -138,7 +153,7 @@ function indexBody(posts, problems = []) {
 </header>
 ${problemsBlock(problems)}
 <ul class="b-list">
-${listItems(newestFirst(posts))}
+${listItems(newestFirst(posts), posts)}
 </ul>`;
 }
 
@@ -234,7 +249,7 @@ export function buildSite({ posts, assets, problems = [] }, { preview = false } 
             type: "article",
             image: post.cover ?? post.figures[0],
             published: post.date,
-            body: postBody(post, siblings[i - 1], siblings[i + 1]),
+            body: postBody(post, siblings[i - 1], siblings[i + 1], seriesLabel(post, posts, { of: true })),
             preview,
             series: post.series,
         })));

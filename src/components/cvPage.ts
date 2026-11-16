@@ -164,6 +164,42 @@ const CSS = `
 }
 #${PAGE_ID} .cv-theme:hover { color: var(--cv-text); border-color: var(--cv-muted); }
 /*
+ * The terminal page's blog / cv menu (style.css), in the same corner, so "blog"
+ * stays put when the CV opens; "cv" is marked as the page you are on. Absolute
+ * in the scrolling page, so it scrolls away instead of floating over the text.
+ */
+#${PAGE_ID} .cv-site-nav {
+    position: absolute;
+    top: max(8px, env(safe-area-inset-top));
+    right: max(12px, env(safe-area-inset-right));
+    display: flex;
+    gap: 4px;
+    font-size: 15px;
+    line-height: 20px;
+}
+#${PAGE_ID} .cv-site-nav > * {
+    display: block;
+    min-height: 44px;
+    box-sizing: border-box;
+    padding: 12px;
+    border: 0;
+    border-radius: 6px;
+}
+#${PAGE_ID} .cv-site-nav a { color: var(--cv-text); text-decoration: none; -webkit-tap-highlight-color: transparent; }
+@media (hover: hover) {
+    #${PAGE_ID} .cv-site-nav a:hover { color: var(--cv-link); }
+}
+#${PAGE_ID} .cv-site-nav a:focus-visible { outline: 2px solid var(--cv-link); outline-offset: -2px; }
+#${PAGE_ID} .cv-site-nav [aria-current] {
+    color: var(--cv-heading);
+    text-decoration: underline 2px var(--cv-link);
+    text-underline-offset: 6px;
+}
+/* Where the menu would run into the theme toggle, the toggle moves to the left. */
+@media (max-width: 980px) {
+    #${PAGE_ID} .cv-theme { right: auto; left: 24px; }
+}
+/*
  * The way back to the terminal, pinned to the right edge at every size. Once
  * the CV is open the terminal's own close button is gone with it, so this is
  * the only route back — a footer link would mean scrolling to find it.
@@ -194,7 +230,7 @@ const CSS = `
     #${PAGE_ID} .cv-inner { padding: 58px 18px 72px; }
     #${PAGE_ID} .cv-grid { grid-template-columns: 1fr; gap: 2px 0; }
     #${PAGE_ID} .cv-key { margin-top: 10px; }
-    #${PAGE_ID} .cv-theme { top: 14px; right: 18px; }
+    #${PAGE_ID} .cv-theme { top: 14px; right: auto; left: 18px; }
 }
 @media (prefers-reduced-motion: reduce) {
     #${PAGE_ID} { transition: none; }
@@ -247,6 +283,7 @@ const CSS = `
 
     /* Screen-only controls. */
     #${PAGE_ID} .cv-theme,
+    #${PAGE_ID} .cv-site-nav,
     #${PAGE_ID} .cv-terminal-tab,
     #${PAGE_ID} .cv-back,
     .skip-to-cv,
@@ -315,6 +352,10 @@ function build(): HTMLElement {
     page.setAttribute("aria-label", "CV");
 
     page.innerHTML = `
+<nav class="cv-site-nav" aria-label="Site">
+  ${posts.length ? `<a href="/blog/">blog</a>` : ""}
+  <span aria-current="page">cv</span>
+</nav>
 <div class="cv-inner">
   <button type="button" class="cv-theme"></button>
   <button type="button" class="cv-terminal-tab" aria-label="Open the terminal">&gt;_</button>
