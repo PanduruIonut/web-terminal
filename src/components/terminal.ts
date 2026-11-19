@@ -192,6 +192,13 @@ export class MyTerminal extends HTMLElement {
         .terminal__input:focus {
             outline: none;
         }
+
+        /* iOS Safari zooms the page onto any input under 16px when it takes
+           focus, and does not zoom back out. Touch screens get 16px; a mouse
+           keeps 14px. Not maximum-scale=1: that disables pinch zoom too. */
+        @media (pointer: coarse) {
+            .terminal__input { font-size: 16px; }
+        }
         .terminal__input_container {
         display: flex;
         overflow: hidden;
