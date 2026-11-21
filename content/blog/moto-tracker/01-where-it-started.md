@@ -211,4 +211,7 @@ It didn't fully answer that question yet. It still had a lot to learn, and some 
 
 But it worked, and it was mine.
 
+@[The Moto Tracker project page](https://mototracker.ionut.codes/en)
+*Nine months later: the project's own page. It is live, not a screenshot. Scroll inside it.*
+
 *Cover photo: ThisisEngineering on Unsplash.*

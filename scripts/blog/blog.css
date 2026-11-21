@@ -207,6 +207,16 @@ h1 {
 @media (min-width: 621px) {
   .b-body .b-fig-tall { float: right; width: 40%; margin: 6px 0 20px 32px; }
 }
+/* A live page (content.mjs, LIVE_ORIGINS): laid out like a wide photo. A frame has no height of its
+   own, so it gets one: most of the screen, so that its first view reads as a page and not a strip,
+   and short of the whole screen, so that there is always page around it to scroll the post by. */
+.b-body .b-live-frame {
+  height: min(720px, 72vh); overflow: hidden;
+  border-radius: 8px; border: 1px solid var(--rule); background: var(--chip);
+}
+.b-body .b-live iframe { display: block; width: 100%; height: 100%; border: 0; }
+.b-body .b-live-open { white-space: nowrap; }
+
 /* A post may end on a floated photo; the pager and footer start below it, not beside it. */
 .b-body::after { content: ""; display: block; clear: both; }
 

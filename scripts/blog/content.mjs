@@ -153,7 +153,18 @@ const BULLET = /^ {0,3}[-*+][ \t]+(.*)$/;
 const NUMBERED = /^ {0,3}\d{1,9}[.)][ \t]+(.*)$/;
 const RAW_HTML = /^[ \t]*</;
 const FIGURE = /^!\[([^\]]*)\]\(([^()\s]+)\)$/;
+const LIVE = /^@\[([^\]]*)\]\(([^()\s]+)\)$/;
 const SAFE_HREF = /^(?:https?:\/\/|mailto:|\/(?!\/)|#)/i;
+
+/**
+ * The only sites a post may show live, in a frame: `@[what it is](https://…)` on
+ * a line of its own. A frame runs that site's code inside the post, so it is a
+ * list, not a pattern, and anything off it is refused rather than linked.
+ */
+export const LIVE_ORIGINS = new Set(["https://mototracker.ionut.codes"]);
+// What the framed page may do. Never allow-top-navigation: the page must not be
+// able to send the reader's tab somewhere else.
+const LIVE_SANDBOX = "allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox";
 const HARD_BREAK = "\u0001";
 
 function startsBlock(line) {
@@ -176,6 +187,9 @@ function renderInline(text, where) {
 
     if (/!\[[^\]]*\]\(/.test(out)) {
         throw new ContentError(`${where}: an image goes on a line of its own, with only its *caption* on the lines under it`);
+    }
+    if (/@\[[^\]]*\]\(/.test(out)) {
+        throw new ContentError(`${where}: a live page goes on a line of its own, with only its *caption* on the lines under it`);
     }
 
     out = out.replace(/\[([^\]\n]+)\]\(([^()\s]+)\)/g, (_, label, href) => {
@@ -212,8 +226,8 @@ function countWords(text) {
 }
 
 /**
- * Block level: ## to #### headings, paragraphs, figures, - and 1. lists,
- * > quotes, ``` code, --- rules. Inline: *em*, **strong**, `code`, [links](/x),
+ * Block level: ## to #### headings, paragraphs, figures, live pages from
+ * LIVE_ORIGINS, - and 1. lists, > quotes, ``` code, --- rules. Inline: *em*, **strong**, `code`, [links](/x),
  * and a line ending in two spaces breaks. Anything else that looks like markup
  * is either shown as typed (escaped) or refused, never passed through.
  */
@@ -237,19 +251,43 @@ export function renderMarkdown(body, { file, lineOffset = 0, resolveImage }) {
         return inline(joined, index).split(HARD_BREAK).join("<br>");
     };
 
+    // The lines under an image or a live page: one *italic* run, or nothing.
+    const captionOf = (captionLines, index, what) => {
+        const captionText = captionLines.map((line) => line.trim()).join(" ");
+        if (!captionText) return "";
+        const italic = /^\*(?!\*)([\s\S]+)\*$/.exec(captionText) ?? /^_([\s\S]+)_$/.exec(captionText);
+        if (!italic) {
+            throw new ContentError(`${where(index + 1)}: the lines under ${what} are its caption and must be one *italic* run; found "${captionText.slice(0, 60)}"`);
+        }
+        return inline(italic[1], index + 1);
+    };
+
+    const live = (match, captionLines, index) => {
+        const [, title, src] = match;
+        if (!title.trim()) throw new ContentError(`${where(index)}: ${src} needs a title, as in @[what it is](${src})`);
+        let url;
+        try {
+            url = new URL(src);
+        } catch {
+            throw new ContentError(`${where(index)}: cannot read "${src}" as an address`);
+        }
+        if (!LIVE_ORIGINS.has(url.origin) || url.username || url.password) {
+            throw new ContentError(`${where(index)}: ${url.origin} is not on the list of sites a post may show live (LIVE_ORIGINS in scripts/blog/content.mjs)`);
+        }
+        const caption = captionOf(captionLines, index, "a live page");
+        const href = escapeHtml(url.href);
+        // The frame is lazy: a reader who never scrolls this far never loads the page.
+        // Its address is printed under it as a plain link, for anyone the frame fails.
+        const open = `<a class="b-live-open" href="${href}" rel="noopener">${escapeHtml(url.host)} ↗</a>`;
+        return `<figure class="b-fig-wide b-live"><div class="b-live-frame"><iframe src="${href}" title="${escapeHtml(title)}" loading="lazy" sandbox="${LIVE_SANDBOX}"></iframe></div><figcaption>${caption ? `${caption} ` : ""}${open}</figcaption></figure>`;
+    };
+
     const figure = (match, captionLines, index) => {
         const [, alt, src] = match;
         if (!alt.trim()) throw new ContentError(`${where(index)}: ${src} needs alt text, as in ![what it shows](${src})`);
 
-        let caption = "";
-        const captionText = captionLines.map((line) => line.trim()).join(" ");
-        if (captionText) {
-            const italic = /^\*(?!\*)([\s\S]+)\*$/.exec(captionText) ?? /^_([\s\S]+)_$/.exec(captionText);
-            if (!italic) {
-                throw new ContentError(`${where(index + 1)}: the lines under an image are its caption and must be one *italic* run; found "${captionText.slice(0, 60)}"`);
-            }
-            caption = `<figcaption>${inline(italic[1], index + 1)}</figcaption>`;
-        }
+        const captionHtml = captionOf(captionLines, index, "an image");
+        const caption = captionHtml ? `<figcaption>${captionHtml}</figcaption>` : "";
 
         const image = resolveImage(src, where(index));
         figures.push({ ...image, alt });
@@ -360,7 +398,10 @@ export function renderMarkdown(body, { file, lineOffset = 0, resolveImage }) {
         while (i < lines.length && !BLANK.test(lines[i]) && !startsBlock(lines[i])) group.push(lines[i++]);
 
         const image = FIGURE.exec(group[0].trim());
-        html.push(image ? figure(image, group.slice(1), start) : `<p>${paragraphText(group, start)}</p>`);
+        const page = LIVE.exec(group[0].trim());
+        html.push(image ? figure(image, group.slice(1), start)
+            : page ? live(page, group.slice(1), start)
+            : `<p>${paragraphText(group, start)}</p>`);
     }
 
     return { html: html.join("\n"), figures, words };

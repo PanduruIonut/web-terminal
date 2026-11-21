@@ -267,6 +267,53 @@ test("posts: unsafe links are refused", () => {
     refuses(() => parse(swap("(https://example.com)", "(//evil.example)")), /link/);
 });
 
+/* ------------------------------------------------------- live pages */
+
+const LIVE_OK = "@[The project's page, live](https://mototracker.ionut.codes/en)\n*Today. Scroll *inside* it.*";
+const withLive = (block) => swap("> quoted", `${block}\n\n> quoted`);
+
+test("live: a page on the list renders as a lazy, sandboxed frame with its caption and its address under it", () => {
+    const html = parse(withLive(LIVE_OK)).html;
+    const expected = '<figure class="b-fig-wide b-live"><div class="b-live-frame">'
+        + `<iframe src="https://mototracker.ionut.codes/en" title="The project's page, live" loading="lazy" `
+        + 'sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe></div>'
+        + '<figcaption>Today. Scroll <em>inside</em> it. '
+        + '<a class="b-live-open" href="https://mototracker.ionut.codes/en" rel="noopener">mototracker.ionut.codes ↗</a></figcaption></figure>';
+    assert.ok(html.includes(expected), html);
+    // Without a caption, the address is still there.
+    assert.ok(parse(withLive("@[The page](https://mototracker.ionut.codes/)")).html.includes('<figcaption><a class="b-live-open"'));
+});
+
+test("live: the frame can never navigate the reader's tab", () => {
+    const sandbox = /sandbox="([^"]*)"/.exec(parse(withLive(LIVE_OK)).html)[1].split(" ");
+    assert.ok(sandbox.length > 0);
+    assert.ok(!sandbox.some((flag) => flag.startsWith("allow-top-navigation")), sandbox.join(" "));
+});
+
+test("live: a site off the list is refused, however close it looks", () => {
+    for (const src of [
+        "https://example.com/",
+        "http://mototracker.ionut.codes/",
+        "https://mototracker.ionut.codes.evil.example/",
+        "https://evil.example/https://mototracker.ionut.codes/",
+        "https://user@mototracker.ionut.codes/",
+        "https://mototracker.ionut.codes:8443/",
+        "javascript:void0",
+        "/blog/",
+    ]) {
+        assert.throws(() => parse(withLive(`@[A page](${src})`)),
+            (error) => error instanceof ContentError && /show live|cannot read/.test(error.message), `not refused: ${src}`);
+    }
+});
+
+test("live: it needs a title, a line of its own, and an italic caption or none", () => {
+    refuses(() => parse(withLive("@[](https://mototracker.ionut.codes/)")), /needs a title/);
+    refuses(() => parse(withLive("See @[it](https://mototracker.ionut.codes/) here")), /line of its own/);
+    refuses(() => parse(withLive("@[It](https://mototracker.ionut.codes/)\nplain words")), /caption/);
+    // A frame written as HTML stays refused: the list is the only way in.
+    refuses(() => parse(withLive('<iframe src="https://mototracker.ionut.codes/"></iframe>')), /raw HTML/);
+});
+
 test("posts: a # heading is refused (the title comes from the front matter)", () => {
     refuses(() => parse(swap("## 3 February", "# 3 February")), /title/);
 });
